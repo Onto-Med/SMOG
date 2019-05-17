@@ -11,6 +11,7 @@ The following example demonstrates how to start the SMOG:
 // Build a ModelGenerator object from Microsoft Excel file: example.xlsx
 ModelGenerator gen = new ModelGenerator(new File("example.xlsx")); 
 
-// Use the ModelGenerator object to generate Java class files in the directory "test/model" with package name "test.model"
+// Use the ModelGenerator object to generate Java class files
+// in the directory "test/model" with package name "test.model"
 gen.generate(new File("test/model"), "test.model");
 ```
