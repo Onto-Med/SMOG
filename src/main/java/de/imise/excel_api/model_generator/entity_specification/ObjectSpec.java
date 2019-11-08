@@ -1,12 +1,15 @@
 package de.imise.excel_api.model_generator.entity_specification;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class ObjectSpec extends Spec {
 	
 	private List<FieldSpec> fields;
-	private List<TableSpec> tables;
+	private Map<String, TableSpec> tables;
 	private List<DynamicTableSpec> dynamicTables;
 	private List<TableSpec> freePositionTables;
 	private List<TreeSpec> trees;
@@ -15,7 +18,7 @@ public class ObjectSpec extends Spec {
 	public ObjectSpec(String name) {
 		super(name);
 		this.fields = new ArrayList<>();
-		this.tables = new ArrayList<>();
+		this.tables = new HashMap<>();
 		this.dynamicTables = new ArrayList<>();
 		this.freePositionTables = new ArrayList<>();
 		this.trees = new ArrayList<>();
@@ -27,7 +30,7 @@ public class ObjectSpec extends Spec {
 	}
 	
 	public void addTable(TableSpec table) {
-		tables.add(table);
+		tables.put(table.getName(), table);
 	}	
 	
 	public void addDynamicTable(DynamicTableSpec dynamicTable) {
@@ -54,8 +57,12 @@ public class ObjectSpec extends Spec {
 		return fields;
 	}
 
-	public List<TableSpec> getTables() {
-		return tables;
+	public Collection<TableSpec> getTables() {
+		return tables.values();
+	}
+
+	public TableSpec getTable(String name) {
+		return tables.get(name);
 	}
 
 	public List<DynamicTableSpec> getDynamicTables() {

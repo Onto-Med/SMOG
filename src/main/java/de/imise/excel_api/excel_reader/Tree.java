@@ -6,8 +6,6 @@ import java.util.List;
 
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
-import org.apache.poi.xssf.usermodel.XSSFCell;
-
 import de.imise.excel_api.excel_writer.ExcelWriter;
 
 public class Tree {
@@ -25,7 +23,7 @@ public class Tree {
 	}
 	
 	public List<TreeNode> getRootNodes() {
-		List<TreeNode> rootNodes = new ArrayList<TreeNode>();
+		List<TreeNode> rootNodes = new ArrayList<>();
 			
 		for (Row row : markCell.getSheet()) {
 			if (row.getRowNum() > markCell.getRowIndex()) {

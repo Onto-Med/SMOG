@@ -71,48 +71,60 @@ public class Templates {
 		
 		for (FieldSpec field : obj.getFields()) {
 			if (field.hasListDataType()) {
-				if (field.getDataType().equals(DataType.STRING)) {
-					imps.addAll(sheetImp.get("get_STRING_LIST_FIELD"));
-					String get_STRING_LIST_FIELD = sheet.get("get_STRING_LIST_FIELD").replace("_STRING_LIST_FIELD", field.getJavaName()).replace("_ROW", field.getRow()+"").replace("_COL", field.getCol()+"").replace("_LIST_SEPARATOR", field.getListSeparator());
-					sb.append(get_STRING_LIST_FIELD);
-				} else if (field.getDataType().equals(DataType.INTEGER)) {
-					imps.addAll(sheetImp.get("get_INTEGER_LIST_FIELD"));
-					String get_INTEGER_LIST_FIELD = sheet.get("get_INTEGER_LIST_FIELD").replace("_INTEGER_LIST_FIELD", field.getJavaName()).replace("_ROW", field.getRow()+"").replace("_COL", field.getCol()+"").replace("_LIST_SEPARATOR", field.getListSeparator());
-					sb.append(get_INTEGER_LIST_FIELD);
-				} else if (field.getDataType().equals(DataType.DOUBLE)) {
-					imps.addAll(sheetImp.get("get_DOUBLE_LIST_FIELD"));
-					String get_DOUBLE_LIST_FIELD = sheet.get("get_DOUBLE_LIST_FIELD").replace("_DOUBLE_LIST_FIELD", field.getJavaName()).replace("_ROW", field.getRow()+"").replace("_COL", field.getCol()+"").replace("_LIST_SEPARATOR", field.getListSeparator());
-					sb.append(get_DOUBLE_LIST_FIELD);
-				} else if (field.getDataType().equals(DataType.DATE)) {
-					imps.addAll(sheetImp.get("get_DATE_LIST_FIELD"));
-					String get_DATE_LIST_FIELD = sheet.get("get_DATE_LIST_FIELD").replace("_DATE_LIST_FIELD", field.getJavaName()).replace("_ROW", field.getRow()+"").replace("_COL", field.getCol()+"").replace("_LIST_SEPARATOR", field.getListSeparator());
-					sb.append(get_DATE_LIST_FIELD);
-				} else if (field.getDataType().equals(DataType.BOOLEAN)) {
-					imps.addAll(sheetImp.get("get_BOOLEAN_LIST_FIELD"));
-					String get_BOOLEAN_LIST_FIELD = sheet.get("get_BOOLEAN_LIST_FIELD").replace("_BOOLEAN_LIST_FIELD", field.getJavaName()).replace("_ROW", field.getRow()+"").replace("_COL", field.getCol()+"").replace("_LIST_SEPARATOR", field.getListSeparator());
-					sb.append(get_BOOLEAN_LIST_FIELD);
+				switch (field.getDataType()) {
+					case DataType.STRING:
+						imps.addAll(sheetImp.get("get_STRING_LIST_FIELD"));
+						String get_STRING_LIST_FIELD = sheet.get("get_STRING_LIST_FIELD").replace("_STRING_LIST_FIELD", field.getJavaName()).replace("_ROW", field.getRow() + "").replace("_COL", field.getCol() + "").replace("_LIST_SEPARATOR", field.getListSeparator());
+						sb.append(get_STRING_LIST_FIELD);
+						break;
+					case DataType.INTEGER:
+						imps.addAll(sheetImp.get("get_INTEGER_LIST_FIELD"));
+						String get_INTEGER_LIST_FIELD = sheet.get("get_INTEGER_LIST_FIELD").replace("_INTEGER_LIST_FIELD", field.getJavaName()).replace("_ROW", field.getRow() + "").replace("_COL", field.getCol() + "").replace("_LIST_SEPARATOR", field.getListSeparator());
+						sb.append(get_INTEGER_LIST_FIELD);
+						break;
+					case DataType.DOUBLE:
+						imps.addAll(sheetImp.get("get_DOUBLE_LIST_FIELD"));
+						String get_DOUBLE_LIST_FIELD = sheet.get("get_DOUBLE_LIST_FIELD").replace("_DOUBLE_LIST_FIELD", field.getJavaName()).replace("_ROW", field.getRow() + "").replace("_COL", field.getCol() + "").replace("_LIST_SEPARATOR", field.getListSeparator());
+						sb.append(get_DOUBLE_LIST_FIELD);
+						break;
+					case DataType.DATE:
+						imps.addAll(sheetImp.get("get_DATE_LIST_FIELD"));
+						String get_DATE_LIST_FIELD = sheet.get("get_DATE_LIST_FIELD").replace("_DATE_LIST_FIELD", field.getJavaName()).replace("_ROW", field.getRow() + "").replace("_COL", field.getCol() + "").replace("_LIST_SEPARATOR", field.getListSeparator());
+						sb.append(get_DATE_LIST_FIELD);
+						break;
+					case DataType.BOOLEAN:
+						imps.addAll(sheetImp.get("get_BOOLEAN_LIST_FIELD"));
+						String get_BOOLEAN_LIST_FIELD = sheet.get("get_BOOLEAN_LIST_FIELD").replace("_BOOLEAN_LIST_FIELD", field.getJavaName()).replace("_ROW", field.getRow() + "").replace("_COL", field.getCol() + "").replace("_LIST_SEPARATOR", field.getListSeparator());
+						sb.append(get_BOOLEAN_LIST_FIELD);
+						break;
 				}
 			} else {
-				if (field.getDataType().equals(DataType.STRING)) {
-					imps.addAll(sheetImp.get("get_STRING_FIELD"));
-					String get_STRING_FIELD = sheet.get("get_STRING_FIELD").replace("_STRING_FIELD", field.getJavaName()).replace("_ROW", field.getRow()+"").replace("_COL", field.getCol()+"");
-					sb.append(get_STRING_FIELD);
-				} else if (field.getDataType().equals(DataType.INTEGER)) {
-					imps.addAll(sheetImp.get("get_INTEGER_FIELD"));
-					String get_INTEGER_FIELD = sheet.get("get_INTEGER_FIELD").replace("_INTEGER_FIELD", field.getJavaName()).replace("_ROW", field.getRow()+"").replace("_COL", field.getCol()+"");
-					sb.append(get_INTEGER_FIELD);
-				} else if (field.getDataType().equals(DataType.DOUBLE)) {
-					imps.addAll(sheetImp.get("get_DOUBLE_FIELD"));
-					String get_DOUBLE_FIELD = sheet.get("get_DOUBLE_FIELD").replace("_DOUBLE_FIELD", field.getJavaName()).replace("_ROW", field.getRow()+"").replace("_COL", field.getCol()+"");
-					sb.append(get_DOUBLE_FIELD);
-				} else if (field.getDataType().equals(DataType.DATE)) {
-					imps.addAll(sheetImp.get("get_DATE_FIELD"));
-					String get_DATE_FIELD = sheet.get("get_DATE_FIELD").replace("_DATE_FIELD", field.getJavaName()).replace("_ROW", field.getRow()+"").replace("_COL", field.getCol()+"");
-					sb.append(get_DATE_FIELD);
-				} else if (field.getDataType().equals(DataType.BOOLEAN)) {
-					imps.addAll(sheetImp.get("get_BOOLEAN_FIELD"));
-					String get_BOOLEAN_FIELD = sheet.get("get_BOOLEAN_FIELD").replace("_BOOLEAN_FIELD", field.getJavaName()).replace("_ROW", field.getRow()+"").replace("_COL", field.getCol()+"");
-					sb.append(get_BOOLEAN_FIELD);
+				switch (field.getDataType()) {
+					case DataType.STRING:
+						imps.addAll(sheetImp.get("get_STRING_FIELD"));
+						String get_STRING_FIELD = sheet.get("get_STRING_FIELD").replace("_STRING_FIELD", field.getJavaName()).replace("_ROW", field.getRow() + "").replace("_COL", field.getCol() + "");
+						sb.append(get_STRING_FIELD);
+						break;
+					case DataType.INTEGER:
+						imps.addAll(sheetImp.get("get_INTEGER_FIELD"));
+						String get_INTEGER_FIELD = sheet.get("get_INTEGER_FIELD").replace("_INTEGER_FIELD", field.getJavaName()).replace("_ROW", field.getRow() + "").replace("_COL", field.getCol() + "");
+						sb.append(get_INTEGER_FIELD);
+						break;
+					case DataType.DOUBLE:
+						imps.addAll(sheetImp.get("get_DOUBLE_FIELD"));
+						String get_DOUBLE_FIELD = sheet.get("get_DOUBLE_FIELD").replace("_DOUBLE_FIELD", field.getJavaName()).replace("_ROW", field.getRow() + "").replace("_COL", field.getCol() + "");
+						sb.append(get_DOUBLE_FIELD);
+						break;
+					case DataType.DATE:
+						imps.addAll(sheetImp.get("get_DATE_FIELD"));
+						String get_DATE_FIELD = sheet.get("get_DATE_FIELD").replace("_DATE_FIELD", field.getJavaName()).replace("_ROW", field.getRow() + "").replace("_COL", field.getCol() + "");
+						sb.append(get_DATE_FIELD);
+						break;
+					case DataType.BOOLEAN:
+						imps.addAll(sheetImp.get("get_BOOLEAN_FIELD"));
+						String get_BOOLEAN_FIELD = sheet.get("get_BOOLEAN_FIELD").replace("_BOOLEAN_FIELD", field.getJavaName()).replace("_ROW", field.getRow() + "").replace("_COL", field.getCol() + "");
+						sb.append(get_BOOLEAN_FIELD);
+						break;
 				}
 			}
 		}
@@ -122,7 +134,7 @@ public class Templates {
 			String javaRecordClsName = clsName + tab.getJavaName() + "Record";
 			String get_TABLE = sheet.get("get_TABLE").replace("_TABLE_RECORD_T", javaRecordClsName).replace("_TABLE", tab.getJavaName()).replace("_FIRST_ROW", tab.getFirstRow()+"").replace("_FIRST_COL", tab.getFirstCol()+"").replace("_LAST_COL", tab.getLastCol()+"");
 			sb.append(get_TABLE);
-			writeTableRecord(dir, javaRecordClsName, packageName, tab);
+			writeTableRecord(dir, javaRecordClsName, packageName, tab, obj);
 		}
 
 		for (TableSpec tab : obj.getFreePositionTables()) {
@@ -158,62 +170,89 @@ public class Templates {
 		write(getFileStringBuffer(packageName, imps, sb), dir, clsName);
 	}
 	
-	private void writeTableRecord(File dir, String clsName, String packageName, TableSpec tab) {
+	private void writeTableRecord(File dir, String clsName, String packageName, TableSpec tab, ObjectSpec obj) {
 		Set<String> imps = new HashSet<>();
 		StringBuffer sb = new StringBuffer(tabRec.get("_HEADER").replace("_TABLE_RECORD_T", clsName));
 		
 		for (FieldSpec field : tab.getFields()) {
 			if (field.hasListDataType()) {
-				if (field.getDataType().equals(DataType.STRING)) {
-					imps.addAll(tabRecImp.get("get_STRING_LIST_FIELD"));
-					String get_STRING_LIST_FIELD = tabRec.get("get_STRING_LIST_FIELD").replace("_STRING_LIST_FIELD", field.getJavaName()).replace("_COL", field.getCol()+"").replace("_LIST_SEPARATOR", field.getListSeparator());
-					sb.append(get_STRING_LIST_FIELD);
-				} else if (field.getDataType().equals(DataType.INTEGER)) {
-					imps.addAll(tabRecImp.get("get_INTEGER_LIST_FIELD"));
-					String get_INTEGER_LIST_FIELD = tabRec.get("get_INTEGER_LIST_FIELD").replace("_INTEGER_LIST_FIELD", field.getJavaName()).replace("_COL", field.getCol()+"").replace("_LIST_SEPARATOR", field.getListSeparator());
-					sb.append(get_INTEGER_LIST_FIELD);
-				} else if (field.getDataType().equals(DataType.DOUBLE)) {
-					imps.addAll(tabRecImp.get("get_DOUBLE_LIST_FIELD"));
-					String get_DOUBLE_LIST_FIELD = tabRec.get("get_DOUBLE_LIST_FIELD").replace("_DOUBLE_LIST_FIELD", field.getJavaName()).replace("_COL", field.getCol()+"").replace("_LIST_SEPARATOR", field.getListSeparator());
-					sb.append(get_DOUBLE_LIST_FIELD);
-				} else if (field.getDataType().equals(DataType.DATE)) {
-					imps.addAll(tabRecImp.get("get_DATE_LIST_FIELD"));
-					String get_DATE_LIST_FIELD = tabRec.get("get_DATE_LIST_FIELD").replace("_DATE_LIST_FIELD", field.getJavaName()).replace("_COL", field.getCol()+"").replace("_LIST_SEPARATOR", field.getListSeparator());
-					sb.append(get_DATE_LIST_FIELD);
-				} else if (field.getDataType().equals(DataType.BOOLEAN)) {
-					imps.addAll(tabRecImp.get("get_BOOLEAN_LIST_FIELD"));
-					String get_BOOLEAN_LIST_FIELD = tabRec.get("get_BOOLEAN_LIST_FIELD").replace("_BOOLEAN_LIST_FIELD", field.getJavaName()).replace("_COL", field.getCol()+"").replace("_LIST_SEPARATOR", field.getListSeparator());
-					sb.append(get_BOOLEAN_LIST_FIELD);
+				switch (field.getDataType()) {
+					case DataType.STRING:
+						imps.addAll(tabRecImp.get("get_STRING_LIST_FIELD"));
+						String get_STRING_LIST_FIELD = tabRec.get("get_STRING_LIST_FIELD").replace("_STRING_LIST_FIELD", field.getJavaName()).replace("_COL", field.getCol() + "").replace("_LIST_SEPARATOR", field.getListSeparator());
+						sb.append(get_STRING_LIST_FIELD);
+						break;
+					case DataType.INTEGER:
+						imps.addAll(tabRecImp.get("get_INTEGER_LIST_FIELD"));
+						String get_INTEGER_LIST_FIELD = tabRec.get("get_INTEGER_LIST_FIELD").replace("_INTEGER_LIST_FIELD", field.getJavaName()).replace("_COL", field.getCol() + "").replace("_LIST_SEPARATOR", field.getListSeparator());
+						sb.append(get_INTEGER_LIST_FIELD);
+						break;
+					case DataType.DOUBLE:
+						imps.addAll(tabRecImp.get("get_DOUBLE_LIST_FIELD"));
+						String get_DOUBLE_LIST_FIELD = tabRec.get("get_DOUBLE_LIST_FIELD").replace("_DOUBLE_LIST_FIELD", field.getJavaName()).replace("_COL", field.getCol() + "").replace("_LIST_SEPARATOR", field.getListSeparator());
+						sb.append(get_DOUBLE_LIST_FIELD);
+						break;
+					case DataType.DATE:
+						imps.addAll(tabRecImp.get("get_DATE_LIST_FIELD"));
+						String get_DATE_LIST_FIELD = tabRec.get("get_DATE_LIST_FIELD").replace("_DATE_LIST_FIELD", field.getJavaName()).replace("_COL", field.getCol() + "").replace("_LIST_SEPARATOR", field.getListSeparator());
+						sb.append(get_DATE_LIST_FIELD);
+						break;
+					case DataType.BOOLEAN:
+						imps.addAll(tabRecImp.get("get_BOOLEAN_LIST_FIELD"));
+						String get_BOOLEAN_LIST_FIELD = tabRec.get("get_BOOLEAN_LIST_FIELD").replace("_BOOLEAN_LIST_FIELD", field.getJavaName()).replace("_COL", field.getCol() + "").replace("_LIST_SEPARATOR", field.getListSeparator());
+						sb.append(get_BOOLEAN_LIST_FIELD);
+						break;
 				}
 			} else {
-				if (field.getDataType().equals(DataType.STRING)) {
-					imps.addAll(tabRecImp.get("get_STRING_FIELD"));
-					String get_STRING_FIELD = tabRec.get("get_STRING_FIELD").replace("_STRING_FIELD", field.getJavaName()).replace("_COL", field.getCol()+"");
-					sb.append(get_STRING_FIELD);
-				} else if (field.getDataType().equals(DataType.INTEGER)) {
-					imps.addAll(tabRecImp.get("get_INTEGER_FIELD"));
-					String get_INTEGER_FIELD = tabRec.get("get_INTEGER_FIELD").replace("_INTEGER_FIELD", field.getJavaName()).replace("_COL", field.getCol()+"");
-					sb.append(get_INTEGER_FIELD);
-				} else if (field.getDataType().equals(DataType.DOUBLE)) {
-					imps.addAll(tabRecImp.get("get_DOUBLE_FIELD"));
-					String get_DOUBLE_FIELD = tabRec.get("get_DOUBLE_FIELD").replace("_DOUBLE_FIELD", field.getJavaName()).replace("_COL", field.getCol()+"");
-					sb.append(get_DOUBLE_FIELD);
-				} else if (field.getDataType().equals(DataType.DATE)) {
-					imps.addAll(tabRecImp.get("get_DATE_FIELD"));
-					String get_DATE_FIELD = tabRec.get("get_DATE_FIELD").replace("_DATE_FIELD", field.getJavaName()).replace("_COL", field.getCol()+"");
-					sb.append(get_DATE_FIELD);
-				} else if (field.getDataType().equals(DataType.BOOLEAN)) {
-					imps.addAll(tabRecImp.get("get_BOOLEAN_FIELD"));
-					String get_BOOLEAN_FIELD = tabRec.get("get_BOOLEAN_FIELD").replace("_BOOLEAN_FIELD", field.getJavaName()).replace("_COL", field.getCol()+"");
-					sb.append(get_BOOLEAN_FIELD);
+				switch (field.getDataType()) {
+					case DataType.STRING:
+						imps.addAll(tabRecImp.get("get_STRING_FIELD"));
+						String get_STRING_FIELD = tabRec.get("get_STRING_FIELD").replace("_STRING_FIELD", field.getJavaName()).replace("_COL", field.getCol() + "");
+						sb.append(get_STRING_FIELD);
+
+						if (tab.hasColRef() && tab.getColRefOwn().getCol() == field.getCol()) {
+							TableSpec foreignTab = obj.getTable(tab.getColRefForeignTable());
+							FieldSpec foreignCol = foreignTab.getField(tab.getColRefForeignColumn());
+
+							String javaRecordClsName = obj.getJavaName() + foreignTab.getJavaName() + "Record";
+
+							imps.addAll(tabRecImp.get("get_COL_REF"));
+							String get_COL_REF = tabRec.get("get_COL_REF").replace("_FOREIGN_TAB_RECORD_T", javaRecordClsName)
+									.replace("_FOREIGN_TAB", foreignTab.getJavaName()).replace("_FOREIGN_FIRST_ROW", foreignTab.getFirstRow() + "").replace("_FOREIGN_FIRST_COL", foreignTab.getFirstCol() + "").replace("_FOREIGN_LAST_COL", foreignTab.getLastCol() + "")
+									.replace("_COL_REF_OWN", tab.getColRefOwn().getCol() + "")
+									.replace("_COL_REF_FOREIGN", foreignCol.getCol() + "");
+							sb.append(get_COL_REF);
+						}
+
+						break;
+					case DataType.INTEGER:
+						imps.addAll(tabRecImp.get("get_INTEGER_FIELD"));
+						String get_INTEGER_FIELD = tabRec.get("get_INTEGER_FIELD").replace("_INTEGER_FIELD", field.getJavaName()).replace("_COL", field.getCol() + "");
+						sb.append(get_INTEGER_FIELD);
+						break;
+					case DataType.DOUBLE:
+						imps.addAll(tabRecImp.get("get_DOUBLE_FIELD"));
+						String get_DOUBLE_FIELD = tabRec.get("get_DOUBLE_FIELD").replace("_DOUBLE_FIELD", field.getJavaName()).replace("_COL", field.getCol() + "");
+						sb.append(get_DOUBLE_FIELD);
+						break;
+					case DataType.DATE:
+						imps.addAll(tabRecImp.get("get_DATE_FIELD"));
+						String get_DATE_FIELD = tabRec.get("get_DATE_FIELD").replace("_DATE_FIELD", field.getJavaName()).replace("_COL", field.getCol() + "");
+						sb.append(get_DATE_FIELD);
+						break;
+					case DataType.BOOLEAN:
+						imps.addAll(tabRecImp.get("get_BOOLEAN_FIELD"));
+						String get_BOOLEAN_FIELD = tabRec.get("get_BOOLEAN_FIELD").replace("_BOOLEAN_FIELD", field.getJavaName()).replace("_COL", field.getCol() + "");
+						sb.append(get_BOOLEAN_FIELD);
+						break;
 				}
 			}
 		}
 		
 		imps.addAll(tabRecImp.get("getRecord"));
-		StringBuffer fields = new StringBuffer();
+		StringBuilder fields = new StringBuilder();
 		for (FieldSpec field : tab.getFields())
-			fields.append("        record.put(\""+ field.getName() +"\", get" + field.getJavaName() + "());").append(System.lineSeparator());			
+			fields.append("        record.put(\"").append(field.getName()).append("\", get").append(field.getJavaName()).append("());").append(System.lineSeparator());
 		
 		String getRecord = tabRec.get("getRecord").replace("//_PUT_FIELDS", fields.toString());
 		sb.append(getRecord);
@@ -227,56 +266,68 @@ public class Templates {
 		
 		for (FieldSpec field : tab.getFields()) {
 			if (field.hasListDataType()) {
-				if (field.getDataType().equals(DataType.STRING)) {
-					imps.addAll(freePosTabRecImp.get("get_STRING_LIST_FIELD"));
-					String get_STRING_LIST_FIELD = freePosTabRec.get("get_STRING_LIST_FIELD").replace("_STRING_LIST_FIELD", field.getJavaName()).replace("_COL_INDEX", field.getTabColIndex()+"").replace("_LIST_SEPARATOR", field.getListSeparator());
-					sb.append(get_STRING_LIST_FIELD);
-				} else if (field.getDataType().equals(DataType.INTEGER)) {
-					imps.addAll(freePosTabRecImp.get("get_INTEGER_LIST_FIELD"));
-					String get_INTEGER_LIST_FIELD = freePosTabRec.get("get_INTEGER_LIST_FIELD").replace("_INTEGER_LIST_FIELD", field.getJavaName()).replace("_COL_INDEX", field.getTabColIndex()+"").replace("_LIST_SEPARATOR", field.getListSeparator());
-					sb.append(get_INTEGER_LIST_FIELD);
-				} else if (field.getDataType().equals(DataType.DOUBLE)) {
-					imps.addAll(freePosTabRecImp.get("get_DOUBLE_LIST_FIELD"));
-					String get_DOUBLE_LIST_FIELD = freePosTabRec.get("get_DOUBLE_LIST_FIELD").replace("_DOUBLE_LIST_FIELD", field.getJavaName()).replace("_COL_INDEX", field.getTabColIndex()+"").replace("_LIST_SEPARATOR", field.getListSeparator());
-					sb.append(get_DOUBLE_LIST_FIELD);
-				} else if (field.getDataType().equals(DataType.DATE)) {
-					imps.addAll(freePosTabRecImp.get("get_DATE_LIST_FIELD"));
-					String get_DATE_LIST_FIELD = freePosTabRec.get("get_DATE_LIST_FIELD").replace("_DATE_LIST_FIELD", field.getJavaName()).replace("_COL_INDEX", field.getTabColIndex()+"").replace("_LIST_SEPARATOR", field.getListSeparator());
-					sb.append(get_DATE_LIST_FIELD);
-				} else if (field.getDataType().equals(DataType.BOOLEAN)) {
-					imps.addAll(freePosTabRecImp.get("get_BOOLEAN_LIST_FIELD"));
-					String get_BOOLEAN_LIST_FIELD = freePosTabRec.get("get_BOOLEAN_LIST_FIELD").replace("_BOOLEAN_LIST_FIELD", field.getJavaName()).replace("_COL_INDEX", field.getTabColIndex()+"").replace("_LIST_SEPARATOR", field.getListSeparator());
-					sb.append(get_BOOLEAN_LIST_FIELD);
+				switch (field.getDataType()) {
+					case DataType.STRING:
+						imps.addAll(freePosTabRecImp.get("get_STRING_LIST_FIELD"));
+						String get_STRING_LIST_FIELD = freePosTabRec.get("get_STRING_LIST_FIELD").replace("_STRING_LIST_FIELD", field.getJavaName()).replace("_COL_INDEX", field.getTabColIndex() + "").replace("_LIST_SEPARATOR", field.getListSeparator());
+						sb.append(get_STRING_LIST_FIELD);
+						break;
+					case DataType.INTEGER:
+						imps.addAll(freePosTabRecImp.get("get_INTEGER_LIST_FIELD"));
+						String get_INTEGER_LIST_FIELD = freePosTabRec.get("get_INTEGER_LIST_FIELD").replace("_INTEGER_LIST_FIELD", field.getJavaName()).replace("_COL_INDEX", field.getTabColIndex() + "").replace("_LIST_SEPARATOR", field.getListSeparator());
+						sb.append(get_INTEGER_LIST_FIELD);
+						break;
+					case DataType.DOUBLE:
+						imps.addAll(freePosTabRecImp.get("get_DOUBLE_LIST_FIELD"));
+						String get_DOUBLE_LIST_FIELD = freePosTabRec.get("get_DOUBLE_LIST_FIELD").replace("_DOUBLE_LIST_FIELD", field.getJavaName()).replace("_COL_INDEX", field.getTabColIndex() + "").replace("_LIST_SEPARATOR", field.getListSeparator());
+						sb.append(get_DOUBLE_LIST_FIELD);
+						break;
+					case DataType.DATE:
+						imps.addAll(freePosTabRecImp.get("get_DATE_LIST_FIELD"));
+						String get_DATE_LIST_FIELD = freePosTabRec.get("get_DATE_LIST_FIELD").replace("_DATE_LIST_FIELD", field.getJavaName()).replace("_COL_INDEX", field.getTabColIndex() + "").replace("_LIST_SEPARATOR", field.getListSeparator());
+						sb.append(get_DATE_LIST_FIELD);
+						break;
+					case DataType.BOOLEAN:
+						imps.addAll(freePosTabRecImp.get("get_BOOLEAN_LIST_FIELD"));
+						String get_BOOLEAN_LIST_FIELD = freePosTabRec.get("get_BOOLEAN_LIST_FIELD").replace("_BOOLEAN_LIST_FIELD", field.getJavaName()).replace("_COL_INDEX", field.getTabColIndex() + "").replace("_LIST_SEPARATOR", field.getListSeparator());
+						sb.append(get_BOOLEAN_LIST_FIELD);
+						break;
 				}
 			} else {
-				if (field.getDataType().equals(DataType.STRING)) {
-					imps.addAll(freePosTabRecImp.get("get_STRING_FIELD"));
-					String get_STRING_FIELD = freePosTabRec.get("get_STRING_FIELD").replace("_STRING_FIELD", field.getJavaName()).replace("_COL_INDEX", field.getTabColIndex()+"");
-					sb.append(get_STRING_FIELD);
-				} else if (field.getDataType().equals(DataType.INTEGER)) {
-					imps.addAll(freePosTabRecImp.get("get_INTEGER_FIELD"));
-					String get_INTEGER_FIELD = freePosTabRec.get("get_INTEGER_FIELD").replace("_INTEGER_FIELD", field.getJavaName()).replace("_COL_INDEX", field.getTabColIndex()+"");
-					sb.append(get_INTEGER_FIELD);
-				} else if (field.getDataType().equals(DataType.DOUBLE)) {
-					imps.addAll(freePosTabRecImp.get("get_DOUBLE_FIELD"));
-					String get_DOUBLE_FIELD = freePosTabRec.get("get_DOUBLE_FIELD").replace("_DOUBLE_FIELD", field.getJavaName()).replace("_COL_INDEX", field.getTabColIndex()+"");
-					sb.append(get_DOUBLE_FIELD);
-				} else if (field.getDataType().equals(DataType.DATE)) {
-					imps.addAll(freePosTabRecImp.get("get_DATE_FIELD"));
-					String get_DATE_FIELD = freePosTabRec.get("get_DATE_FIELD").replace("_DATE_FIELD", field.getJavaName()).replace("_COL_INDEX", field.getTabColIndex()+"");
-					sb.append(get_DATE_FIELD);
-				} else if (field.getDataType().equals(DataType.BOOLEAN)) {
-					imps.addAll(freePosTabRecImp.get("get_BOOLEAN_FIELD"));
-					String get_BOOLEAN_FIELD = freePosTabRec.get("get_BOOLEAN_FIELD").replace("_BOOLEAN_FIELD", field.getJavaName()).replace("_COL_INDEX", field.getTabColIndex()+"");
-					sb.append(get_BOOLEAN_FIELD);
+				switch (field.getDataType()) {
+					case DataType.STRING:
+						imps.addAll(freePosTabRecImp.get("get_STRING_FIELD"));
+						String get_STRING_FIELD = freePosTabRec.get("get_STRING_FIELD").replace("_STRING_FIELD", field.getJavaName()).replace("_COL_INDEX", field.getTabColIndex() + "");
+						sb.append(get_STRING_FIELD);
+						break;
+					case DataType.INTEGER:
+						imps.addAll(freePosTabRecImp.get("get_INTEGER_FIELD"));
+						String get_INTEGER_FIELD = freePosTabRec.get("get_INTEGER_FIELD").replace("_INTEGER_FIELD", field.getJavaName()).replace("_COL_INDEX", field.getTabColIndex() + "");
+						sb.append(get_INTEGER_FIELD);
+						break;
+					case DataType.DOUBLE:
+						imps.addAll(freePosTabRecImp.get("get_DOUBLE_FIELD"));
+						String get_DOUBLE_FIELD = freePosTabRec.get("get_DOUBLE_FIELD").replace("_DOUBLE_FIELD", field.getJavaName()).replace("_COL_INDEX", field.getTabColIndex() + "");
+						sb.append(get_DOUBLE_FIELD);
+						break;
+					case DataType.DATE:
+						imps.addAll(freePosTabRecImp.get("get_DATE_FIELD"));
+						String get_DATE_FIELD = freePosTabRec.get("get_DATE_FIELD").replace("_DATE_FIELD", field.getJavaName()).replace("_COL_INDEX", field.getTabColIndex() + "");
+						sb.append(get_DATE_FIELD);
+						break;
+					case DataType.BOOLEAN:
+						imps.addAll(freePosTabRecImp.get("get_BOOLEAN_FIELD"));
+						String get_BOOLEAN_FIELD = freePosTabRec.get("get_BOOLEAN_FIELD").replace("_BOOLEAN_FIELD", field.getJavaName()).replace("_COL_INDEX", field.getTabColIndex() + "");
+						sb.append(get_BOOLEAN_FIELD);
+						break;
 				}
 			}
 		}
 		
 		imps.addAll(freePosTabRecImp.get("getRecord"));
-		StringBuffer fields = new StringBuffer();
+		StringBuilder fields = new StringBuilder();
 		for (FieldSpec field : tab.getFields())
-			fields.append("        record.put(\""+ field.getName() +"\", get" + field.getJavaName() + "());").append(System.lineSeparator());			
+			fields.append("        record.put(\"").append(field.getName()).append("\", get").append(field.getJavaName()).append("());").append(System.lineSeparator());
 		
 		String getRecord = freePosTabRec.get("getRecord").replace("//_PUT_FIELDS", fields.toString());
 		sb.append(getRecord);
@@ -290,56 +341,68 @@ public class Templates {
 		
 		for (FieldSpec field : tab.getFields()) {
 			if (field.hasListDataType()) {
-				if (field.getDataType().equals(DataType.STRING)) {
-					imps.addAll(treeNodeImp.get("get_STRING_LIST_FIELD"));
-					String get_STRING_LIST_FIELD = treeNode.get("get_STRING_LIST_FIELD").replace("_STRING_LIST_FIELD", field.getJavaName()).replace("_COL_INDEX", field.getTabColIndex()+"").replace("_LIST_SEPARATOR", field.getListSeparator());
-					sb.append(get_STRING_LIST_FIELD);
-				} else if (field.getDataType().equals(DataType.INTEGER)) {
-					imps.addAll(treeNodeImp.get("get_INTEGER_LIST_FIELD"));
-					String get_INTEGER_LIST_FIELD = treeNode.get("get_INTEGER_LIST_FIELD").replace("_INTEGER_LIST_FIELD", field.getJavaName()).replace("_COL_INDEX", field.getTabColIndex()+"").replace("_LIST_SEPARATOR", field.getListSeparator());
-					sb.append(get_INTEGER_LIST_FIELD);
-				} else if (field.getDataType().equals(DataType.DOUBLE)) {
-					imps.addAll(treeNodeImp.get("get_DOUBLE_LIST_FIELD"));
-					String get_DOUBLE_LIST_FIELD = treeNode.get("get_DOUBLE_LIST_FIELD").replace("_DOUBLE_LIST_FIELD", field.getJavaName()).replace("_COL_INDEX", field.getTabColIndex()+"").replace("_LIST_SEPARATOR", field.getListSeparator());
-					sb.append(get_DOUBLE_LIST_FIELD);
-				} else if (field.getDataType().equals(DataType.DATE)) {
-					imps.addAll(treeNodeImp.get("get_DATE_LIST_FIELD"));
-					String get_DATE_LIST_FIELD = treeNode.get("get_DATE_LIST_FIELD").replace("_DATE_LIST_FIELD", field.getJavaName()).replace("_COL_INDEX", field.getTabColIndex()+"").replace("_LIST_SEPARATOR", field.getListSeparator());
-					sb.append(get_DATE_LIST_FIELD);
-				} else if (field.getDataType().equals(DataType.BOOLEAN)) {
-					imps.addAll(treeNodeImp.get("get_BOOLEAN_LIST_FIELD"));
-					String get_BOOLEAN_LIST_FIELD = treeNode.get("get_BOOLEAN_LIST_FIELD").replace("_BOOLEAN_LIST_FIELD", field.getJavaName()).replace("_COL_INDEX", field.getTabColIndex()+"").replace("_LIST_SEPARATOR", field.getListSeparator());
-					sb.append(get_BOOLEAN_LIST_FIELD);
+				switch (field.getDataType()) {
+					case DataType.STRING:
+						imps.addAll(treeNodeImp.get("get_STRING_LIST_FIELD"));
+						String get_STRING_LIST_FIELD = treeNode.get("get_STRING_LIST_FIELD").replace("_STRING_LIST_FIELD", field.getJavaName()).replace("_COL_INDEX", field.getTabColIndex() + "").replace("_LIST_SEPARATOR", field.getListSeparator());
+						sb.append(get_STRING_LIST_FIELD);
+						break;
+					case DataType.INTEGER:
+						imps.addAll(treeNodeImp.get("get_INTEGER_LIST_FIELD"));
+						String get_INTEGER_LIST_FIELD = treeNode.get("get_INTEGER_LIST_FIELD").replace("_INTEGER_LIST_FIELD", field.getJavaName()).replace("_COL_INDEX", field.getTabColIndex() + "").replace("_LIST_SEPARATOR", field.getListSeparator());
+						sb.append(get_INTEGER_LIST_FIELD);
+						break;
+					case DataType.DOUBLE:
+						imps.addAll(treeNodeImp.get("get_DOUBLE_LIST_FIELD"));
+						String get_DOUBLE_LIST_FIELD = treeNode.get("get_DOUBLE_LIST_FIELD").replace("_DOUBLE_LIST_FIELD", field.getJavaName()).replace("_COL_INDEX", field.getTabColIndex() + "").replace("_LIST_SEPARATOR", field.getListSeparator());
+						sb.append(get_DOUBLE_LIST_FIELD);
+						break;
+					case DataType.DATE:
+						imps.addAll(treeNodeImp.get("get_DATE_LIST_FIELD"));
+						String get_DATE_LIST_FIELD = treeNode.get("get_DATE_LIST_FIELD").replace("_DATE_LIST_FIELD", field.getJavaName()).replace("_COL_INDEX", field.getTabColIndex() + "").replace("_LIST_SEPARATOR", field.getListSeparator());
+						sb.append(get_DATE_LIST_FIELD);
+						break;
+					case DataType.BOOLEAN:
+						imps.addAll(treeNodeImp.get("get_BOOLEAN_LIST_FIELD"));
+						String get_BOOLEAN_LIST_FIELD = treeNode.get("get_BOOLEAN_LIST_FIELD").replace("_BOOLEAN_LIST_FIELD", field.getJavaName()).replace("_COL_INDEX", field.getTabColIndex() + "").replace("_LIST_SEPARATOR", field.getListSeparator());
+						sb.append(get_BOOLEAN_LIST_FIELD);
+						break;
 				}
 			} else {
-				if (field.getDataType().equals(DataType.STRING)) {
-					imps.addAll(treeNodeImp.get("get_STRING_FIELD"));
-					String get_STRING_FIELD = treeNode.get("get_STRING_FIELD").replace("_STRING_FIELD", field.getJavaName()).replace("_COL_INDEX", field.getTabColIndex()+"");
-					sb.append(get_STRING_FIELD);
-				} else if (field.getDataType().equals(DataType.INTEGER)) {
-					imps.addAll(treeNodeImp.get("get_INTEGER_FIELD"));
-					String get_INTEGER_FIELD = treeNode.get("get_INTEGER_FIELD").replace("_INTEGER_FIELD", field.getJavaName()).replace("_COL_INDEX", field.getTabColIndex()+"");
-					sb.append(get_INTEGER_FIELD);
-				} else if (field.getDataType().equals(DataType.DOUBLE)) {
-					imps.addAll(treeNodeImp.get("get_DOUBLE_FIELD"));
-					String get_DOUBLE_FIELD = treeNode.get("get_DOUBLE_FIELD").replace("_DOUBLE_FIELD", field.getJavaName()).replace("_COL_INDEX", field.getTabColIndex()+"");
-					sb.append(get_DOUBLE_FIELD);
-				} else if (field.getDataType().equals(DataType.DATE)) {
-					imps.addAll(treeNodeImp.get("get_DATE_FIELD"));
-					String get_DATE_FIELD = treeNode.get("get_DATE_FIELD").replace("_DATE_FIELD", field.getJavaName()).replace("_COL_INDEX", field.getTabColIndex()+"");
-					sb.append(get_DATE_FIELD);
-				} else if (field.getDataType().equals(DataType.BOOLEAN)) {
-					imps.addAll(treeNodeImp.get("get_BOOLEAN_FIELD"));
-					String get_BOOLEAN_FIELD = treeNode.get("get_BOOLEAN_FIELD").replace("_BOOLEAN_FIELD", field.getJavaName()).replace("_COL_INDEX", field.getTabColIndex()+"");
-					sb.append(get_BOOLEAN_FIELD);
+				switch (field.getDataType()) {
+					case DataType.STRING:
+						imps.addAll(treeNodeImp.get("get_STRING_FIELD"));
+						String get_STRING_FIELD = treeNode.get("get_STRING_FIELD").replace("_STRING_FIELD", field.getJavaName()).replace("_COL_INDEX", field.getTabColIndex() + "");
+						sb.append(get_STRING_FIELD);
+						break;
+					case DataType.INTEGER:
+						imps.addAll(treeNodeImp.get("get_INTEGER_FIELD"));
+						String get_INTEGER_FIELD = treeNode.get("get_INTEGER_FIELD").replace("_INTEGER_FIELD", field.getJavaName()).replace("_COL_INDEX", field.getTabColIndex() + "");
+						sb.append(get_INTEGER_FIELD);
+						break;
+					case DataType.DOUBLE:
+						imps.addAll(treeNodeImp.get("get_DOUBLE_FIELD"));
+						String get_DOUBLE_FIELD = treeNode.get("get_DOUBLE_FIELD").replace("_DOUBLE_FIELD", field.getJavaName()).replace("_COL_INDEX", field.getTabColIndex() + "");
+						sb.append(get_DOUBLE_FIELD);
+						break;
+					case DataType.DATE:
+						imps.addAll(treeNodeImp.get("get_DATE_FIELD"));
+						String get_DATE_FIELD = treeNode.get("get_DATE_FIELD").replace("_DATE_FIELD", field.getJavaName()).replace("_COL_INDEX", field.getTabColIndex() + "");
+						sb.append(get_DATE_FIELD);
+						break;
+					case DataType.BOOLEAN:
+						imps.addAll(treeNodeImp.get("get_BOOLEAN_FIELD"));
+						String get_BOOLEAN_FIELD = treeNode.get("get_BOOLEAN_FIELD").replace("_BOOLEAN_FIELD", field.getJavaName()).replace("_COL_INDEX", field.getTabColIndex() + "");
+						sb.append(get_BOOLEAN_FIELD);
+						break;
 				}
 			}
 		}
 		
 		imps.addAll(treeNodeImp.get("getRecord"));
-		StringBuffer fields = new StringBuffer();
+		StringBuilder fields = new StringBuilder();
 		for (FieldSpec field : tab.getFields())
-			fields.append("        record.put(\""+ field.getName() +"\", get" + field.getJavaName() + "());").append(System.lineSeparator());			
+			fields.append("        record.put(\"").append(field.getName()).append("\", get").append(field.getJavaName()).append("());").append(System.lineSeparator());
 		
 		String getRecord = treeNode.get("getRecord").replace("//_PUT_FIELDS", fields.toString());
 		sb.append(getRecord);
@@ -356,7 +419,7 @@ public class Templates {
 		if (ar.length > 2)
 			return Arrays.asList(Arrays.copyOfRange(ar, 2, ar.length));
 		else
-			return new ArrayList<String>();
+			return new ArrayList<>();
 	}
 	
 	private StringBuffer getFileStringBuffer(String packageName, Set<String> imps, StringBuffer code) {

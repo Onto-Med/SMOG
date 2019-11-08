@@ -5,7 +5,7 @@ import de.imise.excel_api.util.StrUtil;
 import java.text.ParseException;
 //_START:_HEADER
 import java.util.*;
-import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.*;
 import de.imise.excel_api.excel_reader.ExcelReader;
 import de.imise.excel_api.excel_writer.ExcelWriter;
 
@@ -37,6 +37,28 @@ public class _TABLE_RECORD_T {
 	
 	private int _COL;
 	
+//_START:get_COL_REF
+    public List<_FOREIGN_TAB_RECORD_T> get_FOREIGN_TAB() {
+        List<_FOREIGN_TAB_RECORD_T> records = new ArrayList<>();
+        Optional<String> colRefOwnVal = ExcelReader.getStringValue(row, _COL_REF_OWN);
+    	if (!colRefOwnVal.isPresent())
+    	    return records;
+    		
+        for (int i = _FOREIGN_FIRST_ROW; true; i++) {
+            Row tabRow = row.getSheet().getRow(i);
+            if (ExcelReader.isEmptyRowPart(tabRow, _FOREIGN_FIRST_COL, _FOREIGN_LAST_COL))
+                break;
+            else {
+                Optional<String> colRefForeignVal = ExcelReader.getStringValue(tabRow, _COL_REF_FOREIGN);
+                if(colRefForeignVal.isPresent() && colRefOwnVal.get().equals(colRefForeignVal.get()))
+                    records.add(new _FOREIGN_TAB_RECORD_T(tabRow, _FOREIGN_FIRST_COL, _FOREIGN_LAST_COL));
+            }  
+        }
+
+        return records;
+    }
+//_END:get_COL_REF
+
 //_START:get_STRING_FIELD
     public Optional<String> get_STRING_FIELD() {
         return ExcelReader.getStringValue(row, _COL);

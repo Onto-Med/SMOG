@@ -3,11 +3,8 @@ package de.imise.excel_api.excel_reader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.text.ParseException;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
+
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellType;
 import org.apache.poi.ss.usermodel.Row;
@@ -80,11 +77,16 @@ public class ExcelReader {
 		if (isDate(cell))
 			return Optional.of(StrUtil.formatDate(cell.getDateCellValue()));
 		if (isInteger(cell))
-			return Optional.of(new Integer((int) cell.getNumericCellValue()).toString());
-		if (isNumeric(cell))
-			return Optional.of(new Double(cell.getNumericCellValue()).toString());
-		if (isBoolean(cell))
-			return Optional.of(new Boolean(cell.getBooleanCellValue()).toString());
+			return Optional.of(Integer.toString((int) cell.getNumericCellValue()));
+		if (isNumeric(cell)) {
+			double dv = cell.getNumericCellValue();
+			int iv = (int) dv;
+			if (dv == iv)
+				return Optional.of(Integer.toString(iv));
+			else
+				return Optional.of(Double.toString(dv));
+		} if (isBoolean(cell))
+			return Optional.of(Boolean.toString(cell.getBooleanCellValue()));
 		if (isString(cell))
 			return Optional.of(cell.getStringCellValue().trim());
 		
@@ -130,7 +132,7 @@ public class ExcelReader {
 		if (isBoolean(cell))
 			return Optional.of(cell.getBooleanCellValue());
 		if (isNumeric(cell))
-			return Optional.of(new Boolean(cell.getNumericCellValue() > 0)) ;
+			return Optional.of(cell.getNumericCellValue() > 0) ;
 		if (isString(cell)) 
 			return StrUtil.parseBoolean(cell.getStringCellValue().trim());
 		
@@ -159,8 +161,7 @@ public class ExcelReader {
 	
 	public static List<String> getStringValues(Row row, int colNum, String separator) {
 		List<String> values = new ArrayList<>();
-		for (String val : getValues(row, colNum, separator))
-			values.add(val);
+		Collections.addAll(values, getValues(row, colNum, separator));
 		
 		return values;
 	}
@@ -211,7 +212,7 @@ public class ExcelReader {
 		Optional<String> valuesStr = getStringValue(row, colNum);
     	if (!valuesStr.isPresent())
     		return new String[]{};
-    	
+
     	return valuesStr.get().trim().split(" *\\" + separator + " *");
 	}
 	
@@ -309,7 +310,7 @@ public class ExcelReader {
 	}
 	
 	public static List<Sheet> getClassSheets(Workbook workbook, String clsName) {
-		List<Sheet> clsSheets = new ArrayList<Sheet>();
+		List<Sheet> clsSheets = new ArrayList<>();
 		
 		for (Sheet sheet : workbook) {
 			for (Row row : sheet) {
@@ -325,10 +326,7 @@ public class ExcelReader {
 	
 	public static boolean hasMark(Cell cell, String mark) {
 		Optional<String> value = getStringValue(cell);
-		if (value.isPresent() && value.get().trim().startsWith(mark))
-			return true;
-		else
-			return false;
+		return value.isPresent() && value.get().trim().startsWith(mark);
 	}
 	
 	public static String getEntityName(Cell cell) {
@@ -338,7 +336,11 @@ public class ExcelReader {
 				mark = ent;
 		}
 		
-		return cell.getStringCellValue().replace(mark, "").replaceAll(Entity.DATA_TYPE_PATTERN, "").replaceAll(Entity.LIST_SEPARATOR_PATTERN, "").trim();
+		return cell.getStringCellValue().replace(mark, "")
+			.replaceAll(Entity.DATA_TYPE_PATTERN, "")
+			.replaceAll(Entity.LIST_SEPARATOR_PATTERN, "")
+			.replaceAll(Entity.COL_REF_PATTERN, "")
+			.trim();
 	}
 	
 	public static Coordinates getValueCellCoordinatesForNameCell(Cell cell) {
@@ -384,6 +386,23 @@ public class ExcelReader {
 		}
 		
 		return Entity.DEFAULT_LIST_SEPARATOR;
+	}
+
+	public static Optional<String[]> getColRef(Cell cell) {
+		Optional<String> value = getStringValue(cell);
+		
+		if (value.isPresent()) {
+			Optional<String> ref = StrUtil.findInString(Entity.COL_REF_PATTERN, value.get());
+			if (ref.isPresent()) {
+				String[] refAr = ref.get().split(Entity.COL_REF_SEPARATOR);
+				if (refAr != null && refAr.length == 2 &&
+					refAr[0] != null && !refAr[0].trim().isEmpty() &&
+					refAr[1] != null && !refAr[1].trim().isEmpty())
+					return Optional.of(refAr);
+			}
+		}
+			
+		return Optional.empty();
 	}
 	
 	public static Tree getTree(Cell markCell) {

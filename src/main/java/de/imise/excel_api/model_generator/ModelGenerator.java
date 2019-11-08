@@ -5,6 +5,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
+
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
@@ -30,8 +32,8 @@ public class ModelGenerator {
 	
 	public ModelGenerator(File file) {
 		this.file = file;
-		this.classes = new HashMap<String, ObjectSpec>();
-		this.objects = new ArrayList<ObjectSpec>();
+		this.classes = new HashMap<>();
+		this.objects = new ArrayList<>();
 	}
 
 	public void generate(File dir, String packageName) {
@@ -82,8 +84,9 @@ public class ModelGenerator {
 		String name = ExcelReader.getEntityName(nameCell);		
 		String dataType = ExcelReader.getDataType(nameCell, valueCell);
 		String listSeparator = ExcelReader.getListSeparator(nameCell);
+		Optional<String[]> colRef = ExcelReader.getColRef(nameCell);
 		Coordinates valueCellCoordinates = ExcelReader.getValueCellCoordinatesForNameCell(nameCell);
-		return new FieldSpec(name, dataType, listSeparator, valueCellCoordinates.getRow(), valueCellCoordinates.getCol(), tabColIndex);
+		return new FieldSpec(name, dataType, colRef, listSeparator, valueCellCoordinates.getRow(), valueCellCoordinates.getCol(), tabColIndex);
 	}
 
 	private TableSpec getTableSpec(Cell nameCell) {	
