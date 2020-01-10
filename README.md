@@ -13,6 +13,17 @@ This results into methods being generated for the Java class of entries in *tabl
 
 
 ## How to use
+
+Add SMOG as dependency to your project (e.g. as maven dependency in `pom.xml`). SMOG is available as maven package on https://maven.pkg.github.com.
+
+```xml
+<dependency>
+    <groupId>de.imise.excel_api</groupId>
+    <artifactId>smog</artifactId>
+    <version>1.0.0</version>
+</dependency>
+```
+
 The following example demonstrates how to start the SMOG:
 
 ```java
