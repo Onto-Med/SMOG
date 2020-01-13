@@ -23,19 +23,31 @@ import de.imise.excel_api.model_generator.entity_specification.TreeTableSpec;
 import de.imise.excel_api.model_generator.template.Templates;
 import de.imise.excel_api.util.StrUtil;
 
+/**
+ * This class is initialized with a Microsoft Excel template file
+ * and is able to generate Java classes according to the annotations in the template.
+ * The generated Java classes can be used to read/write from/to Excel files with the same structure as the template file.
+ */
 public class ModelGenerator {
-	
 	private Map<String, ObjectSpec> classes;
 	private List<ObjectSpec> objects;
-	
 	private File file;
-	
+
+	/**
+	 * Instantiate a Model Generator object to generate Java classes.
+	 * @param file a Microsoft Excel template file with annotations
+	 */
 	public ModelGenerator(File file) {
 		this.file = file;
 		this.classes = new HashMap<>();
 		this.objects = new ArrayList<>();
 	}
 
+	/**
+	 * Created Java class files in the given directory by parsing the initial Microsoft Excel template.
+	 * @param dir the directory where the generated Java class files should be written to
+	 * @param packageName the package name to be used for the generated Java classes
+	 */
 	public void generate(File dir, String packageName) {
 		for (Sheet sheet : ExcelReader.getWorkbook(file)) {
 			createObjectSpec(sheet);

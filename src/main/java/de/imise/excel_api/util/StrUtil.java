@@ -8,7 +8,7 @@ import java.util.regex.Pattern;
 
 public class StrUtil {
 	
-	private static String[][] UMLAUT_REPLACEMENTS = { { new String("Ä"), "Ae" }, { new String("Ü"), "Ue" }, { new String("Ö"), "Oe" }, { new String("ä"), "ae" }, { new String("ü"), "ue" }, { new String("ö"), "oe" }, { new String("ß"), "ss" } };
+	private static String[][] UMLAUT_REPLACEMENTS = { { "Ä", "Ae" }, { "Ü", "Ue" }, { "Ö", "Oe" }, { "ä", "ae" }, { "ü", "ue" }, { "ö", "oe" }, { "ß", "ss" } };
 	private static String[] dateFormats = {"dd.MM.yyyy", "yyyy-MM-dd'T'HH:mm:ss", "yyyy-MM-dd"}; 
 	public static String standardDateFormat = "yyyy-MM-dd'T'HH:mm:ss";
 	public static String intFormat = "0";
@@ -25,7 +25,7 @@ public class StrUtil {
 		
 		int i;
 		while ((i = name.indexOf("_")) > -1) {
-			 name.setCharAt(i+1, Character.toUpperCase(name.charAt(i+1)));
+			 name.setCharAt(i + 1, Character.toUpperCase(name.charAt(i + 1)));
 			 name.deleteCharAt(i);
 		}
 		
@@ -65,7 +65,7 @@ public class StrUtil {
 	
 	public static Optional<Integer> parseInt(String s) {
 		try {
-			return Optional.of(new Integer(Integer.parseInt(s.trim())));
+			return Optional.of(Integer.parseInt(s.trim()));
 		} catch (Exception e) {
 			return Optional.empty();
 		}
@@ -74,7 +74,7 @@ public class StrUtil {
 	public static Optional<Double> parseDouble(String s) {
 		s = s.replace(',', '.');
 		try {
-			return Optional.of(new Double(Double.parseDouble(s.trim())));
+			return Optional.of(Double.parseDouble(s.trim()));
 		} catch (Exception e) {
 			return Optional.empty();
 		}
@@ -84,9 +84,9 @@ public class StrUtil {
 		try {
 			Optional<Double> dVal = StrUtil.parseDouble(s);
 			if (dVal.isPresent())
-				return Optional.of(new Boolean(dVal.get() > 0));
+				return Optional.of(dVal.get() > 0);
 			else
-				return Optional.of(new Boolean(s.trim()));
+				return Optional.of(Boolean.valueOf(s.trim()));
 		} catch (Exception e) {
 			return Optional.empty();
 		}

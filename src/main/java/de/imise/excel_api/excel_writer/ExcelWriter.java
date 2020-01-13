@@ -30,24 +30,6 @@ public class ExcelWriter {
 		}
 	}
 	
-//	private static void setIntCellFormat(Cell cell) {
-//		CellStyle style = cell.getCellStyle();
-//		style.setDataFormat(cell.getSheet().getWorkbook().createDataFormat().getFormat("0"));
-//		cell.setCellStyle(style);
-//	}
-//
-//	private static void setDoubleCellFormat(Cell cell) {
-//		CellStyle style = cell.getCellStyle();
-//		style.setDataFormat(cell.getSheet().getWorkbook().createDataFormat().getFormat("0.00"));
-//		cell.setCellStyle(style);
-//	}
-//
-//	private static void setDateCellFormat(Cell cell) {
-//		CellStyle style = cell.getCellStyle();
-//		style.setDataFormat((short) 0x16);
-//		cell.setCellStyle(style);
-//	}
-	
 	public static void setValue(Row row, int colNum, String value) {
 		getCell(row, colNum).setCellValue(value);
 	}
@@ -55,19 +37,16 @@ public class ExcelWriter {
 	public static void setValue(Row row, int colNum, int value) {
 		Cell c = getCell(row, colNum);
 		c.setCellValue(value);
-//		setIntCellFormat(c);
 	}
 
 	public static void setValue(Row row, int colNum, double value) {
 		Cell c = getCell(row, colNum);
 		c.setCellValue(value);
-//		setDoubleCellFormat(c);
 	}
 
 	public static void setValue(Row row, int colNum, Date value) {
 		Cell c = getCell(row, colNum);
 		c.setCellValue(value);
-//		setDateCellFormat(c);
 	}
 	
 	public static void setDateValue(Row row, int colNum, String value) throws ParseException {
@@ -131,85 +110,73 @@ public class ExcelWriter {
 	}
 	
 	public static void setValues(Row row, int colNum, String separator, String... values) {
-		String vals = "";
+		StringBuilder vals = new StringBuilder();
 		for (int i = 0; i < values.length; i++) {
-			if (i > 0)
-				vals += separator;
-			
-			vals += values[i];
+			if (i > 0) vals.append(separator);
+			vals.append(values[i]);
 		}
 		
-		setValue(row, colNum, vals);
+		setValue(row, colNum, vals.toString());
 	}
 	
 	public static void setValues(Row row, int colNum, String separator, int... values) {
-		String vals = "";
+		StringBuilder vals = new StringBuilder();
 		for (int i = 0; i < values.length; i++) {
-			if (i > 0)
-				vals += separator;
-			
-			vals += values[i];
+			if (i > 0) vals.append(separator);
+			vals.append(values[i]);
 		}
 		
-		setValue(row, colNum, vals);
+		setValue(row, colNum, vals.toString());
 	}
 	
 	public static void setValues(Row row, int colNum, String separator, double... values) {
-		String vals = "";
+		StringBuilder vals = new StringBuilder();
 		for (int i = 0; i < values.length; i++) {
-			if (i > 0)
-				vals += separator;
-			
-			vals += values[i];
+			if (i > 0) vals.append(separator);
+			vals.append(values[i]);
 		}
 		
-		setValue(row, colNum, vals);
+		setValue(row, colNum, vals.toString());
 	}
 	
 	public static void setValues(Row row, int colNum, String separator, Date... values) {
-		String vals = "";
+		StringBuilder vals = new StringBuilder();
 		for (int i = 0; i < values.length; i++) {
-			if (i > 0)
-				vals += separator;
-			
-			vals += StrUtil.formatDate(values[i]);
+			if (i > 0) vals.append(separator);
+			vals.append(StrUtil.formatDate(values[i]));
 		}
 		
-		setValue(row, colNum, vals);
+		setValue(row, colNum, vals.toString());
 	}
 	
 	public static void setDateValues(Row row, int colNum, String separator, String... values) throws ParseException {
-		String vals = "";
+		StringBuilder vals = new StringBuilder();
 		for (int i = 0; i < values.length; i++) {
-			if (i > 0)
-				vals += separator;
+			if (i > 0) vals.append(separator);
 			
 			Optional<Date> date = StrUtil.parseDate(values[i]);
 			if (date.isPresent())
-				vals += values[i];
+				vals.append(values[i]);
 			else
 				throw new ParseException("Wrong date format: '" + values[i] + "'!", 0);
 		}
 		
-		setValue(row, colNum, vals);
+		setValue(row, colNum, vals.toString());
 	}
 	
 	public static void setValues(Row row, int colNum, String separator, boolean... values) {
-		String vals = "";
+		StringBuilder vals = new StringBuilder();
 		for (int i = 0; i < values.length; i++) {
-			if (i > 0)
-				vals += separator;
-			
-			vals += values[i];
+			if (i > 0) vals.append(separator);
+			vals.append(values[i]);
 		}
-		
-		setValue(row, colNum, vals);
+
+		setValue(row, colNum, vals.toString());
 	}
 	
 	public static Row getRow(Sheet sheet, int rowNum) {
 		Row row = sheet.getRow(rowNum);
-		if (row == null)
-			row = sheet.createRow(rowNum);
+		if (row == null) row = sheet.createRow(rowNum);
 		
 		return row;
 	}
@@ -220,22 +187,17 @@ public class ExcelWriter {
 
 	public static Cell getCell(Row row, int colNum) {
 		Cell cell = row.getCell(colNum);
-		if (cell == null)
-			cell = row.createCell(colNum);
+		if (cell == null) cell = row.createCell(colNum);
 		
 		return cell;
 	}
 	
 	public static void clearCell(Cell cell) {
-		if (cell != null) {
-			cell.setCellType(CellType.BLANK);
-//			cell.setCellStyle(cell.getRow().getSheet().getWorkbook().createCellStyle());
-		}
+		if (cell != null) cell.setCellType(CellType.BLANK);
 	}
 	
 	public static void clearCell(Row row, int colNum) {
-		if (row != null)
-			clearCell(row.getCell(colNum));
+		if (row != null) clearCell(row.getCell(colNum));
 	}
 
 	public static void clearCell(Sheet sheet, int rowNum, int colNum) {
@@ -294,8 +256,7 @@ public class ExcelWriter {
 	
 	public static void addEmptyTableRecord(Sheet sheet, int oldRowNum, int newRowNum, int firstColNum, int lastColNum) {
 		Row oldRow = sheet.getRow(oldRowNum);
-		if (oldRow == null)
-			return;
+		if (oldRow == null) return;
 		
 		for (int i = firstColNum; i <= lastColNum; i++)
 			copyCellStyles(getCell(oldRow, i), getCell(sheet, newRowNum, i));
@@ -336,6 +297,7 @@ public class ExcelWriter {
 			sheet.createRow(rowNum);
 	}
 
+	@SuppressWarnings("unused")
 	public static void insertCol(Sheet sheet, int colNum, int lastColNum) {
 		sheet.shiftColumns(colNum, lastColNum, 1);
 	}
@@ -349,7 +311,8 @@ public class ExcelWriter {
 			}
 		}
 	}
-	
+
+	@SuppressWarnings("unused")
 	public static void deleteRow(Sheet sheet, int rowNum) {
 		sheet.removeRow(sheet.getRow(rowNum));
         if (rowNum < sheet.getLastRowNum()) {
@@ -367,23 +330,4 @@ public class ExcelWriter {
             updateCellReferencesForShifting(sheet, startRowNum);
 		}
 	}
-	
-//	public static void deleteRow(Sheet sheet, int rowNum) {
-//		sheet.removeRow(sheet.getRow(rowNum));
-//		for (int i = rowNum + 1; i <= sheet.getLastRowNum(); i++) {
-//			for (Cell cell : sheet.getRow(i))
-//				copyCell(cell, sheet.getRow(i-1).getCell(cell.getColumnIndex()));
-//		}
-//	}
-//
-//	public static void deleteRows(Sheet sheet, int startRowNum, int endRowNum) {
-//		for (int i = startRowNum; i <= endRowNum; i++)
-//			sheet.removeRow(sheet.getRow(i));
-//		
-//		for (int i = endRowNum + 1; i <= sheet.getLastRowNum(); i++) {
-//			for (Cell cell : sheet.getRow(i))
-//				copyCell(cell, sheet.getRow(i-(endRowNum-startRowNum+1)).getCell(cell.getColumnIndex()));
-//		}
-//	}
-	
 }
