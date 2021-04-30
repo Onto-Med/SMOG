@@ -2,11 +2,13 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>de.imise.excel_api</groupId>
 	<artifactId>smog</artifactId>
-	<version>1.0.1</version>
+	<version>1.0.2</version>
 	<description>Generates Java programming models for annotated Microsoft Excel templates.</description>
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<maven.compiler.source>8</maven.compiler.source>
+		<maven.compiler.target>8</maven.compiler.target>
 	</properties>
 
 	<distributionManagement>
@@ -45,18 +47,5 @@
 				<filtering>true</filtering>
 			</resource>
 		</resources>
-
-		<sourceDirectory>src/main/java</sourceDirectory>
-
-		<plugins>
-			<plugin>
-				<artifactId>maven-compiler-plugin</artifactId>
-				<version>3.5.1</version>
-				<configuration>
-					<source>1.8</source>
-					<target>1.8</target>
-				</configuration>
-			</plugin>
-		</plugins>
 	</build>
 </project>
