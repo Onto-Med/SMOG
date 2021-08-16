@@ -1,0 +1,29 @@
+title: "Spreadsheet Model Generator (SMOG)"
+abstract: "A Lightweight Tool for Object-Spreadsheet Mapping."
+authors:
+  -
+    affiliation: "University of Leipzig"
+    family-names: Uciteli
+    given-names: Alexandr
+    orcid: "https://orcid.org/0000-0001-9558-5352"
+  -
+    affiliation: "University of Leipzig"
+    family-names: Beger
+    given-names: Christoph
+    orcid: "https://orcid.org/0000-0002-1166-0368"
+  -
+    affiliation: "University of Leipzig"
+    family-names: Kropf
+    given-names: Stefan
+    orcid: "https://orcid.org/0000-0003-1305-8108"
+  -
+    affiliation: "University of Leipzig"
+    family-names: Herre
+    given-names: Heinrich
+cff-version: "1.1.0"
+date-released: 2021-04-30
+keywords: 
+  - "spreadsheet-mapping"
+license: MIT
+message: "If you use this software, please cite it using these metadata."
+version: "v1.0.2"
