@@ -413,12 +413,33 @@ public class ExcelReader {
         getWorkbook(new File(file)).getSheet(sheet), treeRow, treeCol, tabRow, tabCol);
   }
 
+  public static List<DynamicTreeTable> getDynamicTreeTables(String file) {
+    List<DynamicTreeTable> treeTabs = new ArrayList<>();
+    for (Sheet sheet : getWorkbook(new File(file))) {
+      DynamicTreeTable treeTab = getDynamicTreeTable(sheet);
+      if (treeTab != null) treeTabs.add(treeTab);
+    }
+    return treeTabs;
+  }
+
   public static DynamicTreeTable getDynamicTreeTable(String file, String sheetName) {
-    Sheet sheet = getWorkbook(new File(file)).getSheet(sheetName);
-    Coordinates treeCoord = find("Tree", sheet).get();
-    Coordinates tabCoord = find("Table", sheet).get();
+    return getDynamicTreeTable(getWorkbook(new File(file)), sheetName);
+  }
+
+  public static DynamicTreeTable getDynamicTreeTable(Workbook workbook, String sheetName) {
+    return getDynamicTreeTable(workbook.getSheet(sheetName));
+  }
+
+  public static DynamicTreeTable getDynamicTreeTable(Sheet sheet) {
+    Optional<Coordinates> treeCoord = find("Tree", sheet);
+    Optional<Coordinates> tabCoord = find("Table", sheet);
+    if (treeCoord.isEmpty() || tabCoord.isEmpty()) return null;
     return getDynamicTreeTable(
-        sheet, treeCoord.getRow(), treeCoord.getCol(), tabCoord.getRow(), tabCoord.getCol());
+        sheet,
+        treeCoord.get().getRow(),
+        treeCoord.get().getCol(),
+        tabCoord.get().getRow(),
+        tabCoord.get().getCol());
   }
 
   public static Optional<Coordinates> find(String mark, String entityName, Sheet sheet) {
