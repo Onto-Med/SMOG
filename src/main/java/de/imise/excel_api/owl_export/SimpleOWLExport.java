@@ -10,9 +10,9 @@ import org.semanticweb.owlapi.apibinding.OWLManager;
 import org.semanticweb.owlapi.formats.RDFXMLDocumentFormat;
 import org.semanticweb.owlapi.model.IRI;
 import org.semanticweb.owlapi.model.OWLAnnotationProperty;
+import org.semanticweb.owlapi.model.OWLAnnotationValue;
 import org.semanticweb.owlapi.model.OWLClass;
 import org.semanticweb.owlapi.model.OWLDataFactory;
-import org.semanticweb.owlapi.model.OWLLiteral;
 import org.semanticweb.owlapi.model.OWLOntology;
 import org.semanticweb.owlapi.model.OWLOntologyCreationException;
 import org.semanticweb.owlapi.model.OWLOntologyManager;
@@ -92,8 +92,8 @@ public class SimpleOWLExport {
   }
 
   private void addAnnotations(String clsName, String propName, String propValues) {
-    if (propValues.contains(",")) {
-      String[] propVals = propValues.split("\\s*,\\s*");
+    if (propValues.contains("|")) {
+      String[] propVals = propValues.split("\\s*\\Q|\\E\\s*");
       for (String propVal : propVals) addAnnotation(clsName, propName, propVal);
     } else addAnnotation(clsName, propName, propValues);
   }
@@ -101,12 +101,13 @@ public class SimpleOWLExport {
   private void addAnnotation(String clsName, String propName, String propValue) {
     OWLClass cls = getClass(clsName);
     OWLAnnotationProperty prop = null;
-    OWLLiteral val = null;
+    OWLAnnotationValue val = null;
     if (propName.contains(":")) {
-      String[] propNameLang = propName.split("\\s*:\\s*");
-      prop = getProperty(clean(propNameLang[0]));
-      String lang = clean(propNameLang[1]);
-      val = fac.getOWLLiteral(propValue, lang);
+      String[] propNameAttr = propName.split("\\s*:\\s*");
+      prop = getProperty(clean(propNameAttr[0]));
+      String attr = clean(propNameAttr[1]);
+      if ("ref".equalsIgnoreCase(attr)) val = getClass(clean(propValue)).getIRI();
+      else val = fac.getOWLLiteral(propValue, attr);
     } else {
       prop = getProperty(clean(propName));
       val = fac.getOWLLiteral(propValue);
@@ -120,7 +121,7 @@ public class SimpleOWLExport {
     return fac.getOWLAnnotationProperty(IRI.create(ontoNS, propName));
   }
 
-  private void addAnnotation(OWLClass sbj, OWLAnnotationProperty prop, OWLLiteral obj) {
+  private void addAnnotation(OWLClass sbj, OWLAnnotationProperty prop, OWLAnnotationValue obj) {
     ont.add(fac.getOWLAnnotationAssertionAxiom(prop, sbj.getIRI(), obj));
   }
 

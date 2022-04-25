@@ -112,7 +112,7 @@ public class DynamicTreeTableTest {
         EntitySearcher.getAnnotationObjects(
                 c112,
                 ont,
-                exp.getFactory().getOWLAnnotationProperty("https://www.test.de/ontologies/ont#P1"))
+                exp.getFactory().getOWLAnnotationProperty("https://www.test.de/ontologies/ont#p1"))
             .map(a -> a.getValue())
             .collect(Collectors.toSet());
 
@@ -122,7 +122,7 @@ public class DynamicTreeTableTest {
         EntitySearcher.getAnnotationObjects(
                 c112,
                 ont,
-                exp.getFactory().getOWLAnnotationProperty("https://www.test.de/ontologies/ont#P2"))
+                exp.getFactory().getOWLAnnotationProperty("https://www.test.de/ontologies/ont#p2"))
             .map(a -> a.getValue())
             .collect(Collectors.toSet());
 
@@ -132,10 +132,25 @@ public class DynamicTreeTableTest {
         EntitySearcher.getAnnotationObjects(
                 c112,
                 ont,
-                exp.getFactory().getOWLAnnotationProperty("https://www.test.de/ontologies/ont#P3"))
+                exp.getFactory().getOWLAnnotationProperty("https://www.test.de/ontologies/ont#p3"))
             .map(a -> a.getValue())
             .collect(Collectors.toSet());
 
     assertEquals(Sets.newHashSet(exp.getFactory().getOWLLiteral("v44")), p3);
+
+    Set<OWLAnnotationValue> rel =
+        EntitySearcher.getAnnotationObjects(
+                c112,
+                ont,
+                exp.getFactory()
+                    .getOWLAnnotationProperty("https://www.test.de/ontologies/ont#relation"))
+            .map(a -> a.getValue())
+            .collect(Collectors.toSet());
+
+    assertEquals(
+        Sets.newHashSet(
+            exp.getFactory().getOWLClass("https://www.test.de/ontologies/ont#C111").getIRI(),
+            exp.getFactory().getOWLClass("https://www.test.de/ontologies/ont#C113").getIRI()),
+        rel);
   }
 }
