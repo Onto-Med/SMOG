@@ -85,6 +85,7 @@ public class SimpleOWLExport {
   }
 
   private void addAnnotations(String clsName, Map<String, DynamicTableField> props) {
+    if (props == null) return;
     for (Entry<String, DynamicTableField> prop : props.entrySet()) {
       Optional<String> val = prop.getValue().getValue();
       if (val.isPresent()) addAnnotations(clsName, prop.getKey(), val.get());
