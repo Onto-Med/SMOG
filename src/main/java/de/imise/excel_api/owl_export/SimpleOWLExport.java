@@ -13,6 +13,7 @@ import org.semanticweb.owlapi.model.OWLAnnotationProperty;
 import org.semanticweb.owlapi.model.OWLAnnotationValue;
 import org.semanticweb.owlapi.model.OWLClass;
 import org.semanticweb.owlapi.model.OWLDataFactory;
+import org.semanticweb.owlapi.model.OWLObjectProperty;
 import org.semanticweb.owlapi.model.OWLOntology;
 import org.semanticweb.owlapi.model.OWLOntologyCreationException;
 import org.semanticweb.owlapi.model.OWLOntologyManager;
@@ -56,7 +57,7 @@ public class SimpleOWLExport {
     for (DynamicTreeTableNode root : tt.getRootNodes()) {
       String clsName = clean(root.getName());
       addClass(clsName);
-      addAnnotations(clsName, root.getProperties());
+      addProperties(clsName, root.getProperties());
       for (DynamicTreeTableNode node : root.getChildren()) addClass(node, clsName);
     }
   }
@@ -64,7 +65,7 @@ public class SimpleOWLExport {
   private void addClass(DynamicTreeTableNode node, String superClsName) {
     String clsName = clean(node.getName());
     addClass(clsName, superClsName);
-    addAnnotations(clsName, node.getProperties());
+    addProperties(clsName, node.getProperties());
     for (DynamicTreeTableNode child : node.getChildren()) addClass(child, clsName);
   }
 
@@ -84,46 +85,57 @@ public class SimpleOWLExport {
     return fac.getOWLClass(IRI.create(ontoNS, clsName));
   }
 
-  private void addAnnotations(String clsName, Map<String, DynamicTableField> props) {
+  private void addProperties(String clsName, Map<String, DynamicTableField> props) {
     if (props == null) return;
     for (Entry<String, DynamicTableField> prop : props.entrySet()) {
       Optional<String> val = prop.getValue().getValue();
-      if (val.isPresent()) addAnnotations(clsName, prop.getKey(), val.get());
+      if (val.isPresent()) addProperties(clsName, prop.getKey().trim(), val.get().trim());
     }
   }
 
-  private void addAnnotations(String clsName, String propName, String propValues) {
+  private void addProperties(String clsName, String propName, String propValues) {
     if (propValues.contains("|")) {
       String[] propVals = propValues.split("\\s*\\Q|\\E\\s*");
-      for (String propVal : propVals) addAnnotation(clsName, propName, propVal);
-    } else addAnnotation(clsName, propName, propValues);
+      for (String propVal : propVals) addProperty(clsName, propName, propVal);
+    } else addProperty(clsName, propName, propValues);
   }
 
-  private void addAnnotation(String clsName, String propName, String propValue) {
+  private void addProperty(String clsName, String propName, String propValue) {
     OWLClass cls = getClass(clsName);
-    OWLAnnotationProperty prop = null;
-    OWLAnnotationValue val = null;
     if (propName.contains(":")) {
       String[] propNameAttr = propName.split("\\s*:\\s*");
-      prop = getProperty(clean(propNameAttr[0]));
-      String attr = clean(propNameAttr[1]);
-      if ("ref".equalsIgnoreCase(attr)) val = getClass(clean(propValue)).getIRI();
-      else val = fac.getOWLLiteral(propValue, attr);
-    } else {
-      prop = getProperty(clean(propName));
-      val = fac.getOWLLiteral(propValue);
-    }
-    addAnnotation(cls, prop, val);
+      addComplexProperty(cls, propNameAttr[0], propNameAttr[1].toLowerCase(), propValue);
+    } else addAnnotation(cls, getAnnotationProperty(propName), fac.getOWLLiteral(propValue));
   }
 
-  private OWLAnnotationProperty getProperty(String propName) {
-    if ("comment".equalsIgnoreCase(propName)) return fac.getRDFSComment();
-    if ("label".equalsIgnoreCase(propName)) return fac.getRDFSLabel();
+  private void addComplexProperty(
+      OWLClass cls, String propName, String propAttr, String propValue) {
+    if (propAttr.startsWith("ref")) {
+      OWLClass valCls = getClass(clean(propValue));
+      if ("ref-a".equals(propAttr))
+        addAnnotation(cls, getAnnotationProperty(propName), valCls.getIRI());
+      else if ("ref-r".equals(propAttr)) addRestriction(cls, getObjectProperty(propName), valCls);
+    } else
+      addAnnotation(cls, getAnnotationProperty(propName), fac.getOWLLiteral(propValue, propAttr));
+  }
+
+  private OWLAnnotationProperty getAnnotationProperty(String propName) {
+    propName = clean(propName).toLowerCase();
+    if ("comment".equals(propName)) return fac.getRDFSComment();
+    if ("label".equals(propName)) return fac.getRDFSLabel();
     return fac.getOWLAnnotationProperty(IRI.create(ontoNS, propName));
+  }
+
+  private OWLObjectProperty getObjectProperty(String propName) {
+    return fac.getOWLObjectProperty(IRI.create(ontoNS, clean(propName).toLowerCase()));
   }
 
   private void addAnnotation(OWLClass sbj, OWLAnnotationProperty prop, OWLAnnotationValue obj) {
     ont.add(fac.getOWLAnnotationAssertionAxiom(prop, sbj.getIRI(), obj));
+  }
+
+  private void addRestriction(OWLClass cls, OWLObjectProperty prop, OWLClass valCls) {
+    ont.add(fac.getOWLSubClassOfAxiom(cls, fac.getOWLObjectSomeValuesFrom(prop, valCls)));
   }
 
   private String clean(String str) {
