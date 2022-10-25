@@ -110,7 +110,7 @@ public class SimpleOWLExport {
       String[] propNameAttr = mainPart.split("\\s*:\\s*");
       propName = propNameAttr[0];
       String propAttr = propNameAttr[1].toLowerCase();
-      if ("ref-a".equals(propAttr))
+      if ("ref-a".equals(propAttr) || "ref".equals(propAttr))
         addAnnotation(cls, getAnnotationProperty(propName), getClass(propValue).getIRI(), annOfAnn);
       else if ("ref-r".equals(propAttr))
         addRestriction(cls, getObjectProperty(propName), getClass(propValue));
