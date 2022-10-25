@@ -9,6 +9,7 @@ import java.util.Optional;
 import org.semanticweb.owlapi.apibinding.OWLManager;
 import org.semanticweb.owlapi.formats.RDFXMLDocumentFormat;
 import org.semanticweb.owlapi.model.IRI;
+import org.semanticweb.owlapi.model.OWLAnnotation;
 import org.semanticweb.owlapi.model.OWLAnnotationProperty;
 import org.semanticweb.owlapi.model.OWLAnnotationValue;
 import org.semanticweb.owlapi.model.OWLClass;
@@ -55,7 +56,7 @@ public class SimpleOWLExport {
 
   private void addDynamicTreeTable(DynamicTreeTable tt) {
     for (DynamicTreeTableNode root : tt.getRootNodes()) {
-      String clsName = clean(root.getName());
+      String clsName = root.getName();
       addClass(clsName);
       addProperties(clsName, root.getProperties());
       for (DynamicTreeTableNode node : root.getChildren()) addClass(node, clsName);
@@ -63,7 +64,7 @@ public class SimpleOWLExport {
   }
 
   private void addClass(DynamicTreeTableNode node, String superClsName) {
-    String clsName = clean(node.getName());
+    String clsName = node.getName();
     addClass(clsName, superClsName);
     addProperties(clsName, node.getProperties());
     for (DynamicTreeTableNode child : node.getChildren()) addClass(child, clsName);
@@ -82,7 +83,7 @@ public class SimpleOWLExport {
   }
 
   private OWLClass getClass(String clsName) {
-    return fac.getOWLClass(IRI.create(ontoNS, clsName));
+    return fac.getOWLClass(IRI.create(ontoNS, clean(clsName)));
   }
 
   private void addProperties(String clsName, Map<String, DynamicTableField> props) {
@@ -93,45 +94,68 @@ public class SimpleOWLExport {
     }
   }
 
-  private void addProperties(String clsName, String propName, String propValues) {
+  private void addProperties(String clsName, String propSpec, String propValues) {
     if (propValues.contains("|")) {
       String[] propVals = propValues.split("\\s*\\Q|\\E\\s*");
-      for (String propVal : propVals) addProperty(clsName, propName, propVal);
-    } else addProperty(clsName, propName, propValues);
+      for (String propVal : propVals) addProperty(clsName, propSpec, propVal);
+    } else addProperty(clsName, propSpec, propValues);
   }
 
-  private void addProperty(String clsName, String propName, String propValue) {
+  private void addProperty(String clsName, String propSpec, String propValue) {
     OWLClass cls = getClass(clsName);
-    if (propName.contains(":")) {
-      String[] propNameAttr = propName.split("\\s*:\\s*");
-      addComplexProperty(cls, propNameAttr[0], propNameAttr[1].toLowerCase(), propValue);
-    } else addAnnotation(cls, getAnnotationProperty(propName), fac.getOWLLiteral(propValue));
+    OWLAnnotation annOfAnn = getAnnotationOfAnnotation(propSpec);
+    String mainPart = getPropMainPartSpec(propSpec);
+    String propName = null;
+    if (mainPart.contains(":")) {
+      String[] propNameAttr = mainPart.split("\\s*:\\s*");
+      propName = propNameAttr[0];
+      String propAttr = propNameAttr[1].toLowerCase();
+      if ("ref-a".equals(propAttr))
+        addAnnotation(cls, getAnnotationProperty(propName), getClass(propValue).getIRI(), annOfAnn);
+      else if ("ref-r".equals(propAttr))
+        addRestriction(cls, getObjectProperty(propName), getClass(propValue));
+      else
+        addAnnotation(
+            cls, getAnnotationProperty(propName), fac.getOWLLiteral(propValue, propAttr), annOfAnn);
+    } else
+      addAnnotation(cls, getAnnotationProperty(propSpec), fac.getOWLLiteral(propValue), annOfAnn);
   }
 
-  private void addComplexProperty(
-      OWLClass cls, String propName, String propAttr, String propValue) {
-    if (propAttr.startsWith("ref")) {
-      OWLClass valCls = getClass(clean(propValue));
-      if ("ref-a".equals(propAttr))
-        addAnnotation(cls, getAnnotationProperty(propName), valCls.getIRI());
-      else if ("ref-r".equals(propAttr)) addRestriction(cls, getObjectProperty(propName), valCls);
-    } else
-      addAnnotation(cls, getAnnotationProperty(propName), fac.getOWLLiteral(propValue, propAttr));
+  private String getPropMainPartSpec(String propSpec) {
+    return (propSpec.contains("(")) ? propSpec.substring(0, propSpec.indexOf('(')) : propSpec;
+  }
+
+  private OWLAnnotation getAnnotationOfAnnotation(String propSpec) {
+    if (!propSpec.contains("(")) return null;
+    String annOfAnnSpec = propSpec.substring(propSpec.indexOf('(') + 1, propSpec.indexOf(')'));
+    if (!annOfAnnSpec.contains(":")) return null;
+    String[] propAr = annOfAnnSpec.split("\\s*:\\s*");
+    OWLAnnotationProperty prop = getAnnotationProperty(propAr[0]);
+    OWLAnnotationValue val = null;
+    if (propAr.length > 2) {
+      if (propAr[1].startsWith("ref")) val = getClass(propAr[2]).getIRI();
+      else val = fac.getOWLLiteral(propAr[2], propAr[1]);
+    } else val = fac.getOWLLiteral(propAr[1]);
+    return fac.getOWLAnnotation(prop, val);
   }
 
   private OWLAnnotationProperty getAnnotationProperty(String propName) {
-    propName = clean(propName).toLowerCase();
+    propName = cleanProp(propName);
     if ("comment".equals(propName)) return fac.getRDFSComment();
     if ("label".equals(propName)) return fac.getRDFSLabel();
+    if ("alt_label".equals(propName) || "altlabel".equals(propName))
+      return fac.getOWLAnnotationProperty("http://www.w3.org/2004/02/skos/core#altLabel");
     return fac.getOWLAnnotationProperty(IRI.create(ontoNS, propName));
   }
 
   private OWLObjectProperty getObjectProperty(String propName) {
-    return fac.getOWLObjectProperty(IRI.create(ontoNS, clean(propName).toLowerCase()));
+    return fac.getOWLObjectProperty(IRI.create(ontoNS, cleanProp(propName)));
   }
 
-  private void addAnnotation(OWLClass sbj, OWLAnnotationProperty prop, OWLAnnotationValue obj) {
-    ont.add(fac.getOWLAnnotationAssertionAxiom(prop, sbj.getIRI(), obj));
+  private void addAnnotation(
+      OWLClass sbj, OWLAnnotationProperty prop, OWLAnnotationValue obj, OWLAnnotation annOfAnn) {
+    if (annOfAnn == null) ont.add(fac.getOWLAnnotationAssertionAxiom(prop, sbj.getIRI(), obj));
+    else ont.add(fac.getOWLAnnotationAssertionAxiom(prop, sbj.getIRI(), obj, List.of(annOfAnn)));
   }
 
   private void addRestriction(OWLClass cls, OWLObjectProperty prop, OWLClass valCls) {
@@ -140,5 +164,9 @@ public class SimpleOWLExport {
 
   private String clean(String str) {
     return str.trim().replaceAll("[^A-Za-z0-9_]+", "_");
+  }
+
+  private String cleanProp(String str) {
+    return clean(str).toLowerCase();
   }
 }
