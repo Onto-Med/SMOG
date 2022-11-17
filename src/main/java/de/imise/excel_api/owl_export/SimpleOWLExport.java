@@ -108,9 +108,8 @@ public class SimpleOWLExport {
     else {
       OWLAnnotation ann = getAnnotation(mainProp);
       List<OWLAnnotation> annOfAnns = new ArrayList<>();
-      if (propSpec.hasAdditionalProperty())
-        annOfAnns.add(getAnnotation(propSpec.getAdditionalProperty()));
-      if (propSpec.hasValueProperty()) annOfAnns.add(getAnnotation(propSpec.getValueProperty()));
+      for (Property p : propSpec.getAdditionalProperties()) annOfAnns.add(getAnnotation(p));
+      for (Property p : propSpec.getValueProperties()) annOfAnns.add(getAnnotation(p));
       addAnnotation(cls, ann, annOfAnns);
     }
   }

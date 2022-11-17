@@ -2,10 +2,13 @@ package de.imise.excel_api.owl_export;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class PropertyReader {
 
-  private static final String VALUE_SPLIT = "\\s*\\Q|\\E\\s*";
+  private static final String VALUE_SPLIT = "\\s*\\|\\s*";
+  private static final String PROPERTY_SPLIT = "\\s*\\\\\\s*";
   private static final String ATTRIBUTE_SPLIT = "\\s*:\\s*";
   private static final String OPEN_BRACKET = "{";
   private static final String CLOSED_BRACKET = "}";
@@ -27,14 +30,16 @@ public class PropertyReader {
 
     Property mainProp = new Property(propMainPart.split(ATTRIBUTE_SPLIT), valMainPart);
     PropertySpec propertySpec = new PropertySpec(mainProp);
-
-    if (propAddPart != null)
-      propertySpec.setAdditionalProperty(new Property(propAddPart.split(ATTRIBUTE_SPLIT)));
-
-    if (valAddPart != null)
-      propertySpec.setValueProperty(new Property(valAddPart.split(ATTRIBUTE_SPLIT)));
+    if (propAddPart != null) propertySpec.setAdditionalProperties(getProperties(propAddPart));
+    if (valAddPart != null) propertySpec.setValueProperties(getProperties(valAddPart));
 
     return propertySpec;
+  }
+
+  private static List<Property> getProperties(String spec) {
+    return Stream.of(spec.split(PROPERTY_SPLIT))
+        .map(p -> new Property(p.split(ATTRIBUTE_SPLIT)))
+        .collect(Collectors.toList());
   }
 
   private static String getMainPart(String spec) {

@@ -1,10 +1,13 @@
 package de.imise.excel_api.owl_export;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class PropertySpec {
 
   private Property mainProperty;
-  private Property additionalProperty;
-  private Property valueProperty;
+  private List<Property> additionalProperties = new ArrayList<>();
+  private List<Property> valueProperties = new ArrayList<>();
 
   public PropertySpec(Property mainProperty) {
     this.mainProperty = mainProperty;
@@ -14,27 +17,19 @@ public class PropertySpec {
     return mainProperty;
   }
 
-  public Property getAdditionalProperty() {
-    return additionalProperty;
+  public List<Property> getAdditionalProperties() {
+    return additionalProperties;
   }
 
-  public boolean hasAdditionalProperty() {
-    return additionalProperty != null;
+  public void setAdditionalProperties(List<Property> additionalProperties) {
+    this.additionalProperties = additionalProperties;
   }
 
-  public void setAdditionalProperty(Property additionalProperty) {
-    this.additionalProperty = additionalProperty;
+  public List<Property> getValueProperties() {
+    return valueProperties;
   }
 
-  public Property getValueProperty() {
-    return valueProperty;
-  }
-
-  public boolean hasValueProperty() {
-    return valueProperty != null;
-  }
-
-  public void setValueProperty(Property valueProperty) {
-    this.valueProperty = valueProperty;
+  public void setValueProperties(List<Property> valueProperties) {
+    this.valueProperties = valueProperties;
   }
 }
