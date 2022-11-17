@@ -106,7 +106,7 @@ public class SimpleOWLExport {
     if (mainProp.hasReferenceRestriction())
       addRestriction(cls, getObjectProperty(mainProp.getProperty()), getClass(mainProp.getValue()));
     else {
-      OWLAnnotation ann = getAnnotation(propSpec.getMainProperty());
+      OWLAnnotation ann = getAnnotation(mainProp);
       List<OWLAnnotation> annOfAnns = new ArrayList<>();
       if (propSpec.hasAdditionalProperty())
         annOfAnns.add(getAnnotation(propSpec.getAdditionalProperty()));
@@ -114,40 +114,6 @@ public class SimpleOWLExport {
       addAnnotation(cls, ann, annOfAnns);
     }
   }
-
-  //  private void addProperties(String clsName, String propSpec, String propValues) {
-  //    if (propValues.contains("|")) {
-  //      String[] propVals = propValues.split("\\s*\\Q|\\E\\s*");
-  //      for (String propVal : propVals) addProperty(clsName, propSpec, propVal);
-  //    } else addProperty(clsName, propSpec, propValues);
-  //  }
-  //
-  //  private void addProperty(String clsName, String propSpec, String propValue) {
-  //    OWLClass cls = getClass(clsName);
-  //    OWLAnnotation annOfAnn = getAnnotationOfAnnotation(propSpec);
-  //    String mainPart = getPropMainPartSpec(propSpec);
-  //    String propName = null;
-  //    if (mainPart.contains(":")) {
-  //      String[] propNameAttr = mainPart.split("\\s*:\\s*");
-  //      propName = propNameAttr[0];
-  //      String propAttr = propNameAttr[1].toLowerCase();
-  //      if ("ref-a".equals(propAttr) || "ref".equals(propAttr))
-  //        addAnnotation(cls, getAnnotationProperty(propName), getClass(propValue).getIRI(),
-  // annOfAnn);
-  //      else if ("ref-r".equals(propAttr))
-  //        addRestriction(cls, getObjectProperty(propName), getClass(propValue));
-  //      else
-  //        addAnnotation(
-  //            cls, getAnnotationProperty(propName), fac.getOWLLiteral(propValue, propAttr),
-  // annOfAnn);
-  //    } else
-  //      addAnnotation(cls, getAnnotationProperty(propSpec), fac.getOWLLiteral(propValue),
-  // annOfAnn);
-  //  }
-  //
-  //  private String getPropMainPartSpec(String propSpec) {
-  //    return (propSpec.contains("(")) ? propSpec.substring(0, propSpec.indexOf('(')) : propSpec;
-  //  }
 
   private OWLAnnotation getAnnotation(Property propSpec) {
     OWLAnnotationProperty prop = getAnnotationProperty(propSpec.getProperty());
@@ -161,20 +127,6 @@ public class SimpleOWLExport {
       return fac.getOWLLiteral(propSpec.getValue(), propSpec.getLanguage());
     return fac.getOWLLiteral(propSpec.getValue());
   }
-
-  //  private OWLAnnotation getAnnotationOfAnnotation(String propSpec) {
-  //	  if (!propSpec.contains("(")) return null;
-  //	  String annOfAnnSpec = propSpec.substring(propSpec.indexOf('(') + 1, propSpec.indexOf(')'));
-  //	  if (!annOfAnnSpec.contains(":")) return null;
-  //	  String[] propAr = annOfAnnSpec.split("\\s*:\\s*");
-  //	  OWLAnnotationProperty prop = getAnnotationProperty(propAr[0]);
-  //	  OWLAnnotationValue val = null;
-  //	  if (propAr.length > 2) {
-  //		  if (propAr[1].startsWith("ref")) val = getClass(propAr[2]).getIRI();
-  //		  else val = fac.getOWLLiteral(propAr[2], propAr[1]);
-  //	  } else val = fac.getOWLLiteral(propAr[1]);
-  //	  return fac.getOWLAnnotation(prop, val);
-  //  }
 
   private OWLAnnotationProperty getAnnotationProperty(String propName) {
     propName = cleanProp(propName);
