@@ -1,6 +1,8 @@
 package de.imise.excel_api.owl_export;
 
 import java.io.File;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -8,6 +10,7 @@ import java.util.Map.Entry;
 import java.util.Optional;
 
 import org.semanticweb.owlapi.apibinding.OWLManager;
+import org.semanticweb.owlapi.formats.RDFJsonLDDocumentFormat;
 import org.semanticweb.owlapi.formats.RDFXMLDocumentFormat;
 import org.semanticweb.owlapi.model.IRI;
 import org.semanticweb.owlapi.model.OWLAnnotation;
@@ -15,11 +18,13 @@ import org.semanticweb.owlapi.model.OWLAnnotationProperty;
 import org.semanticweb.owlapi.model.OWLAnnotationValue;
 import org.semanticweb.owlapi.model.OWLClass;
 import org.semanticweb.owlapi.model.OWLDataFactory;
+import org.semanticweb.owlapi.model.OWLDocumentFormat;
 import org.semanticweb.owlapi.model.OWLObjectProperty;
 import org.semanticweb.owlapi.model.OWLOntology;
 import org.semanticweb.owlapi.model.OWLOntologyCreationException;
 import org.semanticweb.owlapi.model.OWLOntologyManager;
 import org.semanticweb.owlapi.model.OWLOntologyStorageException;
+import org.semanticweb.owlapi.vocab.OWL2Datatype;
 
 import de.imise.excel_api.excel_reader.DynamicTableField;
 import de.imise.excel_api.excel_reader.DynamicTreeTable;
@@ -53,6 +58,10 @@ public class SimpleOWLExport {
 
   public void save(String owlFile) throws OWLOntologyStorageException {
     man.saveOntology(ont, new RDFXMLDocumentFormat(), IRI.create(new File(owlFile).toURI()));
+  }
+
+  public void save(String outputFile, OWLDocumentFormat format) throws OWLOntologyStorageException {
+    man.saveOntology(ont, format, IRI.create(new File(outputFile).toURI()));
   }
 
   private void addDynamicTreeTable(DynamicTreeTable tt) {
@@ -155,5 +164,35 @@ public class SimpleOWLExport {
 
   private String cleanProp(String str) {
     return clean(str).toLowerCase();
+  }
+
+  public void addOntoVersion(String value, OWL2Datatype datatype) {
+    addOntoAnnotation(fac.getOWLVersionInfo(), fac.getOWLLiteral(value, datatype));
+  }
+
+  public void addOntoAnnotation(OWLAnnotationProperty prop, OWLAnnotationValue val) {
+    ont.addAxiom(
+        fac.getOWLAnnotationAssertionAxiom(prop, ont.getOntologyID().getOntologyIRI().get(), val));
+  }
+
+  public static void main(String[] args)
+      throws OWLOntologyCreationException, OWLOntologyStorageException {
+    if (args.length < 3)
+      throw new IllegalArgumentException(
+          "Three arguments must be specified: ontology IRI, input .xlsx file and output file (.owl or .json)!");
+
+    String ontoIri = args[0];
+    String inFile = args[1];
+
+    String outFile = args[2];
+    OWLDocumentFormat format =
+        (outFile.endsWith("json")) ? new RDFJsonLDDocumentFormat() : new RDFXMLDocumentFormat();
+
+    SimpleOWLExport exp = new SimpleOWLExport(inFile, ontoIri);
+    exp.export();
+    exp.addOntoVersion(
+        LocalDateTime.now().format(DateTimeFormatter.ISO_LOCAL_DATE_TIME),
+        OWL2Datatype.XSD_DATE_TIME);
+    exp.save(outFile, format);
   }
 }
