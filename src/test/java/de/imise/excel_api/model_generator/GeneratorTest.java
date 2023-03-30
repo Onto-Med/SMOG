@@ -1,9 +1,9 @@
 package de.imise.excel_api.model_generator;
 
 import org.apache.commons.io.FileUtils;
-import org.junit.AfterClass;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 
 import java.io.File;
 import java.io.IOException;
@@ -16,12 +16,12 @@ public class GeneratorTest {
 		Objects.requireNonNull(GeneratorTest.class.getClassLoader().getResource("test_workbook.xlsx")).getPath());
 	private static final String OUTPUT_DIR = "test";
 
-	@BeforeClass
+	@BeforeAll
 	public static void setup() {
 		new File(OUTPUT_DIR).mkdirs();
 	}
 
-	@AfterClass
+	@AfterAll
 	public static void cleanUp() throws IOException {
 		FileUtils.deleteDirectory(new File(OUTPUT_DIR));
 	}
