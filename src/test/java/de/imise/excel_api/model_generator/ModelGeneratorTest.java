@@ -1,10 +1,10 @@
 package de.imise.excel_api.model_generator;
 
-import junit.framework.AssertionFailedError;
+import org.opentest4j.AssertionFailedError;
 import org.apache.commons.io.FileUtils;
-import org.junit.AfterClass;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 
 import java.io.File;
 import java.io.IOException;
@@ -16,7 +16,7 @@ import java.nio.file.attribute.BasicFileAttributes;
 import java.util.Arrays;
 import java.util.Objects;
 
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 
 public class ModelGeneratorTest {
@@ -25,7 +25,7 @@ public class ModelGeneratorTest {
 	private static final String EXPECTED = "expected";
 	private static final String ACTUAL   = "actual";
 
-	@BeforeClass
+	@BeforeAll
 	public static void setUp() throws Exception {
 		File actual = getActualFile();
 
@@ -35,7 +35,7 @@ public class ModelGeneratorTest {
 		assertTrue(actual.isDirectory());
 	}
 
-	@AfterClass
+	@AfterAll
 	public static void cleanUp() throws Exception {
 		FileUtils.deleteDirectory(getActualFile());
 	}
