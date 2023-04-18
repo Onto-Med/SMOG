@@ -4,6 +4,7 @@ import java.io.File;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -37,14 +38,21 @@ public class SimpleOWLExport {
   private OWLOntologyManager man;
   private OWLDataFactory fac;
   private OWLOntology ont;
-  private String ontoNS;
+  private String ns;
+  private Map<String, String> propertyPrefixes = new HashMap<>();
 
-  public SimpleOWLExport(String xlsxFile, String ontoIRI) throws OWLOntologyCreationException {
+  public SimpleOWLExport(String xlsxFile, String namespace) throws OWLOntologyCreationException {
+    this.ns = namespace.trim();
+    if (!ns.endsWith("/") && !ns.endsWith("#"))
+      throw new IllegalArgumentException("The namespace must end with '#' oder '/'!");
     treeTabs = ExcelReader.getDynamicTreeTables(xlsxFile);
     man = OWLManager.createOWLOntologyManager();
     fac = man.getOWLDataFactory();
-    ont = man.createOntology(IRI.create(ontoIRI));
-    this.ontoNS = ontoIRI + "#";
+    ont = man.createOntology(IRI.create(ns.substring(0, ns.length() - 1)));
+  }
+
+  public void addPropertyPrefix(String prop, String pref) {
+    propertyPrefixes.put(prop, pref);
   }
 
   public OWLOntology export() {
@@ -93,7 +101,7 @@ public class SimpleOWLExport {
   }
 
   private OWLClass getClass(String clsName) {
-    return fac.getOWLClass(IRI.create(ontoNS, clean(clsName)));
+    return fac.getOWLClass(IRI.create(ns, clean(clsName)));
   }
 
   private void addProperties(String clsName, Map<String, DynamicTableField> props) {
@@ -125,15 +133,17 @@ public class SimpleOWLExport {
 
   private OWLAnnotation getAnnotation(Property propSpec) {
     OWLAnnotationProperty prop = getAnnotationProperty(propSpec.getProperty());
-    OWLAnnotationValue val = getAnnotationValue(propSpec);
+    OWLAnnotationValue val = getAnnotationValue(propSpec, prop.getIRI().getShortForm());
     return fac.getOWLAnnotation(prop, val);
   }
 
-  private OWLAnnotationValue getAnnotationValue(Property propSpec) {
+  private OWLAnnotationValue getAnnotationValue(Property propSpec, String propName) {
     if (propSpec.hasReference()) return getClass(propSpec.getValue()).getIRI();
     if (propSpec.hasLanguage())
       return fac.getOWLLiteral(propSpec.getValue(), propSpec.getLanguage());
-    return fac.getOWLLiteral(propSpec.getValue());
+    String pref = propertyPrefixes.get(propName);
+    if (pref == null) return fac.getOWLLiteral(propSpec.getValue());
+    return fac.getOWLLiteral(pref + propSpec.getValue());
   }
 
   private OWLAnnotationProperty getAnnotationProperty(String propName) {
@@ -142,11 +152,11 @@ public class SimpleOWLExport {
     if ("label".equals(propName)) return fac.getRDFSLabel();
     if ("alt_label".equals(propName) || "altlabel".equals(propName))
       return fac.getOWLAnnotationProperty("http://www.w3.org/2004/02/skos/core#altLabel");
-    return fac.getOWLAnnotationProperty(IRI.create(ontoNS, propName));
+    return fac.getOWLAnnotationProperty(IRI.create(ns, propName));
   }
 
   private OWLObjectProperty getObjectProperty(String propName) {
-    return fac.getOWLObjectProperty(IRI.create(ontoNS, cleanProp(propName)));
+    return fac.getOWLObjectProperty(IRI.create(ns, cleanProp(propName)));
   }
 
   private void addAnnotation(OWLClass sbj, OWLAnnotation ann, List<OWLAnnotation> annOfAnns) {
@@ -177,22 +187,28 @@ public class SimpleOWLExport {
 
   public static void main(String[] args)
       throws OWLOntologyCreationException, OWLOntologyStorageException {
-    if (args.length < 3)
-      throw new IllegalArgumentException(
-          "Three arguments must be specified: ontology IRI, input .xlsx file and output file (.owl or .json)!");
+    if (args.length < 3) {
+      System.out.println(
+          "arguments: <ontology namespace> <input.xlsx> <output.owl|.json> [<property> <prefix> ...]");
+      System.exit(0);
+    }
 
-    String ontoIri = args[0];
-    String inFile = args[1];
+    String ns = args[0];
+    String in = args[1];
 
-    String outFile = args[2];
+    String out = args[2];
     OWLDocumentFormat format =
-        (outFile.endsWith("json")) ? new RDFJsonLDDocumentFormat() : new RDFXMLDocumentFormat();
+        (out.endsWith("json")) ? new RDFJsonLDDocumentFormat() : new RDFXMLDocumentFormat();
 
-    SimpleOWLExport exp = new SimpleOWLExport(inFile, ontoIri);
+    SimpleOWLExport exp = new SimpleOWLExport(in, ns);
+
+    if (args.length >= 5)
+      for (int i = 3; i < args.length; i += 2) exp.addPropertyPrefix(args[i], args[i + 1]);
+
     exp.export();
     exp.addOntoVersion(
         LocalDateTime.now().format(DateTimeFormatter.ISO_LOCAL_DATE_TIME),
         OWL2Datatype.XSD_DATE_TIME);
-    exp.save(outFile, format);
+    exp.save(out, format);
   }
 }
