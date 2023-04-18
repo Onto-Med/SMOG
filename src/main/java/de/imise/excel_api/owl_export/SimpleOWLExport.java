@@ -156,7 +156,16 @@ public class SimpleOWLExport {
   }
 
   private OWLObjectProperty getObjectProperty(String propName) {
-    return fac.getOWLObjectProperty(IRI.create(ns, cleanProp(propName)));
+    propName = cleanProp(propName);
+    if ("has_part".equals(propName) || "haspart".equals(propName))
+      return fac.getOWLObjectProperty("http://www.onto-med.de/ontologies/gfo.owl#has_part");
+    if ("part_of".equals(propName) || "partof".equals(propName))
+      return fac.getOWLObjectProperty("http://www.onto-med.de/ontologies/gfo.owl#part_of");
+    if ("has_property".equals(propName) || "hasproperty".equals(propName))
+      return fac.getOWLObjectProperty("http://www.onto-med.de/ontologies/gfo.owl#has_property");
+    if ("property_of".equals(propName) || "propertyof".equals(propName))
+      return fac.getOWLObjectProperty("http://www.onto-med.de/ontologies/gfo.owl#property_of");
+    return fac.getOWLObjectProperty(IRI.create(ns, propName));
   }
 
   private void addAnnotation(OWLClass sbj, OWLAnnotation ann, List<OWLAnnotation> annOfAnns) {
