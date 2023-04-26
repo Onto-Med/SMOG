@@ -101,7 +101,7 @@ public class SimpleOWLExport {
   }
 
   private OWLClass getClass(String clsName) {
-    return fac.getOWLClass(IRI.create(ns, clean(clsName)));
+    return fac.getOWLClass(IRI.create(ns, cleanCls(clsName)));
   }
 
   private void addProperties(String clsName, Map<String, DynamicTableField> props) {
@@ -148,23 +148,31 @@ public class SimpleOWLExport {
 
   private OWLAnnotationProperty getAnnotationProperty(String propName) {
     propName = cleanProp(propName);
-    if ("comment".equals(propName)) return fac.getRDFSComment();
-    if ("label".equals(propName)) return fac.getRDFSLabel();
-    if ("alt_label".equals(propName) || "altlabel".equals(propName))
+    String propNameLower = propName.toLowerCase();
+    if ("comment".equals(propNameLower)) return fac.getRDFSComment();
+    if ("label".equals(propNameLower)) return fac.getRDFSLabel();
+    if ("altlabel".equals(propNameLower))
       return fac.getOWLAnnotationProperty("http://www.w3.org/2004/02/skos/core#altLabel");
     return fac.getOWLAnnotationProperty(IRI.create(ns, propName));
   }
 
   private OWLObjectProperty getObjectProperty(String propName) {
     propName = cleanProp(propName);
-    if ("has_part".equals(propName) || "haspart".equals(propName))
-      return fac.getOWLObjectProperty("http://www.onto-med.de/ontologies/gfo.owl#has_part");
-    if ("part_of".equals(propName) || "partof".equals(propName))
-      return fac.getOWLObjectProperty("http://www.onto-med.de/ontologies/gfo.owl#part_of");
-    if ("has_property".equals(propName) || "hasproperty".equals(propName))
-      return fac.getOWLObjectProperty("http://www.onto-med.de/ontologies/gfo.owl#has_property");
-    if ("property_of".equals(propName) || "propertyof".equals(propName))
-      return fac.getOWLObjectProperty("http://www.onto-med.de/ontologies/gfo.owl#property_of");
+    String propNameLower = propName.toLowerCase();
+
+    if ("haspart".equals(propNameLower))
+      return fac.getOWLObjectProperty("http://www.onto-med.de/ontologies/gfo.owl#hasPart");
+    if ("partof".equals(propNameLower))
+      return fac.getOWLObjectProperty("http://www.onto-med.de/ontologies/gfo.owl#partOf");
+    if ("hasproperty".equals(propNameLower))
+      return fac.getOWLObjectProperty("http://www.onto-med.de/ontologies/gfo.owl#hasProperty");
+    if ("propertyof".equals(propNameLower))
+      return fac.getOWLObjectProperty("http://www.onto-med.de/ontologies/gfo.owl#propertyOf");
+    if ("hasboundary".equals(propNameLower))
+      return fac.getOWLObjectProperty("http://www.onto-med.de/ontologies/gfo.owl#hasBoundary");
+    if ("boundaryof".equals(propNameLower))
+      return fac.getOWLObjectProperty("http://www.onto-med.de/ontologies/gfo.owl#boundaryOf");
+
     return fac.getOWLObjectProperty(IRI.create(ns, propName));
   }
 
@@ -178,11 +186,29 @@ public class SimpleOWLExport {
   }
 
   private String clean(String str) {
-    return str.trim().replaceAll("[^A-Za-z0-9_]+", "_");
+    String[] parts = str.trim().split("[^A-Za-z0-9]+");
+    String res = "";
+    for (String part : parts) if (!part.isBlank()) res += firstLetterToUpper(part);
+    if (res.isBlank()) return str;
+    return res;
+    //    return str.trim().replaceAll("[^A-Za-z0-9_]+", "_");
+  }
+
+  private String cleanCls(String str) {
+    return firstLetterToUpper(clean(str));
   }
 
   private String cleanProp(String str) {
-    return clean(str).toLowerCase();
+    return firstLetterToLower(clean(str));
+    //    return clean(str).toLowerCase();
+  }
+
+  private String firstLetterToUpper(String str) {
+    return str.substring(0, 1).toUpperCase() + str.substring(1);
+  }
+
+  private String firstLetterToLower(String str) {
+    return str.substring(0, 1).toLowerCase() + str.substring(1);
   }
 
   public void addOntoVersion(String value, OWL2Datatype datatype) {
