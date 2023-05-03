@@ -1,0 +1,165 @@
+package de.imise.excel_api.owl_export;
+
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import org.semanticweb.owlapi.formats.RDFJsonLDDocumentFormat;
+import org.semanticweb.owlapi.formats.RDFXMLDocumentFormat;
+import org.semanticweb.owlapi.model.IRI;
+import org.semanticweb.owlapi.model.OWLDocumentFormat;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
+
+public class Config {
+
+  private String namespace;
+  private String inputFile;
+  private String outputFile;
+  private Map<String, String> propertyPrefixes = new HashMap<>();
+  private List<String> annotationProperties = new ArrayList<>();
+  private List<String> objectProperties = new ArrayList<>();
+
+  public static Config get(String yamlFilePath) {
+    ObjectMapper mapper = new ObjectMapper(new YAMLFactory());
+    Config config = null;
+    try {
+      config = mapper.readValue(new File(yamlFilePath), Config.class);
+    } catch (IOException e) {
+      System.out.println(
+          "The file 'config.yaml' with the following content must be located in the root directory:");
+      System.out.println(
+          "namespace: ..."
+              + System.lineSeparator()
+              + "inputFile: ..."
+              + System.lineSeparator()
+              + "outputFile: ..."
+              + System.lineSeparator()
+              + "propertyPrefixes:"
+              + System.lineSeparator()
+              + "  <name>: <prefix>"
+              + System.lineSeparator()
+              + "annotationProperties:"
+              + System.lineSeparator()
+              + "  - <uri>"
+              + System.lineSeparator()
+              + "objectProperties:"
+              + System.lineSeparator()
+              + "  - <uri>");
+    }
+    if (config.getNamespace() == null
+        || (!config.getNamespace().endsWith("/") && !config.getNamespace().endsWith("#")))
+      throw new IllegalArgumentException(
+          "The namespace must not be empty and must end with '#' oder '/'!");
+    if (config.getInputFile() == null || config.getOutputFile() == null)
+      throw new IllegalArgumentException("The input and the output files must not be empty!");
+    return config;
+  }
+
+  public String getNamespace() {
+    return namespace;
+  }
+
+  public void setNamespace(String namespace) {
+    this.namespace = namespace;
+  }
+
+  public String getInputFile() {
+    return inputFile;
+  }
+
+  public void setInputFile(String inputFile) {
+    this.inputFile = inputFile;
+  }
+
+  public String getOutputFile() {
+    return outputFile;
+  }
+
+  public void setOutputFile(String outputFile) {
+    this.outputFile = outputFile;
+  }
+
+  public Map<String, String> getPropertyPrefixes() {
+    return propertyPrefixes;
+  }
+
+  public void setPropertyPrefixes(Map<String, String> propertyPrefixes) {
+    this.propertyPrefixes = propertyPrefixes;
+  }
+
+  public List<String> getAnnotationProperties() {
+    return annotationProperties;
+  }
+
+  public void setAnnotationProperties(List<String> annotationProperties) {
+    this.annotationProperties = annotationProperties;
+  }
+
+  public List<String> getObjectProperties() {
+    return objectProperties;
+  }
+
+  public void setObjectProperties(List<String> objectProperties) {
+    this.objectProperties = objectProperties;
+  }
+
+  public IRI getOntologyIRI() {
+    return IRI.create(namespace.substring(0, namespace.length() - 1));
+  }
+
+  public OWLDocumentFormat getOutputFormat() {
+    return (outputFile.endsWith("json"))
+        ? new RDFJsonLDDocumentFormat()
+        : new RDFXMLDocumentFormat();
+  }
+
+  public IRI getOutputFileIRI() {
+    return IRI.create(new File(outputFile).toURI());
+  }
+
+  public String getAnnotationProperty(String propName) {
+    for (String ap : annotationProperties) if (propName.equals(getName(ap))) return ap;
+    return null;
+  }
+
+  public String getObjectProperty(String propName) {
+    for (String op : objectProperties) if (propName.equals(getName(op))) return op;
+    return null;
+  }
+
+  private String getName(String uri) {
+    int ind = uri.lastIndexOf('#');
+    if (ind > -1) return uri.substring(ind + 1).toLowerCase();
+    return uri.substring(uri.lastIndexOf('/') + 1).toLowerCase();
+  }
+
+  public String getPropertyPrefix(String propName) {
+    return propertyPrefixes.get(propName);
+  }
+
+  @Override
+  public String toString() {
+    return "Config [namespace="
+        + namespace
+        + ", inputFile="
+        + inputFile
+        + ", outputFile="
+        + outputFile
+        + ", propertyPrefixes="
+        + propertyPrefixes
+        + ", annotationProperties="
+        + annotationProperties
+        + ", objectProperties="
+        + objectProperties
+        + "]";
+  }
+
+  public static void main(String[] args) {
+    System.out.println(Config.get("config.yaml"));
+  }
+}
