@@ -134,8 +134,13 @@ public class SimpleOWLExport {
     if (propSpec.hasLanguage())
       return fac.getOWLLiteral(propSpec.getValue(), propSpec.getLanguage());
     String pref = config.getPropertyPrefix(propName);
-    if (pref == null) return fac.getOWLLiteral(propSpec.getValue());
-    return fac.getOWLLiteral(pref + propSpec.getValue());
+    if (pref == null) return checkIRI(propSpec.getValue());
+    return checkIRI(pref + propSpec.getValue());
+  }
+
+  private OWLAnnotationValue checkIRI(String val) {
+    if (val.startsWith("http")) return IRI.create(val);
+    return fac.getOWLLiteral(val);
   }
 
   private OWLAnnotationProperty getAnnotationProperty(String propName) {
