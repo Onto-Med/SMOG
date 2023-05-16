@@ -88,6 +88,7 @@ public class ExcelReader {
     }
     if (isBoolean(cell)) return Optional.of(Boolean.toString(cell.getBooleanCellValue()));
     if (isString(cell)) return Optional.of(cell.getStringCellValue().trim());
+    if (isFormula(cell)) return Optional.of(cell.getRichStringCellValue().getString());
 
     return Optional.empty();
   }
@@ -228,6 +229,10 @@ public class ExcelReader {
 
   public static boolean isBlank(Cell cell) {
     return cell != null && cell.getCellType() == CellType.BLANK;
+  }
+
+  public static boolean isFormula(Cell cell) {
+    return cell != null && cell.getCellType() == CellType.FORMULA;
   }
 
   //	private static boolean hasGeneralFormat(Cell cell) {
