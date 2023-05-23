@@ -47,16 +47,34 @@ public class SimpleOWLExport {
     }
   }
 
-  public OWLOntology export() {
+  public void export() {
     for (DynamicTreeTable tt : treeTabs) addDynamicTreeTable(tt);
-    return ont;
+    addOntoAnnotation(
+        fac.getOWLAnnotationProperty("http://purl.org/dc/terms/created"),
+        fac.getOWLLiteral(
+            LocalDateTime.now().format(DateTimeFormatter.ISO_LOCAL_DATE_TIME),
+            OWL2Datatype.XSD_DATE_TIME));
+    if (config.getVersion() != null)
+      addOntoAnnotation(fac.getOWLVersionInfo(), fac.getOWLLiteral(config.getVersion()));
+    for (String prop : config.getMetadata().keySet())
+      addMetadata(fac.getOWLAnnotationProperty(prop), config.getMetadata().get(prop));
+    save();
+  }
+
+  private void addMetadata(OWLAnnotationProperty prop, List<String> values) {
+    for (String val : values) {
+      if (val.contains("|")) {
+        String[] valAr = val.split("\\|");
+        addOntoAnnotation(prop, checkIRI(valAr[0].trim(), valAr[1].trim()));
+      } else addOntoAnnotation(prop, checkIRI(val.trim(), null));
+    }
   }
 
   public OWLDataFactory getFactory() {
     return fac;
   }
 
-  public void save() {
+  private void save() {
     try {
       man.saveOntology(ont, config.getOutputFormat(), config.getOutputFileIRI());
     } catch (OWLOntologyStorageException e) {
@@ -134,13 +152,14 @@ public class SimpleOWLExport {
     if (propSpec.hasLanguage())
       return fac.getOWLLiteral(propSpec.getValue(), propSpec.getLanguage());
     String pref = config.getPropertyPrefix(propName);
-    if (pref == null) return checkIRI(propSpec.getValue());
-    return checkIRI(pref + propSpec.getValue());
+    if (pref == null) return checkIRI(propSpec.getValue(), null);
+    return checkIRI(pref + propSpec.getValue(), null);
   }
 
-  private OWLAnnotationValue checkIRI(String val) {
+  private OWLAnnotationValue checkIRI(String val, String lang) {
     if (val.startsWith("http")) return IRI.create(val);
-    return fac.getOWLLiteral(val);
+    if (lang == null) return fac.getOWLLiteral(val);
+    return fac.getOWLLiteral(val, lang);
   }
 
   private OWLAnnotationProperty getAnnotationProperty(String propName) {
@@ -194,7 +213,7 @@ public class SimpleOWLExport {
     addOntoAnnotation(fac.getOWLVersionInfo(), fac.getOWLLiteral(value, datatype));
   }
 
-  public void addOntoAnnotation(OWLAnnotationProperty prop, OWLAnnotationValue val) {
+  private void addOntoAnnotation(OWLAnnotationProperty prop, OWLAnnotationValue val) {
     ont.addAxiom(
         fac.getOWLAnnotationAssertionAxiom(prop, ont.getOntologyID().getOntologyIRI().get(), val));
   }
@@ -202,9 +221,9 @@ public class SimpleOWLExport {
   public static void main(String[] args) {
     SimpleOWLExport exp = new SimpleOWLExport(Config.get("config.yaml"));
     exp.export();
-    exp.addOntoVersion(
-        LocalDateTime.now().format(DateTimeFormatter.ISO_LOCAL_DATE_TIME),
-        OWL2Datatype.XSD_DATE_TIME);
-    exp.save();
+    //    exp.addOntoVersion(
+    //        LocalDateTime.now().format(DateTimeFormatter.ISO_LOCAL_DATE_TIME),
+    //        OWL2Datatype.XSD_DATE_TIME);
+    //    exp.save();
   }
 }

@@ -18,11 +18,13 @@ import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 public class Config {
 
   private String namespace;
+  private String version;
   private String inputFile;
   private String outputFile;
   private Map<String, String> propertyPrefixes = new HashMap<>();
   private List<String> annotationProperties = new ArrayList<>();
   private List<String> objectProperties = new ArrayList<>();
+  private Map<String, List<String>> metadata = new HashMap<>();
 
   public static Config get(String yamlFilePath) {
     ObjectMapper mapper = new ObjectMapper(new YAMLFactory());
@@ -34,6 +36,8 @@ public class Config {
           "The file 'config.yaml' with the following content must be located in the root directory:");
       System.out.println(
           "namespace: ..."
+              + System.lineSeparator()
+              + "version: ..."
               + System.lineSeparator()
               + "inputFile: ..."
               + System.lineSeparator()
@@ -49,7 +53,12 @@ public class Config {
               + System.lineSeparator()
               + "objectProperties:"
               + System.lineSeparator()
-              + "  - <uri>");
+              + "  - <uri>"
+              + System.lineSeparator()
+              + "metadata:"
+              + System.lineSeparator()
+              + "  <property-uri>: [value1, value2, ...]");
+      e.printStackTrace();
     }
     if (config.getNamespace() == null
         || (!config.getNamespace().endsWith("/") && !config.getNamespace().endsWith("#")))
@@ -66,6 +75,14 @@ public class Config {
 
   public void setNamespace(String namespace) {
     this.namespace = namespace;
+  }
+
+  public String getVersion() {
+    return version;
+  }
+
+  public void setVersion(String version) {
+    this.version = version;
   }
 
   public String getInputFile() {
@@ -108,6 +125,14 @@ public class Config {
     this.objectProperties = objectProperties;
   }
 
+  public Map<String, List<String>> getMetadata() {
+    return metadata;
+  }
+
+  public void setMetadata(Map<String, List<String>> metadata) {
+    this.metadata = metadata;
+  }
+
   public IRI getOntologyIRI() {
     return IRI.create(namespace.substring(0, namespace.length() - 1));
   }
@@ -146,6 +171,8 @@ public class Config {
   public String toString() {
     return "Config [namespace="
         + namespace
+        + ", version="
+        + version
         + ", inputFile="
         + inputFile
         + ", outputFile="
@@ -156,6 +183,8 @@ public class Config {
         + annotationProperties
         + ", objectProperties="
         + objectProperties
+        + ", metadata="
+        + metadata
         + "]";
   }
 
