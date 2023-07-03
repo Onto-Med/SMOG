@@ -4,12 +4,12 @@ import java.util.Optional;
 
 public class FieldSpec extends Spec {
 
-  private String dataType;
-  private String listSeparator;
-  private Optional<String[]> colRef;
-  private int row;
-  private int col;
-  private int tabColIndex;
+  private final String dataType;
+  private final String listSeparator;
+  private final Optional<String[]> colRef;
+  private final int row;
+  private final int col;
+  private final int tabColIndex;
 
   public FieldSpec(
       String name,
