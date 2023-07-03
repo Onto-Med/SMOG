@@ -115,7 +115,7 @@ public class DynamicTable {
     for (Integer rowNum : allRecords.keySet()) {
       List<DynamicTableField> record = allRecords.get(rowNum);
       DynamicTableField field = record.get(colNum);
-      Optional<String> fieldValOpt = field.getValue();
+      Optional<String> fieldValOpt = field.value();
       if (fieldValOpt.isPresent()) {
         String fieldVal = fieldValOpt.get();
         if (fieldVal.trim().equalsIgnoreCase(text.trim())) records.put(rowNum, record);

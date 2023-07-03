@@ -8,32 +8,19 @@ import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 
-public class DynamicTreeTableNode {
-
-  private String name;
-  private int rowNum;
-  private int colNum;
-  private Sheet sheet;
-  private Map<Integer, Map<String, DynamicTableField>> table;
-
+public record DynamicTreeTableNode(
+    String name,
+    int rowNum,
+    int colNum,
+    Sheet sheet,
+    Map<Integer, Map<String, DynamicTableField>> table) {
   public DynamicTreeTableNode(Cell cell, Map<Integer, Map<String, DynamicTableField>> table) {
-    this.name = ExcelReader.getStringValue(cell).get();
-    this.rowNum = cell.getRowIndex();
-    this.colNum = cell.getColumnIndex();
-    this.sheet = cell.getSheet();
-    this.table = table;
-  }
-
-  public String getName() {
-    return name;
-  }
-
-  public int getRowNum() {
-    return rowNum;
-  }
-
-  public int getColNum() {
-    return colNum;
+    this(
+        ExcelReader.getStringValue(cell).get(),
+        cell.getRowIndex(),
+        cell.getColumnIndex(),
+        cell.getSheet(),
+        table);
   }
 
   public Map<String, DynamicTableField> getProperties() {
@@ -41,7 +28,7 @@ public class DynamicTreeTableNode {
   }
 
   public Optional<String> getProperty(String propertyName) {
-    return getProperties().get(propertyName).getValue();
+    return getProperties().get(propertyName).value();
   }
 
   public List<DynamicTreeTableNode> getChildren() {
