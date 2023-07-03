@@ -1,5 +1,9 @@
 package de.imise.excel_api.owl_export;
 
+import de.imise.excel_api.excel_reader.DynamicTableField;
+import de.imise.excel_api.excel_reader.DynamicTreeTable;
+import de.imise.excel_api.excel_reader.DynamicTreeTableNode;
+import de.imise.excel_api.excel_reader.ExcelReader;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -7,7 +11,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Optional;
-
 import org.semanticweb.owlapi.apibinding.OWLManager;
 import org.semanticweb.owlapi.model.IRI;
 import org.semanticweb.owlapi.model.OWLAnnotation;
@@ -21,11 +24,6 @@ import org.semanticweb.owlapi.model.OWLOntologyCreationException;
 import org.semanticweb.owlapi.model.OWLOntologyManager;
 import org.semanticweb.owlapi.model.OWLOntologyStorageException;
 import org.semanticweb.owlapi.vocab.OWL2Datatype;
-
-import de.imise.excel_api.excel_reader.DynamicTableField;
-import de.imise.excel_api.excel_reader.DynamicTreeTable;
-import de.imise.excel_api.excel_reader.DynamicTreeTableNode;
-import de.imise.excel_api.excel_reader.ExcelReader;
 
 public class SimpleOWLExport {
 

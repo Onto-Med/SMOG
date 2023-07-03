@@ -10,57 +10,56 @@ import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 
 public class CStyle {
-	
-	private CellStyle cellStyle;
-	private Font font;
-	
-	public CStyle(Workbook wb) {
-		this.cellStyle = wb.createCellStyle();
-		this.font = wb.createFont();
-	}
-	
-	public CStyle foregroundColor(IndexedColors foregroundColor) {
-		cellStyle.setFillForegroundColor(foregroundColor.getIndex());
-		cellStyle.setFillPattern(FillPatternType.SOLID_FOREGROUND);
-		return this;
-	}
 
-	public CStyle fontColor(IndexedColors fontColor) {
-		font.setColor(fontColor.getIndex());
-		return this;
-	}
+  private CellStyle cellStyle;
+  private Font font;
 
-	public CStyle fontBold() {
-		font.setBold(true);
-		return this;
-	}
+  public CStyle(Workbook wb) {
+    this.cellStyle = wb.createCellStyle();
+    this.font = wb.createFont();
+  }
 
-	public CStyle fontItalic() {
-		font.setItalic(true);
-		return this;
-	}
+  public CStyle foregroundColor(IndexedColors foregroundColor) {
+    cellStyle.setFillForegroundColor(foregroundColor.getIndex());
+    cellStyle.setFillPattern(FillPatternType.SOLID_FOREGROUND);
+    return this;
+  }
 
-	public CStyle wrapText() {
-		cellStyle.setWrapText(true);
-		return this;
-	}
+  public CStyle fontColor(IndexedColors fontColor) {
+    font.setColor(fontColor.getIndex());
+    return this;
+  }
 
-	public CStyle border(BorderStyle borderStyle) {
-		cellStyle.setBorderBottom(borderStyle);
-		cellStyle.setBorderTop(borderStyle);
-		cellStyle.setBorderLeft(borderStyle);
-		cellStyle.setBorderRight(borderStyle);
-		return this;
-	}
-	
-	public void set(Cell... cells) {
-		cellStyle.setFont(font);
-		
-		for (Cell cell : cells)
-			cell.setCellStyle(cellStyle);
-	}
+  public CStyle fontBold() {
+    font.setBold(true);
+    return this;
+  }
 
-	public void set(Sheet sheet, int row, int col) {
-		set(sheet.getRow(row).getCell(col));
-	}
+  public CStyle fontItalic() {
+    font.setItalic(true);
+    return this;
+  }
+
+  public CStyle wrapText() {
+    cellStyle.setWrapText(true);
+    return this;
+  }
+
+  public CStyle border(BorderStyle borderStyle) {
+    cellStyle.setBorderBottom(borderStyle);
+    cellStyle.setBorderTop(borderStyle);
+    cellStyle.setBorderLeft(borderStyle);
+    cellStyle.setBorderRight(borderStyle);
+    return this;
+  }
+
+  public void set(Cell... cells) {
+    cellStyle.setFont(font);
+
+    for (Cell cell : cells) cell.setCellStyle(cellStyle);
+  }
+
+  public void set(Sheet sheet, int row, int col) {
+    set(sheet.getRow(row).getCell(col));
+  }
 }
