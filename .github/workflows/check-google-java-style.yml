@@ -1,0 +1,22 @@
+name: Check Google Java Style
+
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+    branches:
+      - master
+
+jobs:
+  formatting:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: axel-op/googlejavaformat-action@v3
+        with:
+          args: "--skip-reflowing-long-strings --replace"
+          skip-commit: true
+          files: src/**/java/**/*.java
+      - name: Print diffs
+        run: git --no-pager diff --exit-code
