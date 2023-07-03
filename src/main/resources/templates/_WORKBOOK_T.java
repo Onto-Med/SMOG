@@ -1,8 +1,6 @@
 package templates;
 
 import java.util.*;
-
-//_START:_HEADER
 import java.io.File;
 import org.apache.poi.ss.usermodel.*;
 import de.imise.excel_api.excel_reader.ExcelReader;

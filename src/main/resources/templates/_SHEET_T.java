@@ -3,8 +3,6 @@ package templates;
 import de.imise.excel_api.model_generator.entity_specification.Entity;
 import de.imise.excel_api.util.StrUtil;
 import java.text.ParseException;
-
-//_START:_HEADER
 import java.util.*;
 import org.apache.poi.ss.usermodel.*;
 import de.imise.excel_api.excel_reader.*;
