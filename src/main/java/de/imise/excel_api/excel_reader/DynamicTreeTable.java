@@ -3,7 +3,6 @@ package de.imise.excel_api.excel_reader;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 
