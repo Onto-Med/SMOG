@@ -2,7 +2,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>de.imise.excel_api</groupId>
 	<artifactId>smog</artifactId>
-	<version>1.1.0</version>
+	<version>1.2.0</version>
 	<description>Generates Java programming models for annotated Microsoft Excel templates.</description>
 
 	<properties>
@@ -48,6 +48,11 @@
             <artifactId>jackson-dataformat-yaml</artifactId>
             <version>2.15.2</version>
         </dependency>
+		<dependency>
+			<groupId>info.picocli</groupId>
+			<artifactId>picocli</artifactId>
+			<version>4.7.0</version>
+		</dependency>
 	</dependencies>
 
 	<build>

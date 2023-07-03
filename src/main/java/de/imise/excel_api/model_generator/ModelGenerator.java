@@ -12,6 +12,8 @@ import de.imise.excel_api.model_generator.entity_specification.TreeTableSpec;
 import de.imise.excel_api.model_generator.template.Templates;
 import de.imise.excel_api.util.StrUtil;
 import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -49,9 +51,13 @@ public class ModelGenerator {
    * @param dir the directory where the generated Java class files should be written to
    * @param packageName the package name to be used for the generated Java classes
    */
-  public void generate(File dir, String packageName) {
+  public void generate(File dir, String packageName) throws IOException {
     for (Sheet sheet : ExcelReader.getWorkbook(file)) {
       createObjectSpec(sheet);
+    }
+
+    if (!dir.exists()) {
+      Files.createDirectory(dir.toPath());
     }
 
     Templates temp = new Templates();
