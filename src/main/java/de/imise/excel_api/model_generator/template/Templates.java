@@ -419,14 +419,14 @@ public class Templates {
     StringBuilder fields = new StringBuilder();
     for (FieldSpec field : tab.getFields())
       fields
-          .append("        record.put(\"")
+          .append("    record.put(\"")
           .append(field.getName())
           .append("\", get")
           .append(field.getJavaName())
           .append("());")
           .append(System.lineSeparator());
 
-    String getRecord = tabRec.get("getRecord").replace("//_PUT_FIELDS", fields.toString());
+    String getRecord = tabRec.get("getRecord").replace("// _PUT_FIELDS", fields.toString());
     sb.append(getRecord);
 
     write(getFileStringBuffer(packageName, imps, sb), dir, clsName);
@@ -548,14 +548,14 @@ public class Templates {
     StringBuilder fields = new StringBuilder();
     for (FieldSpec field : tab.getFields())
       fields
-          .append("        record.put(\"")
+          .append("    record.put(\"")
           .append(field.getName())
           .append("\", get")
           .append(field.getJavaName())
           .append("());")
           .append(System.lineSeparator());
 
-    String getRecord = freePosTabRec.get("getRecord").replace("//_PUT_FIELDS", fields.toString());
+    String getRecord = freePosTabRec.get("getRecord").replace("// _PUT_FIELDS", fields.toString());
     sb.append(getRecord);
 
     write(getFileStringBuffer(packageName, imps, sb), dir, clsName);
@@ -674,14 +674,14 @@ public class Templates {
     StringBuilder fields = new StringBuilder();
     for (FieldSpec field : tab.getFields())
       fields
-          .append("        record.put(\"")
+          .append("    record.put(\"")
           .append(field.getName())
           .append("\", get")
           .append(field.getJavaName())
           .append("());")
           .append(System.lineSeparator());
 
-    String getRecord = treeNode.get("getRecord").replace("//_PUT_FIELDS", fields.toString());
+    String getRecord = treeNode.get("getRecord").replace("// _PUT_FIELDS", fields.toString());
     sb.append(getRecord);
 
     write(getFileStringBuffer(packageName, imps, sb), dir, clsName);
