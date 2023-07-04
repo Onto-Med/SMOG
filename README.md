@@ -17,6 +17,16 @@ This results into methods being generated for the Java class of entries in *tabl
 
 ## How to use
 
+### Executable JAR
+
+Download one of our JAR releases and run it as shown below:
+
+```sh
+java -jar smog-x.x.x.jar example.xlsx test/model --package test.model # replace 'x.x.x' with the SMOG version
+```
+
+### Maven Dependency
+
 Add SMOG as dependency to your project (e.g. as maven dependency in `pom.xml`). SMOG is available as maven package
 on https://maven.pkg.github.com.
 

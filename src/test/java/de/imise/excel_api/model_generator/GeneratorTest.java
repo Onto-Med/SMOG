@@ -1,5 +1,7 @@
 package de.imise.excel_api.model_generator;
 
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+
 import java.io.File;
 import java.io.IOException;
 import java.util.Objects;
@@ -30,6 +32,6 @@ public class GeneratorTest {
   @Test
   public void generate() {
     ModelGenerator gen = new ModelGenerator(testFile);
-    gen.generate(new File(OUTPUT_DIR), "test.model");
+    assertDoesNotThrow(() -> gen.generate(new File(OUTPUT_DIR), "test.model"));
   }
 }

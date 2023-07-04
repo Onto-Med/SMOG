@@ -2,7 +2,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>de.imise.excel_api</groupId>
 	<artifactId>smog</artifactId>
-	<version>1.1.0</version>
+	<version>1.2.0</version>
 	<description>Generates Java programming models for annotated Microsoft Excel templates.</description>
 
 	<properties>
@@ -48,6 +48,11 @@
             <artifactId>jackson-dataformat-yaml</artifactId>
             <version>2.15.2</version>
         </dependency>
+		<dependency>
+			<groupId>info.picocli</groupId>
+			<artifactId>picocli</artifactId>
+			<version>4.7.0</version>
+		</dependency>
 	</dependencies>
 
 	<build>
@@ -57,5 +62,36 @@
 				<filtering>true</filtering>
 			</resource>
 		</resources>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-shade-plugin</artifactId>
+				<version>3.5.0</version>
+				<executions>
+					<execution>
+						<phase>package</phase>
+						<goals>
+							<goal>shade</goal>
+						</goals>
+						<configuration>
+							<createDependencyReducedPom>false</createDependencyReducedPom>
+							<transformers>
+								<transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
+									<mainClass>de.imise.excel_api.GenerateJavaFiles</mainClass>
+								</transformer>
+							</transformers>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>exec-maven-plugin</artifactId>
+				<version>3.1.0</version>
+				<configuration>
+					<mainClass>de.imise.excel_api.GenerateJavaFiles</mainClass>
+				</configuration>
+			</plugin>
+		</plugins>
 	</build>
 </project>
