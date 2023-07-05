@@ -9,10 +9,10 @@ import org.apache.poi.ss.usermodel.Sheet;
 
 public class TreeNode {
 
-  private String name;
-  private int rowNum;
-  private int colNum;
-  private Sheet sheet;
+  private final String name;
+  private final int rowNum;
+  private final int colNum;
+  private final Sheet sheet;
   HashMap<Integer, FreePositionTableRecord> table;
 
   public TreeNode(Cell cell) {

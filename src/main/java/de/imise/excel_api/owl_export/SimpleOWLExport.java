@@ -82,7 +82,7 @@ public class SimpleOWLExport {
 
   private void addDynamicTreeTable(DynamicTreeTable tt) {
     for (DynamicTreeTableNode root : tt.getRootNodes()) {
-      String clsName = root.getName();
+      String clsName = root.name();
       addClass(clsName);
       addProperties(clsName, root.getProperties());
       for (DynamicTreeTableNode node : root.getChildren()) addClass(node, clsName);
@@ -90,7 +90,7 @@ public class SimpleOWLExport {
   }
 
   private void addClass(DynamicTreeTableNode node, String superClsName) {
-    String clsName = node.getName();
+    String clsName = node.name();
     addClass(clsName, superClsName);
     addProperties(clsName, node.getProperties());
     for (DynamicTreeTableNode child : node.getChildren()) addClass(child, clsName);
@@ -115,7 +115,7 @@ public class SimpleOWLExport {
   private void addProperties(String clsName, Map<String, DynamicTableField> props) {
     if (props == null) return;
     for (Entry<String, DynamicTableField> prop : props.entrySet()) {
-      Optional<String> val = prop.getValue().getValue();
+      Optional<String> val = prop.getValue().value();
       if (val.isPresent()) addProperties(clsName, prop.getKey().trim(), val.get().trim());
     }
   }
