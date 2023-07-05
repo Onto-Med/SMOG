@@ -19,10 +19,17 @@ This results into methods being generated for the Java class of entries in *tabl
 
 ### Executable JAR
 
-Download one of our JAR releases and run it as shown below:
+Download one of our JAR releases and run it as shown below (replace 'x.x.x' with the actual SMOG version):
 
 ```sh
-java -jar smog-x.x.x.jar example.xlsx test/model --package test.model # replace 'x.x.x' with the SMOG version
+# generate Java files in directory 'src/main/java'
+java -jar smog-x.x.x.jar generate --group-id test.model --artifact-id test_artifact --package-version 0.1.0 example.xlsx src/main/java
+
+# generate Maven package in directory 'lib', default values are used for --group-id, --artifact-id, and --package-version
+java -jar smog-x.x.x.jar generate --mvn example.xlsx lib
+
+# specify maven home
+java -jar "-Dmaven.home=/path/to/maven/home" smog-x.x.x.jar generate --mvn example.xlsx lib
 ```
 
 ### Maven Dependency
