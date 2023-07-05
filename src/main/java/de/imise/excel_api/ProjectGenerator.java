@@ -16,51 +16,19 @@ import org.apache.maven.shared.utils.cli.CommandLineException;
 import picocli.CommandLine;
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Option;
+import picocli.CommandLine.ParameterException;
 import picocli.CommandLine.Parameters;
 
 @Command(
-    name = "generate",
+    name = "smog",
     mixinStandardHelpOptions = true,
     versionProvider = SmogVersionProvider.class,
-    description = "Generates Java class files in a directory with a desired package name")
+    description =
+        "Spreadsheet Model Generator (SMOG): A lightweight tool for Object-Spreadsheet mapping.",
+    synopsisSubcommandLabel = "COMMAND")
 public class ProjectGenerator implements Callable<Integer> {
 
   private static final String PROPERTIES_FILE = "smog.properties";
-
-  @Parameters(
-      index = "0",
-      description = "Microsoft Excel file for which Java files are to be generated.")
-  private File inputFile;
-
-  @Parameters(
-      index = "1",
-      description = "The output directory to which the Java files will be written.")
-  private File outputDir;
-
-  @Option(
-      names = {"-m", "--mvn"},
-      description =
-          "Set this option to enable packaging of the generated Java source files via Maven "
-              + "(Maven must be installed and set as env variable)")
-  private boolean maven;
-
-  @Option(
-      names = {"-g", "--group-id"},
-      defaultValue = "com.example",
-      description = "Group ID of the generated Java classes. (defaults to 'com.example')")
-  private String groupId;
-
-  @Option(
-      names = {"-a", "--artifact-id"},
-      defaultValue = "excel_api",
-      description = "Artifact ID of the generated Java classes. (defaults to 'excel_api')")
-  private String artifactId;
-
-  @Option(
-      names = {"-pv", "--package-version"},
-      defaultValue = "1.0.0",
-      description = "Version of the generated Maven package. (defaults to '1.0.0')")
-  private String version;
 
   public static void main(String... args) {
     int exitCode = new CommandLine(new ProjectGenerator()).execute(args);
@@ -69,6 +37,46 @@ public class ProjectGenerator implements Callable<Integer> {
 
   @Override
   public Integer call() {
+    throw new ParameterException(
+        new CommandLine(new ProjectGenerator()), "Missing required subcommand");
+  }
+
+  @Command(showDefaultValues = true)
+  int generate(
+      @Option(
+              names = {"-g", "--group-id"},
+              paramLabel = "<group-id>",
+              defaultValue = "com.example",
+              description = "Group ID of the generated Java classes.")
+          String groupId,
+      @Option(
+              names = {"-a", "--artifact-id"},
+              paramLabel = "<artifact-id>",
+              defaultValue = "excel_api",
+              description = "Artifact ID of the generated Java classes.")
+          String artifactId,
+      @Option(
+              names = {"-pv", "--package-version"},
+              paramLabel = "<package-version>",
+              defaultValue = "1.0.0",
+              description = "Version of the generated Maven package.")
+          String version,
+      @Option(
+              names = {"-m", "--mvn"},
+              description =
+                  "Set this option to enable packaging of the generated Java source files via Maven "
+                      + "(Maven must be installed and set as env variable)")
+          boolean maven,
+      @Parameters(
+              index = "0",
+              paramLabel = "<input Excel>",
+              description = "Microsoft Excel file for which Java files are to be generated.")
+          File inputFile,
+      @Parameters(
+              index = "1",
+              paramLabel = "<output dir>",
+              description = "The output directory to which the Java files will be written.")
+          File outputDir) {
     try {
       ModelGenerator gen = new ModelGenerator(inputFile);
       gen.generate(outputDir, groupId + "." + artifactId);
