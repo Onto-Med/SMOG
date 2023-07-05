@@ -25,10 +25,14 @@ public class Config {
   private Map<String, List<String>> metadata = new HashMap<>();
 
   public static Config get(String yamlFilePath) {
+    return get(new File(yamlFilePath));
+  }
+
+  public static Config get(File yamlFile) {
     ObjectMapper mapper = new ObjectMapper(new YAMLFactory());
     Config config = null;
     try {
-      config = mapper.readValue(new File(yamlFilePath), Config.class);
+      config = mapper.readValue(yamlFile, Config.class);
     } catch (IOException e) {
       System.out.println(
           "The file 'config.yaml' with the following content must be located in the root directory:");
