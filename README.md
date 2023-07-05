@@ -71,7 +71,26 @@ export.export();
 
 ### OWL Export Configuration
 
-TODO: describe YAML configuration file
+| property               | description                                                                   |
+|------------------------|-------------------------------------------------------------------------------|
+| namespace              | namespace to be used for this ontology                                        |
+| version                | version of the ontology, see <https://www.w3.org/TR/owl-ref/#versionInfo-def> |
+| inputFile              | Microsoft Excel input file                                                    |
+| outputFile             | destination of the output file                                                |
+| metadata (map)         | additional axioms provided as `<property-uri>: [value1, value2, ...]`         |
+
+Example `config.yaml`:
+
+```yaml
+---
+namespace: http://example.com/ex#
+version: 1.0.0
+inputFile: example.xlsx
+outputFile: example.owl
+metadata:
+  http://purl.org/dc/terms/title:
+    - Example Ontology
+```
 
 ## Development
 
