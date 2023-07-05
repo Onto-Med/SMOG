@@ -23,13 +23,18 @@ Download one of our JAR releases and run it as shown below (replace 'x.x.x' with
 
 ```sh
 # generate Java files in directory 'src/main/java'
-java -jar smog-x.x.x.jar generate --group-id test.model --artifact-id test_artifact --package-version 0.1.0 example.xlsx src/main/java
+java -jar smog-x.x.x.jar generate --group-id test.model --artifact-id test_artifact --version 0.1.0 example.xlsx src/main/java
 
-# generate Maven package in directory 'lib', default values are used for --group-id, --artifact-id, and --package-version
+# generate Maven package in directory 'lib', default values are used for --group-id, --artifact-id, and --version
 java -jar smog-x.x.x.jar generate --mvn example.xlsx lib
 
 # specify maven home
 java -jar "-Dmaven.home=/path/to/maven/home" smog-x.x.x.jar generate --mvn example.xlsx lib
+```
+
+```sh
+# perform an OWL export as described in the config.yaml file
+java -jar smog-x.x.x.jar export config.yaml
 ```
 
 ### Maven Dependency
@@ -55,6 +60,18 @@ ModelGenerator gen = new ModelGenerator(new File("example.xlsx"));
 // in the directory "test/model" with package name "test.model"
 gen.generate(new File("test/model"), "test.model");
 ```
+
+```java
+// Build a SimpleOWLExport object from a YAML configuration file.
+SimpleOWLExport export = new SimpleOWLExport(Config.get("config.yaml"));
+
+// Perform the export, as specified in the configuration file.
+export.export();
+```
+
+### OWL Export Configuration
+
+TODO: describe YAML configuration file
 
 ## Development
 

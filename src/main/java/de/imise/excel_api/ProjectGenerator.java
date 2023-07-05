@@ -3,6 +3,8 @@ package de.imise.excel_api;
 import com.x5.template.Chunk;
 import com.x5.template.Theme;
 import de.imise.excel_api.model_generator.ModelGenerator;
+import de.imise.excel_api.owl_export.Config;
+import de.imise.excel_api.owl_export.SimpleOWLExport;
 import de.imise.excel_api.util.SmogVersionProvider;
 import java.io.File;
 import java.io.FileWriter;
@@ -56,8 +58,8 @@ public class ProjectGenerator implements Callable<Integer> {
               description = "Artifact ID of the generated Java classes.")
           String artifactId,
       @Option(
-              names = {"-pv", "--package-version"},
-              paramLabel = "<package-version>",
+              names = {"-v", "--version"},
+              paramLabel = "<version>",
               defaultValue = "1.0.0",
               description = "Version of the generated Maven package.")
           String version,
@@ -98,7 +100,25 @@ public class ProjectGenerator implements Callable<Integer> {
     return 0;
   }
 
-  private void addPomFile(File dir, String groupId, String artifactId, String packageVersion)
+  @Command(showDefaultValues = true)
+  int export(
+      @Parameters(
+              index = "0",
+              paramLabel = "<config-file>",
+              description = "YAML configuration file for OWL export.")
+          File config) {
+    try {
+      SimpleOWLExport exp = new SimpleOWLExport(Config.get(config));
+      exp.export();
+    } catch (Exception e) {
+      e.printStackTrace();
+      return 1;
+    }
+
+    return 0;
+  }
+
+  private void addPomFile(File dir, String groupId, String artifactId, String version)
       throws IOException {
     final Properties properties = new Properties();
     properties.load(this.getClass().getClassLoader().getResourceAsStream(PROPERTIES_FILE));
@@ -107,7 +127,7 @@ public class ProjectGenerator implements Callable<Integer> {
     Chunk chunk = theme.makeChunk("pom", "xml");
     chunk.set("group_id", groupId);
     chunk.set("artifact_id", artifactId);
-    chunk.set("version", packageVersion);
+    chunk.set("version", version);
     chunk.set("poi_version", properties.getProperty("poi_version"));
     chunk.set("smog_version", properties.getProperty("smog_version"));
 
