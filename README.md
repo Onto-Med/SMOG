@@ -19,7 +19,8 @@ This results into methods being generated for the Java class of entries in *tabl
 
 ### Executable JAR
 
-Download one of our JAR releases and run it as shown below (replace 'x.x.x' with the actual SMOG version):
+Download one of our [JAR releases](https://github.com/Onto-Med/SMOG/releases/latest) and run it as shown below
+(replace 'x.x.x' with the actual SMOG version):
 
 ```sh
 # generate Java files in directory 'src/main/java'
