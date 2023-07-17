@@ -67,7 +67,7 @@ public class Templates {
       Map<String, ObjectSpec> classes,
       List<ObjectSpec> objects) {
     Set<String> imps = new HashSet<>();
-    StringBuffer sb = new StringBuffer(workbook.get("_HEADER").replace("_WORKBOOK_T", clsName));
+    var sb = new StringBuilder(workbook.get("_HEADER").replace("_WORKBOOK_T", clsName));
 
     for (ObjectSpec cls : classes.values()) {
       imps.addAll(workbookImp.get("get_SHEET_TList"));
@@ -91,12 +91,12 @@ public class Templates {
       writeSheet(dir, obj.getJavaName(), packageName, obj);
     }
 
-    write(getFileStringBuffer(packageName, imps, sb), dir, clsName);
+    write(getFileStringBuilder(packageName, imps, sb), dir, clsName);
   }
 
   private void writeSheet(File dir, String clsName, String packageName, ObjectSpec obj) {
     Set<String> imps = new HashSet<>();
-    StringBuffer sb = new StringBuffer(sheet.get("_HEADER").replace("_SHEET_T", clsName));
+    var sb = new StringBuilder(sheet.get("_HEADER").replace("_SHEET_T", clsName));
 
     for (FieldSpec field : obj.getFields()) {
       if (field.hasListDataType()) {
@@ -281,13 +281,13 @@ public class Templates {
       writeTreeNode(dir, javaRecordClsName, packageName, tab);
     }
 
-    write(getFileStringBuffer(packageName, imps, sb), dir, clsName);
+    write(getFileStringBuilder(packageName, imps, sb), dir, clsName);
   }
 
   private void writeTableRecord(
       File dir, String clsName, String packageName, TableSpec tab, ObjectSpec obj) {
     Set<String> imps = new HashSet<>();
-    StringBuffer sb = new StringBuffer(tabRec.get("_HEADER").replace("_TABLE_RECORD_T", clsName));
+    var sb = new StringBuilder(tabRec.get("_HEADER").replace("_TABLE_RECORD_T", clsName));
 
     for (FieldSpec field : tab.getFields()) {
       if (field.hasListDataType()) {
@@ -416,7 +416,7 @@ public class Templates {
     }
 
     imps.addAll(tabRecImp.get("getRecord"));
-    StringBuilder fields = new StringBuilder();
+    var fields = new StringBuilder();
     for (FieldSpec field : tab.getFields())
       fields
           .append("    record.put(\"")
@@ -429,14 +429,14 @@ public class Templates {
     String getRecord = tabRec.get("getRecord").replace("// _PUT_FIELDS", fields.toString());
     sb.append(getRecord);
 
-    write(getFileStringBuffer(packageName, imps, sb), dir, clsName);
+    write(getFileStringBuilder(packageName, imps, sb), dir, clsName);
   }
 
   private void writeFreePositionTableRecord(
       File dir, String clsName, String packageName, TableSpec tab) {
     Set<String> imps = new HashSet<>();
-    StringBuffer sb =
-        new StringBuffer(
+    var sb =
+        new StringBuilder(
             freePosTabRec.get("_HEADER").replace("_FREE_POSITION_TABLE_RECORD_T", clsName));
 
     for (FieldSpec field : tab.getFields()) {
@@ -545,7 +545,7 @@ public class Templates {
     }
 
     imps.addAll(freePosTabRecImp.get("getRecord"));
-    StringBuilder fields = new StringBuilder();
+    var fields = new StringBuilder();
     for (FieldSpec field : tab.getFields())
       fields
           .append("    record.put(\"")
@@ -558,12 +558,12 @@ public class Templates {
     String getRecord = freePosTabRec.get("getRecord").replace("// _PUT_FIELDS", fields.toString());
     sb.append(getRecord);
 
-    write(getFileStringBuffer(packageName, imps, sb), dir, clsName);
+    write(getFileStringBuilder(packageName, imps, sb), dir, clsName);
   }
 
   private void writeTreeNode(File dir, String clsName, String packageName, TableSpec tab) {
     Set<String> imps = new HashSet<>();
-    StringBuffer sb = new StringBuffer(treeNode.get("_HEADER").replace("_TREE_NODE_T", clsName));
+    var sb = new StringBuilder(treeNode.get("_HEADER").replace("_TREE_NODE_T", clsName));
 
     for (FieldSpec field : tab.getFields()) {
       if (field.hasListDataType()) {
@@ -671,7 +671,7 @@ public class Templates {
     }
 
     imps.addAll(treeNodeImp.get("getRecord"));
-    StringBuilder fields = new StringBuilder();
+    var fields = new StringBuilder();
     for (FieldSpec field : tab.getFields())
       fields
           .append("    record.put(\"")
@@ -684,7 +684,7 @@ public class Templates {
     String getRecord = treeNode.get("getRecord").replace("// _PUT_FIELDS", fields.toString());
     sb.append(getRecord);
 
-    write(getFileStringBuffer(packageName, imps, sb), dir, clsName);
+    write(getFileStringBuilder(packageName, imps, sb), dir, clsName);
   }
 
   private String getName(String line) {
@@ -697,10 +697,10 @@ public class Templates {
     else return new ArrayList<>();
   }
 
-  private StringBuffer getFileStringBuffer(
-      String packageName, Set<String> imps, StringBuffer code) {
-    StringBuffer sb =
-        new StringBuffer("package " + packageName + ";")
+  private StringBuilder getFileStringBuilder(
+      String packageName, Set<String> imps, StringBuilder code) {
+    var sb =
+        new StringBuilder("package " + packageName + ";")
             .append(System.lineSeparator())
             .append(System.lineSeparator());
     for (String imp : imps) sb.append(imp).append(System.lineSeparator());
@@ -712,13 +712,13 @@ public class Templates {
       InputStream file, Map<String, String> templates, Map<String, List<String>> imports) {
     try {
       BufferedReader reader = new BufferedReader(new InputStreamReader(file));
-      StringBuffer temp = new StringBuffer();
+      var temp = new StringBuilder();
       String line;
       String name = null;
       List<String> imps = null;
       while ((line = reader.readLine()) != null) {
         if (line.contains("_START:")) {
-          temp = new StringBuffer();
+          temp = new StringBuilder();
           name = getName(line.trim());
           imps = getImports(line.trim());
         } else if (line.contains("_END:")) {
@@ -732,7 +732,7 @@ public class Templates {
     }
   }
 
-  private void write(StringBuffer sb, File dir, String clsName) {
+  private void write(StringBuilder sb, File dir, String clsName) {
     try {
       FileWriter writer = new FileWriter(new File(dir, clsName + ".java"));
       writer.write(sb.toString());

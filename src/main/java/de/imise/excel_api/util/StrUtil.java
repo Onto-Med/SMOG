@@ -22,8 +22,8 @@ public class StrUtil {
 
     for (String[] uml : UMLAUT_REPLACEMENTS) s = s.replace(uml[0], uml[1]);
 
-    StringBuffer name =
-        new StringBuffer(
+    var name =
+        new StringBuilder(
             s.replaceAll("[^a-zA-Z0-9\\s]", " ").trim().replaceAll("\\s+", "_").toLowerCase());
 
     int i;

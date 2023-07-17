@@ -114,7 +114,7 @@ public class ExcelWriter {
   }
 
   public static void setValues(Row row, int colNum, String separator, String... values) {
-    StringBuilder vals = new StringBuilder();
+    var vals = new StringBuilder();
     for (int i = 0; i < values.length; i++) {
       if (i > 0) vals.append(separator);
       vals.append(values[i]);
@@ -124,7 +124,7 @@ public class ExcelWriter {
   }
 
   public static void setValues(Row row, int colNum, String separator, int... values) {
-    StringBuilder vals = new StringBuilder();
+    var vals = new StringBuilder();
     for (int i = 0; i < values.length; i++) {
       if (i > 0) vals.append(separator);
       vals.append(values[i]);
@@ -134,7 +134,7 @@ public class ExcelWriter {
   }
 
   public static void setValues(Row row, int colNum, String separator, double... values) {
-    StringBuilder vals = new StringBuilder();
+    var vals = new StringBuilder();
     for (int i = 0; i < values.length; i++) {
       if (i > 0) vals.append(separator);
       vals.append(values[i]);
@@ -144,7 +144,7 @@ public class ExcelWriter {
   }
 
   public static void setValues(Row row, int colNum, String separator, Date... values) {
-    StringBuilder vals = new StringBuilder();
+    var vals = new StringBuilder();
     for (int i = 0; i < values.length; i++) {
       if (i > 0) vals.append(separator);
       vals.append(StrUtil.formatDate(values[i]));
@@ -155,7 +155,7 @@ public class ExcelWriter {
 
   public static void setDateValues(Row row, int colNum, String separator, String... values)
       throws ParseException {
-    StringBuilder vals = new StringBuilder();
+    var vals = new StringBuilder();
     for (int i = 0; i < values.length; i++) {
       if (i > 0) vals.append(separator);
 
@@ -168,7 +168,7 @@ public class ExcelWriter {
   }
 
   public static void setValues(Row row, int colNum, String separator, boolean... values) {
-    StringBuilder vals = new StringBuilder();
+    var vals = new StringBuilder();
     for (int i = 0; i < values.length; i++) {
       if (i > 0) vals.append(separator);
       vals.append(values[i]);

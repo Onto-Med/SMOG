@@ -32,7 +32,7 @@ public class DynamicTreeTable {
 
   @Override
   public String toString() {
-    StringBuffer sb = new StringBuffer();
+    var sb = new StringBuilder();
     for (DynamicTreeTableNode node : getRootNodes()) sb.append(node.toString(""));
     return sb.toString();
   }
