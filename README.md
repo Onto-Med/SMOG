@@ -72,13 +72,13 @@ export.export();
 
 ### OWL Export Configuration
 
-| property               | description                                                                   |
-|------------------------|-------------------------------------------------------------------------------|
-| namespace              | namespace to be used for this ontology                                        |
-| version                | version of the ontology, see <https://www.w3.org/TR/owl-ref/#versionInfo-def> |
-| inputFile              | Microsoft Excel input file                                                    |
-| outputFile             | destination of the output file                                                |
-| metadata (map)         | additional axioms provided as `<property-uri>: [value1, value2, ...]`         |
+| property       | description                                                                   |
+|----------------|-------------------------------------------------------------------------------|
+| namespace      | namespace to be used for this ontology                                        |
+| version        | version of the ontology, see <https://www.w3.org/TR/owl-ref/#versionInfo-def> |
+| inputFile      | Microsoft Excel input file                                                    |
+| outputFile     | destination of the output file                                                |
+| metadata (map) | additional axioms provided as `<property-uri>: [value1, value2, ...]`         |
 
 Example `config.yaml`:
 
@@ -100,6 +100,9 @@ The code in this repository, and in contributions provided via pull requests, sh
 
 We use the flag `--skip-reflowing-long-strings` for [google-java-format](https://github.com/google/google-java-format),
 as it is currently not supported by all IDEs.
+
+If you are running Linux and have `google-java-format` installed, you can run the [format](format) script to reformat
+all repository files.
 
 ## Reference
 
