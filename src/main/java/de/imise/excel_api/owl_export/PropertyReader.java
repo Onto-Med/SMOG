@@ -28,8 +28,8 @@ public class PropertyReader {
     String valMainPart = getMainPart(valSpec);
     String valAddPart = getAdditionalPart(valSpec);
 
-    Property mainProp = new Property(propMainPart.split(ATTRIBUTE_SPLIT), valMainPart);
-    PropertySpec propertySpec = new PropertySpec(mainProp);
+    var mainProp = new Property(propMainPart.split(ATTRIBUTE_SPLIT), valMainPart);
+    var propertySpec = new PropertySpec(mainProp);
     if (propAddPart != null) propertySpec.setAdditionalProperties(getProperties(propAddPart));
     if (valAddPart != null) propertySpec.setValueProperties(getProperties(valAddPart));
 

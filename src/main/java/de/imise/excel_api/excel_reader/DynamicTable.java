@@ -20,7 +20,7 @@ public class DynamicTable {
   }
 
   public List<Map<String, DynamicTableField>> getRecordsAsMaps() {
-    List<Map<String, DynamicTableField>> records = new ArrayList<Map<String, DynamicTableField>>();
+    var records = new ArrayList<Map<String, DynamicTableField>>();
 
     for (int i = markCell.getRowIndex() + 2; true; i++) {
       Row row = markCell.getSheet().getRow(i);
@@ -28,7 +28,7 @@ public class DynamicTable {
           || ExcelReader.isEmptyRowPart(
               row, headerNumbers.get(0), headerNumbers.get(headerNumbers.size() - 1))) break;
       else {
-        Map<String, DynamicTableField> record = new HashMap<String, DynamicTableField>();
+        var record = new HashMap<String, DynamicTableField>();
 
         for (int headNum : headerNumbers)
           record.put(
@@ -43,8 +43,7 @@ public class DynamicTable {
   }
 
   public Map<Integer, Map<String, DynamicTableField>> getNumberedRecordsAsMaps() {
-    Map<Integer, Map<String, DynamicTableField>> records =
-        new HashMap<Integer, Map<String, DynamicTableField>>();
+    var records = new HashMap<Integer, Map<String, DynamicTableField>>();
 
     for (int i = markCell.getRowIndex() + 2; true; i++) {
       Row row = markCell.getSheet().getRow(i);
@@ -52,7 +51,7 @@ public class DynamicTable {
           || ExcelReader.isEmptyRowPart(
               row, headerNumbers.get(0), headerNumbers.get(headerNumbers.size() - 1))) break;
       else {
-        Map<String, DynamicTableField> record = new HashMap<String, DynamicTableField>();
+        var record = new HashMap<String, DynamicTableField>();
 
         for (int headNum : headerNumbers)
           record.put(
@@ -67,7 +66,7 @@ public class DynamicTable {
   }
 
   public List<List<DynamicTableField>> getRecordsAsLists() {
-    List<List<DynamicTableField>> records = new ArrayList<List<DynamicTableField>>();
+    var records = new ArrayList<List<DynamicTableField>>();
 
     for (int i = markCell.getRowIndex() + 2; true; i++) {
       Row row = markCell.getSheet().getRow(i);
@@ -75,7 +74,7 @@ public class DynamicTable {
           || ExcelReader.isEmptyRowPart(
               row, headerNumbers.get(0), headerNumbers.get(headerNumbers.size() - 1))) break;
       else {
-        List<DynamicTableField> record = new ArrayList<DynamicTableField>();
+        var record = new ArrayList<DynamicTableField>();
 
         for (int headNum : headerNumbers)
           record.add(new DynamicTableField(row.getCell(headNum), row.getRowNum(), headNum));
@@ -88,7 +87,7 @@ public class DynamicTable {
   }
 
   public Map<Integer, List<DynamicTableField>> getNumberedRecordsAsLists() {
-    Map<Integer, List<DynamicTableField>> records = new HashMap<Integer, List<DynamicTableField>>();
+    var records = new HashMap<Integer, List<DynamicTableField>>();
 
     for (int i = markCell.getRowIndex() + 2; true; i++) {
       Row row = markCell.getSheet().getRow(i);
@@ -96,7 +95,7 @@ public class DynamicTable {
           || ExcelReader.isEmptyRowPart(
               row, headerNumbers.get(0), headerNumbers.get(headerNumbers.size() - 1))) break;
       else {
-        List<DynamicTableField> record = new ArrayList<DynamicTableField>();
+        var record = new ArrayList<DynamicTableField>();
 
         for (int headNum : headerNumbers)
           record.add(new DynamicTableField(row.getCell(headNum), row.getRowNum(), headNum));
@@ -109,11 +108,11 @@ public class DynamicTable {
   }
 
   public Map<Integer, List<DynamicTableField>> findRecords(String text, int colNum) {
-    Map<Integer, List<DynamicTableField>> records = new HashMap<Integer, List<DynamicTableField>>();
-    Map<Integer, List<DynamicTableField>> allRecords = getNumberedRecordsAsLists();
+    var records = new HashMap<Integer, List<DynamicTableField>>();
+    var allRecords = getNumberedRecordsAsLists();
 
     for (Integer rowNum : allRecords.keySet()) {
-      List<DynamicTableField> record = allRecords.get(rowNum);
+      var record = allRecords.get(rowNum);
       DynamicTableField field = record.get(colNum);
       Optional<String> fieldValOpt = field.value();
       if (fieldValOpt.isPresent()) {
