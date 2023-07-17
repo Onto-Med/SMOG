@@ -19,7 +19,7 @@ public class ExcelWriter {
 
   public static void writeWorkbook(Workbook wb, File file) {
     try {
-      FileOutputStream fileOut = new FileOutputStream(file);
+      var fileOut = new FileOutputStream(file);
       wb.write(fileOut);
       fileOut.close();
     } catch (IOException e) {
