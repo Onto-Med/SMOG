@@ -50,8 +50,8 @@ public record DynamicTreeTableNode(
   }
 
   public String toString(String gap) {
-    StringBuffer sb =
-        new StringBuffer(gap + name + " :: " + getProperties()).append(System.lineSeparator());
+    var sb =
+        new StringBuilder(gap + name + " :: " + getProperties()).append(System.lineSeparator());
     for (DynamicTreeTableNode childNode : getChildren()) sb.append(childNode.toString(gap + "  "));
     return sb.toString();
   }
