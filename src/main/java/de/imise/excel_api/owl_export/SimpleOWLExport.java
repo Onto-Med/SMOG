@@ -9,7 +9,6 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.Optional;
 import org.semanticweb.owlapi.apibinding.OWLManager;
 import org.semanticweb.owlapi.model.IRI;
@@ -24,14 +23,17 @@ import org.semanticweb.owlapi.model.OWLOntologyCreationException;
 import org.semanticweb.owlapi.model.OWLOntologyManager;
 import org.semanticweb.owlapi.model.OWLOntologyStorageException;
 import org.semanticweb.owlapi.vocab.OWL2Datatype;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class SimpleOWLExport {
 
-  private List<DynamicTreeTable> treeTabs;
-  private OWLOntologyManager man;
-  private OWLDataFactory fac;
+  private final List<DynamicTreeTable> treeTabs;
+  private final OWLOntologyManager man;
+  private final OWLDataFactory fac;
   private OWLOntology ont;
-  private Config config;
+  private final Config config;
+  private static Logger log = LoggerFactory.getLogger(SimpleOWLExport.class);
 
   public SimpleOWLExport(Config config) {
     this.config = config;
@@ -43,6 +45,26 @@ public class SimpleOWLExport {
     } catch (OWLOntologyCreationException e) {
       e.printStackTrace();
     }
+  }
+
+  public void report() {
+    var classes = ont.getClassesInSignature();
+    log.info("Exported " + classes.size() + " classes.");
+    var unannotated =
+        classes.stream()
+            .filter(
+                cls ->
+                    !cls.isTopEntity() && ont.getAnnotationAssertionAxioms(cls.getIRI()).isEmpty())
+            .toList();
+    if (!unannotated.isEmpty())
+      log.warn(
+          "The following "
+              + unannotated.size()
+              + " classes don't have any annotations: "
+              + unannotated.stream()
+                  .map(cls -> cls.toStringID().replaceAll(".*/", ""))
+                  .reduce((s, t) -> s + ", " + t)
+                  .get());
   }
 
   public void export() {
@@ -57,6 +79,7 @@ public class SimpleOWLExport {
     for (String prop : config.getMetadata().keySet())
       addMetadata(fac.getOWLAnnotationProperty(prop), config.getMetadata().get(prop));
     save();
+    report();
   }
 
   private void addMetadata(OWLAnnotationProperty prop, List<String> values) {
@@ -84,6 +107,7 @@ public class SimpleOWLExport {
     for (DynamicTreeTableNode root : tt.getRootNodes()) {
       String clsName = root.name();
       addClass(clsName);
+
       addProperties(clsName, root.getProperties());
       for (DynamicTreeTableNode node : root.getChildren()) addClass(node, clsName);
     }
@@ -109,20 +133,36 @@ public class SimpleOWLExport {
   }
 
   private OWLClass getClass(String clsName) {
-    return fac.getOWLClass(IRI.create(config.getNamespace(), cleanCls(clsName)));
+    try {
+      return fac.getOWLClass(IRI.create(config.getNamespace(), cleanCls(clsName)));
+    } catch (Exception e) {
+      throw new RuntimeException("Cannot get class with name '" + clsName + "'");
+    }
   }
 
   private void addProperties(String clsName, Map<String, DynamicTableField> props) {
     if (props == null) return;
-    for (Entry<String, DynamicTableField> prop : props.entrySet()) {
+    for (var prop : props.entrySet()) {
       Optional<String> val = prop.getValue().value();
       if (val.isPresent()) addProperties(clsName, prop.getKey().trim(), val.get().trim());
     }
   }
 
   private void addProperties(String clsName, String propSpec, String propValues) {
-    for (PropertySpec prop : PropertyReader.getProperties(propSpec, propValues))
-      addProperty(clsName, prop);
+    try {
+      for (PropertySpec prop : PropertyReader.getProperties(propSpec, propValues))
+        addProperty(clsName, prop);
+    } catch (Exception e) {
+      throw new RuntimeException(
+          "Class '"
+              + clsName
+              + "', property '"
+              + propSpec
+              + "': cannot add values '"
+              + propValues
+              + "'",
+          e);
+    }
   }
 
   private void addProperty(String clsName, PropertySpec propSpec) {
@@ -146,12 +186,22 @@ public class SimpleOWLExport {
   }
 
   private OWLAnnotationValue getAnnotationValue(Property propSpec, String propName) {
-    if (propSpec.hasReference()) return getClass(propSpec.getValue()).getIRI();
-    if (propSpec.hasLanguage())
-      return fac.getOWLLiteral(propSpec.getValue(), propSpec.getLanguage());
-    String pref = config.getPropertyPrefix(propName);
-    if (pref == null) return checkIRI(propSpec.getValue(), null);
-    return checkIRI(pref + propSpec.getValue(), null);
+    try {
+      if (propSpec.hasReference()) return getClass(propSpec.getValue()).getIRI();
+      if (propSpec.hasLanguage())
+        return fac.getOWLLiteral(propSpec.getValue(), propSpec.getLanguage());
+      String pref = config.getPropertyPrefix(propName);
+      if (pref == null) return checkIRI(propSpec.getValue(), null);
+      return checkIRI(pref + propSpec.getValue(), null);
+    } catch (Exception e) {
+      throw new RuntimeException(
+          "Cannot get annotation value for property spec value '"
+              + propSpec.getValue()
+              + "' with property name '"
+              + propName
+              + "'",
+          e);
+    }
   }
 
   private OWLAnnotationValue checkIRI(String val, String lang) {
@@ -200,10 +250,14 @@ public class SimpleOWLExport {
   }
 
   private String firstLetterToUpper(String str) {
+    if (str.isEmpty())
+      throw new IllegalArgumentException("can't convert first letter to uppercase: input is empty");
     return str.substring(0, 1).toUpperCase() + str.substring(1);
   }
 
   private String firstLetterToLower(String str) {
+    if (str.isEmpty())
+      throw new IllegalArgumentException("can't convert first letter to lowercase: input is empty");
     return str.substring(0, 1).toLowerCase() + str.substring(1);
   }
 
