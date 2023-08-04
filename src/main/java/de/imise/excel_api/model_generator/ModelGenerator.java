@@ -29,9 +29,9 @@ import org.apache.poi.ss.usermodel.Sheet;
  * read/write from/to Excel files with the same structure as the template file.
  */
 public class ModelGenerator {
-  private Map<String, ObjectSpec> classes;
-  private List<ObjectSpec> objects;
-  private File file;
+  private final Map<String, ObjectSpec> classes;
+  private final List<ObjectSpec> objects;
+  private final File file;
 
   /**
    * Instantiate a Model Generator object to generate Java classes.
@@ -62,6 +62,11 @@ public class ModelGenerator {
 
     Templates temp = new Templates();
     temp.writeWorkbook(dir, StrUtil.getJavaName(file.getName()), packageName, classes, objects);
+  }
+
+  @Override
+  public String toString() {
+    return "ModelGenerator [classes=" + classes + ", objects=" + objects + "]";
   }
 
   private void createObjectSpec(Sheet sheet) {
@@ -147,10 +152,5 @@ public class ModelGenerator {
         ExcelReader.getNextNotEmptyCellNumInRow(fieldNamesRow, nameCell.getColumnIndex() + 1);
     TableSpec tabSpec = getTableSpec(name, fieldNamesRow, firstCol);
     return new TreeTableSpec(treeSpec, tabSpec);
-  }
-
-  @Override
-  public String toString() {
-    return "ModelGenerator [classes=" + classes + ", objects=" + objects + "]";
   }
 }

@@ -2,8 +2,8 @@ package de.imise.excel_api.model_generator.entity_specification;
 
 public class TreeSpec extends Spec {
 
-  private int row;
-  private int col;
+  private final int row;
+  private final int col;
 
   public TreeSpec(String name, int row, int col) {
     super(name);

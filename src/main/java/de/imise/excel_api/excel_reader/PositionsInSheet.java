@@ -6,8 +6,8 @@ import org.apache.poi.ss.usermodel.Sheet;
 
 public class PositionsInSheet {
 
-  private Sheet sheet;
-  private Set<Coordinates> coordinates;
+  private final Sheet sheet;
+  private final Set<Coordinates> coordinates;
 
   public PositionsInSheet(Sheet sheet) {
     this.sheet = sheet;
@@ -26,14 +26,6 @@ public class PositionsInSheet {
     }
   }
 
-  public Sheet getSheet() {
-    return sheet;
-  }
-
-  public Set<Coordinates> getCoordinates() {
-    return coordinates;
-  }
-
   public void addCoordinates(int row, int col) {
     this.coordinates.add(new Coordinates(row, col));
   }
@@ -41,5 +33,13 @@ public class PositionsInSheet {
   @Override
   public String toString() {
     return "PositionsInSheet [sheet=" + sheet.getSheetName() + ", coordinates=" + coordinates + "]";
+  }
+
+  public Sheet getSheet() {
+    return sheet;
+  }
+
+  public Set<Coordinates> getCoordinates() {
+    return coordinates;
   }
 }

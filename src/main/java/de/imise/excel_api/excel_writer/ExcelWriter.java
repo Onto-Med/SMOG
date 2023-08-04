@@ -14,8 +14,11 @@ import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFCell;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class ExcelWriter {
+  private static final Logger LOGGER = LoggerFactory.getLogger(ExcelWriter.class);
 
   public static void writeWorkbook(Workbook wb, File file) {
     try {
@@ -23,8 +26,8 @@ public class ExcelWriter {
       wb.write(fileOut);
       fileOut.close();
     } catch (IOException e) {
-      System.out.println("Error by writing workbook to " + file.getName());
-      e.printStackTrace();
+      LOGGER.error(
+          "Could not write workbook to file '{}'. ({})", file.getName(), e.getLocalizedMessage());
     }
   }
 

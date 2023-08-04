@@ -8,12 +8,12 @@ import java.util.Map;
 
 public class ObjectSpec extends Spec {
 
-  private List<FieldSpec> fields;
-  private Map<String, TableSpec> tables;
-  private List<DynamicTableSpec> dynamicTables;
-  private List<TableSpec> freePositionTables;
-  private List<TreeSpec> trees;
-  private List<TreeTableSpec> treeTables;
+  private final List<FieldSpec> fields;
+  private final Map<String, TableSpec> tables;
+  private final List<DynamicTableSpec> dynamicTables;
+  private final List<TableSpec> freePositionTables;
+  private final List<TreeSpec> trees;
+  private final List<TreeTableSpec> treeTables;
 
   public ObjectSpec(String name) {
     super(name);
@@ -49,41 +49,8 @@ public class ObjectSpec extends Spec {
     this.treeTables.add(treeTable);
   }
 
-  public List<TableSpec> getFreePositionTables() {
-    return freePositionTables;
-  }
-
-  public List<FieldSpec> getFields() {
-    return fields;
-  }
-
-  public Collection<TableSpec> getTables() {
-    return tables.values();
-  }
-
   public TableSpec getTable(String name) {
     return tables.get(name);
-  }
-
-  public List<DynamicTableSpec> getDynamicTables() {
-    return dynamicTables;
-  }
-
-  public List<TreeSpec> getTrees() {
-    return trees;
-  }
-
-  public List<TreeTableSpec> getTreeTables() {
-    return treeTables;
-  }
-
-  public boolean isEmpty() {
-    return fields.size() == 0
-        && tables.size() == 0
-        && dynamicTables.size() == 0
-        && freePositionTables.size() == 0
-        && trees.size() == 0
-        && treeTables.size() == 0;
   }
 
   @Override
@@ -101,5 +68,38 @@ public class ObjectSpec extends Spec {
         + ", treeTables="
         + treeTables
         + "]";
+  }
+
+  public List<TableSpec> getFreePositionTables() {
+    return freePositionTables;
+  }
+
+  public List<FieldSpec> getFields() {
+    return fields;
+  }
+
+  public Collection<TableSpec> getTables() {
+    return tables.values();
+  }
+
+  public List<DynamicTableSpec> getDynamicTables() {
+    return dynamicTables;
+  }
+
+  public List<TreeSpec> getTrees() {
+    return trees;
+  }
+
+  public List<TreeTableSpec> getTreeTables() {
+    return treeTables;
+  }
+
+  public boolean isEmpty() {
+    return fields.isEmpty()
+        && tables.isEmpty()
+        && dynamicTables.isEmpty()
+        && freePositionTables.isEmpty()
+        && trees.isEmpty()
+        && treeTables.isEmpty();
   }
 }

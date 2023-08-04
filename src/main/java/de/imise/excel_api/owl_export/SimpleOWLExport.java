@@ -28,12 +28,12 @@ import org.slf4j.LoggerFactory;
 
 public class SimpleOWLExport {
 
+  private static final Logger log = LoggerFactory.getLogger(SimpleOWLExport.class);
   private final List<DynamicTreeTable> treeTabs;
   private final OWLOntologyManager man;
   private final OWLDataFactory fac;
-  private OWLOntology ont;
   private final Config config;
-  private static Logger log = LoggerFactory.getLogger(SimpleOWLExport.class);
+  private OWLOntology ont;
 
   public SimpleOWLExport(Config config) {
     this.config = config;
@@ -43,8 +43,13 @@ public class SimpleOWLExport {
     try {
       ont = man.createOntology(config.getOntologyIRI());
     } catch (OWLOntologyCreationException e) {
-      e.printStackTrace();
+      log.error(e.getLocalizedMessage());
     }
+  }
+
+  public static void main(String[] args) {
+    SimpleOWLExport exp = new SimpleOWLExport(Config.get("config.yaml"));
+    exp.export();
   }
 
   public void report() {
@@ -82,6 +87,14 @@ public class SimpleOWLExport {
     report();
   }
 
+  public void addOntoVersion(String value, OWL2Datatype datatype) {
+    addOntoAnnotation(fac.getOWLVersionInfo(), fac.getOWLLiteral(value, datatype));
+  }
+
+  public OWLDataFactory getFactory() {
+    return fac;
+  }
+
   private void addMetadata(OWLAnnotationProperty prop, List<String> values) {
     for (String val : values) {
       if (val.contains("|")) {
@@ -91,15 +104,11 @@ public class SimpleOWLExport {
     }
   }
 
-  public OWLDataFactory getFactory() {
-    return fac;
-  }
-
   private void save() {
     try {
       man.saveOntology(ont, config.getOutputFormat(), config.getOutputFileIRI());
     } catch (OWLOntologyStorageException e) {
-      e.printStackTrace();
+      log.error(e.getLocalizedMessage());
     }
   }
 
@@ -144,7 +153,7 @@ public class SimpleOWLExport {
     if (props == null) return;
     for (var prop : props.entrySet()) {
       Optional<String> val = prop.getValue().value();
-      if (val.isPresent()) addProperties(clsName, prop.getKey().trim(), val.get().trim());
+      val.ifPresent(s -> addProperties(clsName, prop.getKey().trim(), s.trim()));
     }
   }
 
@@ -235,10 +244,10 @@ public class SimpleOWLExport {
 
   private String clean(String str) {
     String[] parts = str.trim().split("[^A-Za-z0-9]+");
-    String res = "";
-    for (String part : parts) if (!part.isBlank()) res += firstLetterToUpper(part);
-    if (res.isBlank()) return str;
-    return res;
+    StringBuilder res = new StringBuilder();
+    for (String part : parts) if (!part.isBlank()) res.append(firstLetterToUpper(part));
+    if (res.toString().isBlank()) return str;
+    return res.toString();
   }
 
   private String cleanCls(String str) {
@@ -261,21 +270,8 @@ public class SimpleOWLExport {
     return str.substring(0, 1).toLowerCase() + str.substring(1);
   }
 
-  public void addOntoVersion(String value, OWL2Datatype datatype) {
-    addOntoAnnotation(fac.getOWLVersionInfo(), fac.getOWLLiteral(value, datatype));
-  }
-
   private void addOntoAnnotation(OWLAnnotationProperty prop, OWLAnnotationValue val) {
     ont.addAxiom(
         fac.getOWLAnnotationAssertionAxiom(prop, ont.getOntologyID().getOntologyIRI().get(), val));
-  }
-
-  public static void main(String[] args) {
-    SimpleOWLExport exp = new SimpleOWLExport(Config.get("config.yaml"));
-    exp.export();
-    //    exp.addOntoVersion(
-    //        LocalDateTime.now().format(DateTimeFormatter.ISO_LOCAL_DATE_TIME),
-    //        OWL2Datatype.XSD_DATE_TIME);
-    //    exp.save();
   }
 }

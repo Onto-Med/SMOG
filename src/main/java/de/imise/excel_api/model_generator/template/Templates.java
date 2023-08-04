@@ -20,20 +20,23 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class Templates {
+  private static final Logger LOGGER = LoggerFactory.getLogger(Templates.class);
 
-  private Map<String, String> workbook = new HashMap<>();
-  private Map<String, String> sheet = new HashMap<>();
-  private Map<String, String> tabRec = new HashMap<>();
-  private Map<String, String> freePosTabRec = new HashMap<>();
-  private Map<String, String> treeNode = new HashMap<>();
+  private final Map<String, String> workbook = new HashMap<>();
+  private final Map<String, String> sheet = new HashMap<>();
+  private final Map<String, String> tabRec = new HashMap<>();
+  private final Map<String, String> freePosTabRec = new HashMap<>();
+  private final Map<String, String> treeNode = new HashMap<>();
 
-  private Map<String, List<String>> workbookImp = new HashMap<>();
-  private Map<String, List<String>> sheetImp = new HashMap<>();
-  private Map<String, List<String>> tabRecImp = new HashMap<>();
-  private Map<String, List<String>> freePosTabRecImp = new HashMap<>();
-  private Map<String, List<String>> treeNodeImp = new HashMap<>();
+  private final Map<String, List<String>> workbookImp = new HashMap<>();
+  private final Map<String, List<String>> sheetImp = new HashMap<>();
+  private final Map<String, List<String>> tabRecImp = new HashMap<>();
+  private final Map<String, List<String>> freePosTabRecImp = new HashMap<>();
+  private final Map<String, List<String>> treeNodeImp = new HashMap<>();
 
   public Templates() {
     readTemplate(
@@ -94,6 +97,19 @@ public class Templates {
     write(getFileStringBuilder(packageName, imps, sb), dir, clsName);
   }
 
+  @Override
+  public String toString() {
+    return "Templates [workbook="
+        + workbook
+        + ", sheet="
+        + sheet
+        + ", tabRec="
+        + tabRec
+        + ", freePosTabRec="
+        + freePosTabRec
+        + "]";
+  }
+
   private void writeSheet(File dir, String clsName, String packageName, ObjectSpec obj) {
     Set<String> imps = new HashSet<>();
     var sb = new StringBuilder(sheet.get("_HEADER").replace("_SHEET_T", clsName));
@@ -101,7 +117,7 @@ public class Templates {
     for (FieldSpec field : obj.getFields()) {
       if (field.hasListDataType()) {
         switch (field.getDataType()) {
-          case DataType.STRING:
+          case DataType.STRING -> {
             imps.addAll(sheetImp.get("get_STRING_LIST_FIELD"));
             String get_STRING_LIST_FIELD =
                 sheet
@@ -111,8 +127,8 @@ public class Templates {
                     .replace("_COL", field.getCol() + "")
                     .replace("_LIST_SEPARATOR", field.getListSeparator());
             sb.append(get_STRING_LIST_FIELD);
-            break;
-          case DataType.INTEGER:
+          }
+          case DataType.INTEGER -> {
             imps.addAll(sheetImp.get("get_INTEGER_LIST_FIELD"));
             String get_INTEGER_LIST_FIELD =
                 sheet
@@ -122,8 +138,8 @@ public class Templates {
                     .replace("_COL", field.getCol() + "")
                     .replace("_LIST_SEPARATOR", field.getListSeparator());
             sb.append(get_INTEGER_LIST_FIELD);
-            break;
-          case DataType.DOUBLE:
+          }
+          case DataType.DOUBLE -> {
             imps.addAll(sheetImp.get("get_DOUBLE_LIST_FIELD"));
             String get_DOUBLE_LIST_FIELD =
                 sheet
@@ -133,8 +149,8 @@ public class Templates {
                     .replace("_COL", field.getCol() + "")
                     .replace("_LIST_SEPARATOR", field.getListSeparator());
             sb.append(get_DOUBLE_LIST_FIELD);
-            break;
-          case DataType.DATE:
+          }
+          case DataType.DATE -> {
             imps.addAll(sheetImp.get("get_DATE_LIST_FIELD"));
             String get_DATE_LIST_FIELD =
                 sheet
@@ -144,8 +160,8 @@ public class Templates {
                     .replace("_COL", field.getCol() + "")
                     .replace("_LIST_SEPARATOR", field.getListSeparator());
             sb.append(get_DATE_LIST_FIELD);
-            break;
-          case DataType.BOOLEAN:
+          }
+          case DataType.BOOLEAN -> {
             imps.addAll(sheetImp.get("get_BOOLEAN_LIST_FIELD"));
             String get_BOOLEAN_LIST_FIELD =
                 sheet
@@ -155,11 +171,11 @@ public class Templates {
                     .replace("_COL", field.getCol() + "")
                     .replace("_LIST_SEPARATOR", field.getListSeparator());
             sb.append(get_BOOLEAN_LIST_FIELD);
-            break;
+          }
         }
       } else {
         switch (field.getDataType()) {
-          case DataType.STRING:
+          case DataType.STRING -> {
             imps.addAll(sheetImp.get("get_STRING_FIELD"));
             String get_STRING_FIELD =
                 sheet
@@ -168,8 +184,8 @@ public class Templates {
                     .replace("_ROW", field.getRow() + "")
                     .replace("_COL", field.getCol() + "");
             sb.append(get_STRING_FIELD);
-            break;
-          case DataType.INTEGER:
+          }
+          case DataType.INTEGER -> {
             imps.addAll(sheetImp.get("get_INTEGER_FIELD"));
             String get_INTEGER_FIELD =
                 sheet
@@ -178,8 +194,8 @@ public class Templates {
                     .replace("_ROW", field.getRow() + "")
                     .replace("_COL", field.getCol() + "");
             sb.append(get_INTEGER_FIELD);
-            break;
-          case DataType.DOUBLE:
+          }
+          case DataType.DOUBLE -> {
             imps.addAll(sheetImp.get("get_DOUBLE_FIELD"));
             String get_DOUBLE_FIELD =
                 sheet
@@ -188,8 +204,8 @@ public class Templates {
                     .replace("_ROW", field.getRow() + "")
                     .replace("_COL", field.getCol() + "");
             sb.append(get_DOUBLE_FIELD);
-            break;
-          case DataType.DATE:
+          }
+          case DataType.DATE -> {
             imps.addAll(sheetImp.get("get_DATE_FIELD"));
             String get_DATE_FIELD =
                 sheet
@@ -198,8 +214,8 @@ public class Templates {
                     .replace("_ROW", field.getRow() + "")
                     .replace("_COL", field.getCol() + "");
             sb.append(get_DATE_FIELD);
-            break;
-          case DataType.BOOLEAN:
+          }
+          case DataType.BOOLEAN -> {
             imps.addAll(sheetImp.get("get_BOOLEAN_FIELD"));
             String get_BOOLEAN_FIELD =
                 sheet
@@ -208,7 +224,7 @@ public class Templates {
                     .replace("_ROW", field.getRow() + "")
                     .replace("_COL", field.getCol() + "");
             sb.append(get_BOOLEAN_FIELD);
-            break;
+          }
         }
       }
     }
@@ -266,8 +282,8 @@ public class Templates {
 
     for (TreeTableSpec tt : obj.getTreeTables()) {
       imps.addAll(sheetImp.get("get_TREE_TABLE"));
-      TreeSpec tree = tt.getTreeSpec();
-      TableSpec tab = tt.getTableSpec();
+      TreeSpec tree = tt.treeSpec();
+      TableSpec tab = tt.tableSpec();
       String javaRecordClsName = clsName + tree.getJavaName() + "Node";
       String get_TREE_TABLE =
           sheet
@@ -292,7 +308,7 @@ public class Templates {
     for (FieldSpec field : tab.getFields()) {
       if (field.hasListDataType()) {
         switch (field.getDataType()) {
-          case DataType.STRING:
+          case DataType.STRING -> {
             imps.addAll(tabRecImp.get("get_STRING_LIST_FIELD"));
             String get_STRING_LIST_FIELD =
                 tabRec
@@ -301,8 +317,8 @@ public class Templates {
                     .replace("_COL", field.getCol() + "")
                     .replace("_LIST_SEPARATOR", field.getListSeparator());
             sb.append(get_STRING_LIST_FIELD);
-            break;
-          case DataType.INTEGER:
+          }
+          case DataType.INTEGER -> {
             imps.addAll(tabRecImp.get("get_INTEGER_LIST_FIELD"));
             String get_INTEGER_LIST_FIELD =
                 tabRec
@@ -311,8 +327,8 @@ public class Templates {
                     .replace("_COL", field.getCol() + "")
                     .replace("_LIST_SEPARATOR", field.getListSeparator());
             sb.append(get_INTEGER_LIST_FIELD);
-            break;
-          case DataType.DOUBLE:
+          }
+          case DataType.DOUBLE -> {
             imps.addAll(tabRecImp.get("get_DOUBLE_LIST_FIELD"));
             String get_DOUBLE_LIST_FIELD =
                 tabRec
@@ -321,8 +337,8 @@ public class Templates {
                     .replace("_COL", field.getCol() + "")
                     .replace("_LIST_SEPARATOR", field.getListSeparator());
             sb.append(get_DOUBLE_LIST_FIELD);
-            break;
-          case DataType.DATE:
+          }
+          case DataType.DATE -> {
             imps.addAll(tabRecImp.get("get_DATE_LIST_FIELD"));
             String get_DATE_LIST_FIELD =
                 tabRec
@@ -331,8 +347,8 @@ public class Templates {
                     .replace("_COL", field.getCol() + "")
                     .replace("_LIST_SEPARATOR", field.getListSeparator());
             sb.append(get_DATE_LIST_FIELD);
-            break;
-          case DataType.BOOLEAN:
+          }
+          case DataType.BOOLEAN -> {
             imps.addAll(tabRecImp.get("get_BOOLEAN_LIST_FIELD"));
             String get_BOOLEAN_LIST_FIELD =
                 tabRec
@@ -341,11 +357,11 @@ public class Templates {
                     .replace("_COL", field.getCol() + "")
                     .replace("_LIST_SEPARATOR", field.getListSeparator());
             sb.append(get_BOOLEAN_LIST_FIELD);
-            break;
+          }
         }
       } else {
         switch (field.getDataType()) {
-          case DataType.STRING:
+          case DataType.STRING -> {
             imps.addAll(tabRecImp.get("get_STRING_FIELD"));
             String get_STRING_FIELD =
                 tabRec
@@ -353,7 +369,6 @@ public class Templates {
                     .replace("_STRING_FIELD", field.getJavaName())
                     .replace("_COL", field.getCol() + "");
             sb.append(get_STRING_FIELD);
-
             if (tab.hasColRef() && tab.getColRefOwn().getCol() == field.getCol()) {
               TableSpec foreignTab = obj.getTable(tab.getColRefForeignTable());
               FieldSpec foreignCol = foreignTab.getField(tab.getColRefForeignColumn());
@@ -373,9 +388,8 @@ public class Templates {
                       .replace("_COL_REF_FOREIGN", foreignCol.getCol() + "");
               sb.append(get_COL_REF);
             }
-
-            break;
-          case DataType.INTEGER:
+          }
+          case DataType.INTEGER -> {
             imps.addAll(tabRecImp.get("get_INTEGER_FIELD"));
             String get_INTEGER_FIELD =
                 tabRec
@@ -383,8 +397,8 @@ public class Templates {
                     .replace("_INTEGER_FIELD", field.getJavaName())
                     .replace("_COL", field.getCol() + "");
             sb.append(get_INTEGER_FIELD);
-            break;
-          case DataType.DOUBLE:
+          }
+          case DataType.DOUBLE -> {
             imps.addAll(tabRecImp.get("get_DOUBLE_FIELD"));
             String get_DOUBLE_FIELD =
                 tabRec
@@ -392,8 +406,8 @@ public class Templates {
                     .replace("_DOUBLE_FIELD", field.getJavaName())
                     .replace("_COL", field.getCol() + "");
             sb.append(get_DOUBLE_FIELD);
-            break;
-          case DataType.DATE:
+          }
+          case DataType.DATE -> {
             imps.addAll(tabRecImp.get("get_DATE_FIELD"));
             String get_DATE_FIELD =
                 tabRec
@@ -401,8 +415,8 @@ public class Templates {
                     .replace("_DATE_FIELD", field.getJavaName())
                     .replace("_COL", field.getCol() + "");
             sb.append(get_DATE_FIELD);
-            break;
-          case DataType.BOOLEAN:
+          }
+          case DataType.BOOLEAN -> {
             imps.addAll(tabRecImp.get("get_BOOLEAN_FIELD"));
             String get_BOOLEAN_FIELD =
                 tabRec
@@ -410,7 +424,7 @@ public class Templates {
                     .replace("_BOOLEAN_FIELD", field.getJavaName())
                     .replace("_COL", field.getCol() + "");
             sb.append(get_BOOLEAN_FIELD);
-            break;
+          }
         }
       }
     }
@@ -442,7 +456,7 @@ public class Templates {
     for (FieldSpec field : tab.getFields()) {
       if (field.hasListDataType()) {
         switch (field.getDataType()) {
-          case DataType.STRING:
+          case DataType.STRING -> {
             imps.addAll(freePosTabRecImp.get("get_STRING_LIST_FIELD"));
             String get_STRING_LIST_FIELD =
                 freePosTabRec
@@ -451,8 +465,8 @@ public class Templates {
                     .replace("_COL_INDEX", field.getTabColIndex() + "")
                     .replace("_LIST_SEPARATOR", field.getListSeparator());
             sb.append(get_STRING_LIST_FIELD);
-            break;
-          case DataType.INTEGER:
+          }
+          case DataType.INTEGER -> {
             imps.addAll(freePosTabRecImp.get("get_INTEGER_LIST_FIELD"));
             String get_INTEGER_LIST_FIELD =
                 freePosTabRec
@@ -461,8 +475,8 @@ public class Templates {
                     .replace("_COL_INDEX", field.getTabColIndex() + "")
                     .replace("_LIST_SEPARATOR", field.getListSeparator());
             sb.append(get_INTEGER_LIST_FIELD);
-            break;
-          case DataType.DOUBLE:
+          }
+          case DataType.DOUBLE -> {
             imps.addAll(freePosTabRecImp.get("get_DOUBLE_LIST_FIELD"));
             String get_DOUBLE_LIST_FIELD =
                 freePosTabRec
@@ -471,8 +485,8 @@ public class Templates {
                     .replace("_COL_INDEX", field.getTabColIndex() + "")
                     .replace("_LIST_SEPARATOR", field.getListSeparator());
             sb.append(get_DOUBLE_LIST_FIELD);
-            break;
-          case DataType.DATE:
+          }
+          case DataType.DATE -> {
             imps.addAll(freePosTabRecImp.get("get_DATE_LIST_FIELD"));
             String get_DATE_LIST_FIELD =
                 freePosTabRec
@@ -481,8 +495,8 @@ public class Templates {
                     .replace("_COL_INDEX", field.getTabColIndex() + "")
                     .replace("_LIST_SEPARATOR", field.getListSeparator());
             sb.append(get_DATE_LIST_FIELD);
-            break;
-          case DataType.BOOLEAN:
+          }
+          case DataType.BOOLEAN -> {
             imps.addAll(freePosTabRecImp.get("get_BOOLEAN_LIST_FIELD"));
             String get_BOOLEAN_LIST_FIELD =
                 freePosTabRec
@@ -491,11 +505,11 @@ public class Templates {
                     .replace("_COL_INDEX", field.getTabColIndex() + "")
                     .replace("_LIST_SEPARATOR", field.getListSeparator());
             sb.append(get_BOOLEAN_LIST_FIELD);
-            break;
+          }
         }
       } else {
         switch (field.getDataType()) {
-          case DataType.STRING:
+          case DataType.STRING -> {
             imps.addAll(freePosTabRecImp.get("get_STRING_FIELD"));
             String get_STRING_FIELD =
                 freePosTabRec
@@ -503,8 +517,8 @@ public class Templates {
                     .replace("_STRING_FIELD", field.getJavaName())
                     .replace("_COL_INDEX", field.getTabColIndex() + "");
             sb.append(get_STRING_FIELD);
-            break;
-          case DataType.INTEGER:
+          }
+          case DataType.INTEGER -> {
             imps.addAll(freePosTabRecImp.get("get_INTEGER_FIELD"));
             String get_INTEGER_FIELD =
                 freePosTabRec
@@ -512,8 +526,8 @@ public class Templates {
                     .replace("_INTEGER_FIELD", field.getJavaName())
                     .replace("_COL_INDEX", field.getTabColIndex() + "");
             sb.append(get_INTEGER_FIELD);
-            break;
-          case DataType.DOUBLE:
+          }
+          case DataType.DOUBLE -> {
             imps.addAll(freePosTabRecImp.get("get_DOUBLE_FIELD"));
             String get_DOUBLE_FIELD =
                 freePosTabRec
@@ -521,8 +535,8 @@ public class Templates {
                     .replace("_DOUBLE_FIELD", field.getJavaName())
                     .replace("_COL_INDEX", field.getTabColIndex() + "");
             sb.append(get_DOUBLE_FIELD);
-            break;
-          case DataType.DATE:
+          }
+          case DataType.DATE -> {
             imps.addAll(freePosTabRecImp.get("get_DATE_FIELD"));
             String get_DATE_FIELD =
                 freePosTabRec
@@ -530,8 +544,8 @@ public class Templates {
                     .replace("_DATE_FIELD", field.getJavaName())
                     .replace("_COL_INDEX", field.getTabColIndex() + "");
             sb.append(get_DATE_FIELD);
-            break;
-          case DataType.BOOLEAN:
+          }
+          case DataType.BOOLEAN -> {
             imps.addAll(freePosTabRecImp.get("get_BOOLEAN_FIELD"));
             String get_BOOLEAN_FIELD =
                 freePosTabRec
@@ -539,7 +553,7 @@ public class Templates {
                     .replace("_BOOLEAN_FIELD", field.getJavaName())
                     .replace("_COL_INDEX", field.getTabColIndex() + "");
             sb.append(get_BOOLEAN_FIELD);
-            break;
+          }
         }
       }
     }
@@ -568,7 +582,7 @@ public class Templates {
     for (FieldSpec field : tab.getFields()) {
       if (field.hasListDataType()) {
         switch (field.getDataType()) {
-          case DataType.STRING:
+          case DataType.STRING -> {
             imps.addAll(treeNodeImp.get("get_STRING_LIST_FIELD"));
             String get_STRING_LIST_FIELD =
                 treeNode
@@ -577,8 +591,8 @@ public class Templates {
                     .replace("_COL_INDEX", field.getTabColIndex() + "")
                     .replace("_LIST_SEPARATOR", field.getListSeparator());
             sb.append(get_STRING_LIST_FIELD);
-            break;
-          case DataType.INTEGER:
+          }
+          case DataType.INTEGER -> {
             imps.addAll(treeNodeImp.get("get_INTEGER_LIST_FIELD"));
             String get_INTEGER_LIST_FIELD =
                 treeNode
@@ -587,8 +601,8 @@ public class Templates {
                     .replace("_COL_INDEX", field.getTabColIndex() + "")
                     .replace("_LIST_SEPARATOR", field.getListSeparator());
             sb.append(get_INTEGER_LIST_FIELD);
-            break;
-          case DataType.DOUBLE:
+          }
+          case DataType.DOUBLE -> {
             imps.addAll(treeNodeImp.get("get_DOUBLE_LIST_FIELD"));
             String get_DOUBLE_LIST_FIELD =
                 treeNode
@@ -597,8 +611,8 @@ public class Templates {
                     .replace("_COL_INDEX", field.getTabColIndex() + "")
                     .replace("_LIST_SEPARATOR", field.getListSeparator());
             sb.append(get_DOUBLE_LIST_FIELD);
-            break;
-          case DataType.DATE:
+          }
+          case DataType.DATE -> {
             imps.addAll(treeNodeImp.get("get_DATE_LIST_FIELD"));
             String get_DATE_LIST_FIELD =
                 treeNode
@@ -607,8 +621,8 @@ public class Templates {
                     .replace("_COL_INDEX", field.getTabColIndex() + "")
                     .replace("_LIST_SEPARATOR", field.getListSeparator());
             sb.append(get_DATE_LIST_FIELD);
-            break;
-          case DataType.BOOLEAN:
+          }
+          case DataType.BOOLEAN -> {
             imps.addAll(treeNodeImp.get("get_BOOLEAN_LIST_FIELD"));
             String get_BOOLEAN_LIST_FIELD =
                 treeNode
@@ -617,11 +631,11 @@ public class Templates {
                     .replace("_COL_INDEX", field.getTabColIndex() + "")
                     .replace("_LIST_SEPARATOR", field.getListSeparator());
             sb.append(get_BOOLEAN_LIST_FIELD);
-            break;
+          }
         }
       } else {
         switch (field.getDataType()) {
-          case DataType.STRING:
+          case DataType.STRING -> {
             imps.addAll(treeNodeImp.get("get_STRING_FIELD"));
             String get_STRING_FIELD =
                 treeNode
@@ -629,8 +643,8 @@ public class Templates {
                     .replace("_STRING_FIELD", field.getJavaName())
                     .replace("_COL_INDEX", field.getTabColIndex() + "");
             sb.append(get_STRING_FIELD);
-            break;
-          case DataType.INTEGER:
+          }
+          case DataType.INTEGER -> {
             imps.addAll(treeNodeImp.get("get_INTEGER_FIELD"));
             String get_INTEGER_FIELD =
                 treeNode
@@ -638,8 +652,8 @@ public class Templates {
                     .replace("_INTEGER_FIELD", field.getJavaName())
                     .replace("_COL_INDEX", field.getTabColIndex() + "");
             sb.append(get_INTEGER_FIELD);
-            break;
-          case DataType.DOUBLE:
+          }
+          case DataType.DOUBLE -> {
             imps.addAll(treeNodeImp.get("get_DOUBLE_FIELD"));
             String get_DOUBLE_FIELD =
                 treeNode
@@ -647,8 +661,8 @@ public class Templates {
                     .replace("_DOUBLE_FIELD", field.getJavaName())
                     .replace("_COL_INDEX", field.getTabColIndex() + "");
             sb.append(get_DOUBLE_FIELD);
-            break;
-          case DataType.DATE:
+          }
+          case DataType.DATE -> {
             imps.addAll(treeNodeImp.get("get_DATE_FIELD"));
             String get_DATE_FIELD =
                 treeNode
@@ -656,8 +670,8 @@ public class Templates {
                     .replace("_DATE_FIELD", field.getJavaName())
                     .replace("_COL_INDEX", field.getTabColIndex() + "");
             sb.append(get_DATE_FIELD);
-            break;
-          case DataType.BOOLEAN:
+          }
+          case DataType.BOOLEAN -> {
             imps.addAll(treeNodeImp.get("get_BOOLEAN_FIELD"));
             String get_BOOLEAN_FIELD =
                 treeNode
@@ -665,7 +679,7 @@ public class Templates {
                     .replace("_BOOLEAN_FIELD", field.getJavaName())
                     .replace("_COL_INDEX", field.getTabColIndex() + "");
             sb.append(get_BOOLEAN_FIELD);
-            break;
+          }
         }
       }
     }
@@ -725,7 +739,7 @@ public class Templates {
       }
       reader.close();
     } catch (Exception e) {
-      e.printStackTrace();
+      LOGGER.error(e.getLocalizedMessage());
     }
   }
 
@@ -735,20 +749,7 @@ public class Templates {
       writer.write(sb.toString());
       writer.close();
     } catch (IOException e) {
-      e.printStackTrace();
+      LOGGER.error(e.getLocalizedMessage());
     }
-  }
-
-  @Override
-  public String toString() {
-    return "Templates [workbook="
-        + workbook
-        + ", sheet="
-        + sheet
-        + ", tabRec="
-        + tabRec
-        + ", freePosTabRec="
-        + freePosTabRec
-        + "]";
   }
 }
