@@ -8,8 +8,8 @@ import org.apache.poi.ss.usermodel.Row;
 
 public class DynamicTreeTable {
 
-  private Cell markCell;
-  private Map<Integer, Map<String, DynamicTableField>> table;
+  private final Cell markCell;
+  private final Map<Integer, Map<String, DynamicTableField>> table;
 
   public DynamicTreeTable(Cell markCell, DynamicTable table) {
     this.markCell = markCell;

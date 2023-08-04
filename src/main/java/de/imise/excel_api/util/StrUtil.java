@@ -8,10 +8,10 @@ import java.util.regex.Pattern;
 
 public class StrUtil {
 
-  private static String[][] UMLAUT_REPLACEMENTS = {
+  private static final String[][] UMLAUT_REPLACEMENTS = {
     {"Ä", "Ae"}, {"Ü", "Ue"}, {"Ö", "Oe"}, {"ä", "ae"}, {"ü", "ue"}, {"ö", "oe"}, {"ß", "ss"}
   };
-  private static String[] dateFormats = {"dd.MM.yyyy", "yyyy-MM-dd'T'HH:mm:ss", "yyyy-MM-dd"};
+  private static final String[] dateFormats = {"dd.MM.yyyy", "yyyy-MM-dd'T'HH:mm:ss", "yyyy-MM-dd"};
   public static String standardDateFormat = "yyyy-MM-dd'T'HH:mm:ss";
   public static String intFormat = "0";
   public static String doubleFormat = "0.00";
@@ -82,8 +82,7 @@ public class StrUtil {
   public static Optional<Boolean> parseBoolean(String s) {
     try {
       Optional<Double> dVal = StrUtil.parseDouble(s);
-      if (dVal.isPresent()) return Optional.of(dVal.get() > 0);
-      else return Optional.of(Boolean.valueOf(s.trim()));
+      return dVal.map(aDouble -> aDouble > 0).or(() -> Optional.of(Boolean.valueOf(s.trim())));
     } catch (Exception e) {
       return Optional.empty();
     }

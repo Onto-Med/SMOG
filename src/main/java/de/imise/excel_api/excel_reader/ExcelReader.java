@@ -18,8 +18,11 @@ import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class ExcelReader {
+  private static final Logger LOGGER = LoggerFactory.getLogger(ExcelReader.class);
 
   public static Workbook getWorkbook(File file) {
     Workbook workbook = null;
@@ -27,8 +30,10 @@ public class ExcelReader {
     try {
       workbook = new XSSFWorkbook(new FileInputStream(file));
     } catch (Exception e) {
-      System.out.println("Error by creating workbook from " + file.getName());
-      e.printStackTrace();
+      LOGGER.error(
+          "Could not create workbook from file '{}'. ({})",
+          file.getName(),
+          e.getLocalizedMessage());
     }
 
     return workbook;
@@ -206,9 +211,9 @@ public class ExcelReader {
 
   private static String[] getValues(Row row, int colNum, String separator) {
     Optional<String> valuesStr = getStringValue(row, colNum);
-    if (!valuesStr.isPresent()) return new String[] {};
-
-    return valuesStr.get().trim().split(" *\\" + separator + " *");
+    return valuesStr
+        .map(s -> s.trim().split(" *\\" + separator + " *"))
+        .orElseGet(() -> new String[] {});
   }
 
   public static boolean isString(Cell cell) {
@@ -242,14 +247,6 @@ public class ExcelReader {
   public static boolean isFormula(Cell cell) {
     return cell != null && cell.getCellType() == CellType.FORMULA;
   }
-
-  //	private static boolean hasGeneralFormat(Cell cell) {
-  //		return cell.getCellStyle().getDataFormatString().equalsIgnoreCase("General");
-  //	}
-  //
-  //	private static boolean hasTextFormat(Cell cell) {
-  //		return cell.getCellStyle().getDataFormatString().equals("@");
-  //	}
 
   private static boolean hasDoubleFormat(Cell cell) {
     String format = cell.getCellStyle().getDataFormatString();
@@ -381,8 +378,7 @@ public class ExcelReader {
       Optional<String> ref = StrUtil.findInString(Entity.COL_REF_PATTERN, value.get());
       if (ref.isPresent()) {
         String[] refAr = ref.get().split(Entity.COL_REF_SEPARATOR);
-        if (refAr != null
-            && refAr.length == 2
+        if (refAr.length == 2
             && refAr[0] != null
             && !refAr[0].trim().isEmpty()
             && refAr[1] != null

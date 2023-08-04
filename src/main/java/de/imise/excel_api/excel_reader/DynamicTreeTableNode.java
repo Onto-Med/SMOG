@@ -16,7 +16,7 @@ public record DynamicTreeTableNode(
     Map<Integer, Map<String, DynamicTableField>> table) {
   public DynamicTreeTableNode(Cell cell, Map<Integer, Map<String, DynamicTableField>> table) {
     this(
-        ExcelReader.getStringValue(cell).get(),
+        ExcelReader.getStringValue(cell).orElse(""),
         cell.getRowIndex(),
         cell.getColumnIndex(),
         cell.getSheet(),

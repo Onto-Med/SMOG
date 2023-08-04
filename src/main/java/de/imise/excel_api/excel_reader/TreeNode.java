@@ -16,18 +16,38 @@ public class TreeNode {
   HashMap<Integer, FreePositionTableRecord> table;
 
   public TreeNode(Cell cell) {
-    this.name = ExcelReader.getStringValue(cell).get();
+    this.name = ExcelReader.getStringValue(cell).orElse("");
     this.rowNum = cell.getRowIndex();
     this.colNum = cell.getColumnIndex();
     this.sheet = cell.getSheet();
   }
 
   public TreeNode(Cell cell, HashMap<Integer, FreePositionTableRecord> table) {
-    this.name = ExcelReader.getStringValue(cell).get();
+    this.name = ExcelReader.getStringValue(cell).orElse("");
     this.rowNum = cell.getRowIndex();
     this.colNum = cell.getColumnIndex();
     this.sheet = cell.getSheet();
     this.table = table;
+  }
+
+  public boolean hasTable() {
+    return table != null && !table.isEmpty();
+  }
+
+  public void print(String gap) {
+    if (hasTable()) System.out.println(gap + name + " :: " + getRecord());
+    else System.out.println(gap + name);
+
+    for (TreeNode childNode : getChildren()) childNode.print(gap + "  ");
+  }
+
+  public void find(String name, PositionsInSheet coordinates) {
+    for (TreeNode node : getChildren()) {
+      if (node.getName().trim().equalsIgnoreCase(name.trim()))
+        coordinates.addCoordinates(node.getRowNum(), node.getColNum());
+
+      node.find(name, coordinates);
+    }
   }
 
   public String getName() {
@@ -40,10 +60,6 @@ public class TreeNode {
 
   public int getColNum() {
     return colNum;
-  }
-
-  public boolean hasTable() {
-    return table != null && table.size() > 0;
   }
 
   public FreePositionTableRecord getRecord() {
@@ -68,21 +84,5 @@ public class TreeNode {
     }
 
     return children;
-  }
-
-  public void print(String gap) {
-    if (hasTable()) System.out.println(gap + name + " :: " + getRecord());
-    else System.out.println(gap + name);
-
-    for (TreeNode childNode : getChildren()) childNode.print(gap + "  ");
-  }
-
-  public void find(String name, PositionsInSheet coordinates) {
-    for (TreeNode node : getChildren()) {
-      if (node.getName().trim().equalsIgnoreCase(name.trim()))
-        coordinates.addCoordinates(node.getRowNum(), node.getColNum());
-
-      node.find(name, coordinates);
-    }
   }
 }

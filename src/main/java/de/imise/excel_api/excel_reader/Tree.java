@@ -9,7 +9,7 @@ import org.apache.poi.ss.usermodel.Row;
 
 public class Tree {
 
-  private Cell markCell;
+  private final Cell markCell;
   HashMap<Integer, FreePositionTableRecord> table;
 
   public Tree(Cell markCell) {
@@ -21,33 +21,14 @@ public class Tree {
     this.table = table;
   }
 
-  public List<TreeNode> getRootNodes() {
-    List<TreeNode> rootNodes = new ArrayList<>();
-
-    for (Row row : markCell.getSheet()) {
-      if (row.getRowNum() > markCell.getRowIndex()) {
-        Cell rootCell = row.getCell(markCell.getColumnIndex());
-
-        if (!ExcelReader.isEmpty(rootCell)) {
-          if (hasTable()) rootNodes.add(new TreeNode(rootCell, table));
-          else rootNodes.add(new TreeNode(rootCell));
-        }
-      }
-    }
-
-    return rootNodes;
-  }
-
   public void addRootNode(String node) {
     ExcelWriter.insertRow(markCell.getSheet(), markCell.getRowIndex() + 1);
     ExcelWriter.setValue(
         markCell.getSheet(), markCell.getRowIndex() + 1, markCell.getColumnIndex(), node);
-    //		return new TreeNode(markCell.getSheet().getRow(markCell.getRowIndex() +
-    // 1).getCell(markCell.getColumnIndex()));
   }
 
   public boolean hasTable() {
-    return table != null && table.size() > 0;
+    return table != null && !table.isEmpty();
   }
 
   public PositionsInSheet find(String name) {
@@ -68,5 +49,22 @@ public class Tree {
       node.print("");
       System.out.println();
     }
+  }
+
+  public List<TreeNode> getRootNodes() {
+    List<TreeNode> rootNodes = new ArrayList<>();
+
+    for (Row row : markCell.getSheet()) {
+      if (row.getRowNum() > markCell.getRowIndex()) {
+        Cell rootCell = row.getCell(markCell.getColumnIndex());
+
+        if (!ExcelReader.isEmpty(rootCell)) {
+          if (hasTable()) rootNodes.add(new TreeNode(rootCell, table));
+          else rootNodes.add(new TreeNode(rootCell));
+        }
+      }
+    }
+
+    return rootNodes;
   }
 }

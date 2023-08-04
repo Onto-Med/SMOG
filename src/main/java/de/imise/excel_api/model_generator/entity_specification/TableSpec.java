@@ -6,10 +6,11 @@ import java.util.Map;
 
 public class TableSpec extends Spec {
 
-  private int firstRow;
-  private int firstCol;
+  private final int firstRow;
+  private final int firstCol;
+  private final Map<String, FieldSpec> fields;
+
   private int lastCol;
-  private Map<String, FieldSpec> fields;
   private FieldSpec colRefOwn;
   private String[] colRefForeign;
 
@@ -30,6 +31,15 @@ public class TableSpec extends Spec {
 
   public boolean hasColRef() {
     return colRefOwn != null;
+  }
+
+  public FieldSpec getField(String name) {
+    return fields.get(name);
+  }
+
+  @Override
+  public String toString() {
+    return "TableSpec [name=" + name + ", fields=" + fields + "]";
   }
 
   public FieldSpec getColRefOwn() {
@@ -64,16 +74,7 @@ public class TableSpec extends Spec {
     return fields.values();
   }
 
-  public FieldSpec getField(String name) {
-    return fields.get(name);
-  }
-
   public int getFieldsNumber() {
     return fields.size();
-  }
-
-  @Override
-  public String toString() {
-    return "TableSpec [name=" + name + ", fields=" + fields + "]";
   }
 }

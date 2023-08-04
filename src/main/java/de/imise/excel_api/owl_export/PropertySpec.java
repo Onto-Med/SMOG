@@ -5,7 +5,7 @@ import java.util.List;
 
 public class PropertySpec {
 
-  private Property mainProperty;
+  private final Property mainProperty;
   private List<Property> additionalProperties = new ArrayList<>();
   private List<Property> valueProperties = new ArrayList<>();
 

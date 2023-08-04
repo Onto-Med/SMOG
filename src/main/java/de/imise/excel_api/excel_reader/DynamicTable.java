@@ -10,7 +10,7 @@ import org.apache.poi.ss.usermodel.Row;
 
 public class DynamicTable {
 
-  private Cell markCell;
+  private final Cell markCell;
   private Map<Integer, String> header;
   private List<Integer> headerNumbers;
 
@@ -125,8 +125,8 @@ public class DynamicTable {
   }
 
   private void setHeader() {
-    header = new HashMap<Integer, String>();
-    headerNumbers = new ArrayList<Integer>();
+    header = new HashMap<>();
+    headerNumbers = new ArrayList<>();
 
     for (Cell head : ExcelReader.getNextRow(markCell)) {
       if (head.getColumnIndex() >= markCell.getColumnIndex()) {

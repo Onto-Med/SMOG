@@ -11,8 +11,8 @@ import org.apache.poi.ss.usermodel.Workbook;
 
 public class CStyle {
 
-  private CellStyle cellStyle;
-  private Font font;
+  private final CellStyle cellStyle;
+  private final Font font;
 
   public CStyle(Workbook wb) {
     this.cellStyle = wb.createCellStyle();
