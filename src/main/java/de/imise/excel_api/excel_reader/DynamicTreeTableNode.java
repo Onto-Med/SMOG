@@ -23,12 +23,18 @@ public record DynamicTreeTableNode(
         table);
   }
 
-  public Map<String, DynamicTableField> getProperties() {
-    return table.get(rowNum);
-  }
-
   public Optional<String> getProperty(String propertyName) {
     return getProperties().get(propertyName).value();
+  }
+
+  public String toString(String gap) {
+    var sb = new StringBuilder(gap + name + " :: " + getProperties()).append("\n");
+    for (DynamicTreeTableNode childNode : getChildren()) sb.append(childNode.toString(gap + "  "));
+    return sb.toString();
+  }
+
+  public Map<String, DynamicTableField> getProperties() {
+    return table.get(rowNum);
   }
 
   public List<DynamicTreeTableNode> getChildren() {
@@ -47,12 +53,5 @@ public record DynamicTreeTableNode(
     }
 
     return children;
-  }
-
-  public String toString(String gap) {
-    var sb =
-        new StringBuilder(gap + name + " :: " + getProperties()).append(System.lineSeparator());
-    for (DynamicTreeTableNode childNode : getChildren()) sb.append(childNode.toString(gap + "  "));
-    return sb.toString();
   }
 }
