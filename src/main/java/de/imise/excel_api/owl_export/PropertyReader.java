@@ -23,17 +23,22 @@ public class PropertyReader {
   }
 
   private static PropertySpec getProperty(String propSpec, String valSpec) {
-    String propMainPart = getMainPart(propSpec);
-    String propAddPart = getAdditionalPart(propSpec);
-    String valMainPart = getMainPart(valSpec);
-    String valAddPart = getAdditionalPart(valSpec);
+    try {
+      String propMainPart = getMainPart(propSpec);
+      String propAddPart = getAdditionalPart(propSpec);
+      String valMainPart = getMainPart(valSpec);
+      String valAddPart = getAdditionalPart(valSpec);
 
-    var mainProp = new Property(propMainPart.split(ATTRIBUTE_SPLIT), valMainPart);
-    var propertySpec = new PropertySpec(mainProp);
-    if (propAddPart != null) propertySpec.setAdditionalProperties(getProperties(propAddPart));
-    if (valAddPart != null) propertySpec.setValueProperties(getProperties(valAddPart));
+      var mainProp = new Property(propMainPart.split(ATTRIBUTE_SPLIT), valMainPart);
+      var propertySpec = new PropertySpec(mainProp);
+      if (propAddPart != null) propertySpec.setAdditionalProperties(getProperties(propAddPart));
+      if (valAddPart != null) propertySpec.setValueProperties(getProperties(valAddPart));
 
-    return propertySpec;
+      return propertySpec;
+    } catch (Exception e) {
+      throw new RuntimeException(
+          "Cannot get property for propSpec '" + propSpec + "' valSpec '" + valSpec + "'.", e);
+    }
   }
 
   private static List<Property> getProperties(String spec) {

@@ -76,18 +76,28 @@ public class ExcelReader {
 
   public static Optional<String> getStringValue(Cell cell) {
     if (isEmpty(cell)) return Optional.empty();
-    if (isDate(cell)) return Optional.of(StrUtil.formatDate(cell.getDateCellValue()));
-    if (isInteger(cell)) return Optional.of(Integer.toString((int) cell.getNumericCellValue()));
-    if (isNumeric(cell)) {
-      double dv = cell.getNumericCellValue();
-      int iv = (int) dv;
-      if (dv == iv) return Optional.of(Integer.toString(iv));
-      else return Optional.of(Double.toString(dv));
+    try {
+      if (isDate(cell)) return Optional.of(StrUtil.formatDate(cell.getDateCellValue()));
+      if (isInteger(cell)) return Optional.of(Integer.toString((int) cell.getNumericCellValue()));
+      if (isNumeric(cell)) {
+        double dv = cell.getNumericCellValue();
+        int iv = (int) dv;
+        if (dv == iv) return Optional.of(Integer.toString(iv));
+        else return Optional.of(Double.toString(dv));
+      }
+      if (isBoolean(cell)) return Optional.of(Boolean.toString(cell.getBooleanCellValue()));
+      if (isString(cell)) return Optional.of(cell.getStringCellValue().trim());
+      if (isFormula(cell)) return Optional.of(cell.getRichStringCellValue().getString());
+    } catch (Exception e) {
+      throw new RuntimeException(
+          "Cannot get string value from cell '"
+              + cell
+              + "' at "
+              + cell.getAddress()
+              + " in sheet "
+              + cell.getSheet().getSheetName(),
+          e);
     }
-    if (isBoolean(cell)) return Optional.of(Boolean.toString(cell.getBooleanCellValue()));
-    if (isString(cell)) return Optional.of(cell.getStringCellValue().trim());
-    if (isFormula(cell)) return Optional.of(cell.getRichStringCellValue().getString());
-
     return Optional.empty();
   }
 
