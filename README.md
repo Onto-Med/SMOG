@@ -24,18 +24,18 @@ Download one of our [JAR releases](https://github.com/Onto-Med/SMOG/releases/lat
 
 ```sh
 # generate Java files in directory 'src/main/java'
-java -jar smog-x.x.x.jar generate --group-id test.model --artifact-id test_artifact --version 0.1.0 example.xlsx src/main/java
+java -jar smog-x.x.x-shaded.jar generate --group-id test.model --artifact-id test_artifact --version 0.1.0 example.xlsx src/main/java
 
 # generate Maven package in directory 'lib', default values are used for --group-id, --artifact-id, and --version
-java -jar smog-x.x.x.jar generate --mvn example.xlsx lib
+java -jar smog-x.x.x-shaded.jar generate --mvn example.xlsx lib
 
 # specify maven home
-java -jar "-Dmaven.home=/path/to/maven/home" smog-x.x.x.jar generate --mvn example.xlsx lib
+java -jar "-Dmaven.home=/path/to/maven/home" smog-x.x.x-shaded.jar generate --mvn example.xlsx lib
 ```
 
 ```sh
 # perform an OWL export as described in the config.yaml file
-java -jar smog-x.x.x.jar export config.yaml
+java -jar smog-x.x.x-shaded.jar export config.yaml
 ```
 
 ### Maven Dependency
