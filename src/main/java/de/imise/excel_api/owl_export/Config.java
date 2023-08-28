@@ -37,19 +37,29 @@ public class Config {
       System.out.println(
           "The file 'config.yaml' with the following content must be located in the root directory:");
       System.out.println(
-          """
-          namespace: ...
-          version: ...
-          inputFile: ...
-          outputFile: ...
-          propertyPrefixes:
-            <name>: <prefix>
-          annotationProperties:
-            - <uri>
-          objectProperties:
-            - <uri>
-          metadata:
-            <property-uri>: [value1, value2, ...]""");
+          "namespace: ..."
+              + System.lineSeparator()
+              + "version: ..."
+              + System.lineSeparator()
+              + "inputFile: ..."
+              + System.lineSeparator()
+              + "outputFile: ..."
+              + System.lineSeparator()
+              + "propertyPrefixes:"
+              + System.lineSeparator()
+              + "  <name>: <prefix>"
+              + System.lineSeparator()
+              + "annotationProperties:"
+              + System.lineSeparator()
+              + "  - <uri>"
+              + System.lineSeparator()
+              + "objectProperties:"
+              + System.lineSeparator()
+              + "  - <uri>"
+              + System.lineSeparator()
+              + "metadata:"
+              + System.lineSeparator()
+              + "  <property-uri>: [value1, value2, ...]");
       e.printStackTrace();
     }
     if (config.getNamespace() == null
@@ -59,45 +69,6 @@ public class Config {
     if (config.getInputFile() == null || config.getOutputFile() == null)
       throw new IllegalArgumentException("The input and the output files must not be empty!");
     return config;
-  }
-
-  public static void main(String[] args) {
-    System.out.println(Config.get("config.yaml"));
-  }
-
-  public String getAnnotationProperty(String propName) {
-    for (String ap : annotationProperties) if (propName.equals(getName(ap))) return ap;
-    return null;
-  }
-
-  public String getObjectProperty(String propName) {
-    for (String op : objectProperties) if (propName.equals(getName(op))) return op;
-    return null;
-  }
-
-  public String getPropertyPrefix(String propName) {
-    return propertyPrefixes.get(propName);
-  }
-
-  @Override
-  public String toString() {
-    return "Config [namespace="
-        + namespace
-        + ", version="
-        + version
-        + ", inputFile="
-        + inputFile
-        + ", outputFile="
-        + outputFile
-        + ", propertyPrefixes="
-        + propertyPrefixes
-        + ", annotationProperties="
-        + annotationProperties
-        + ", objectProperties="
-        + objectProperties
-        + ", metadata="
-        + metadata
-        + "]";
   }
 
   public String getNamespace() {
@@ -178,9 +149,48 @@ public class Config {
     return IRI.create(new File(outputFile).toURI());
   }
 
+  public String getAnnotationProperty(String propName) {
+    for (String ap : annotationProperties) if (propName.equals(getName(ap))) return ap;
+    return null;
+  }
+
+  public String getObjectProperty(String propName) {
+    for (String op : objectProperties) if (propName.equals(getName(op))) return op;
+    return null;
+  }
+
   private String getName(String uri) {
     int ind = uri.lastIndexOf('#');
     if (ind > -1) return uri.substring(ind + 1).toLowerCase();
     return uri.substring(uri.lastIndexOf('/') + 1).toLowerCase();
+  }
+
+  public String getPropertyPrefix(String propName) {
+    return propertyPrefixes.get(propName);
+  }
+
+  @Override
+  public String toString() {
+    return "Config [namespace="
+        + namespace
+        + ", version="
+        + version
+        + ", inputFile="
+        + inputFile
+        + ", outputFile="
+        + outputFile
+        + ", propertyPrefixes="
+        + propertyPrefixes
+        + ", annotationProperties="
+        + annotationProperties
+        + ", objectProperties="
+        + objectProperties
+        + ", metadata="
+        + metadata
+        + "]";
+  }
+
+  public static void main(String[] args) {
+    System.out.println(Config.get("config.yaml"));
   }
 }

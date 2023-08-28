@@ -438,7 +438,7 @@ public class Templates {
           .append("\", get")
           .append(field.getJavaName())
           .append("());")
-          .append("\n");
+          .append(System.lineSeparator());
 
     String getRecord = tabRec.get("getRecord").replace("// _PUT_FIELDS", fields.toString());
     sb.append(getRecord);
@@ -567,7 +567,7 @@ public class Templates {
           .append("\", get")
           .append(field.getJavaName())
           .append("());")
-          .append("\n");
+          .append(System.lineSeparator());
 
     String getRecord = freePosTabRec.get("getRecord").replace("// _PUT_FIELDS", fields.toString());
     sb.append(getRecord);
@@ -693,7 +693,7 @@ public class Templates {
           .append("\", get")
           .append(field.getJavaName())
           .append("());")
-          .append("\n");
+          .append(System.lineSeparator());
 
     String getRecord = treeNode.get("getRecord").replace("// _PUT_FIELDS", fields.toString());
     sb.append(getRecord);
@@ -713,8 +713,11 @@ public class Templates {
 
   private StringBuilder getFileStringBuilder(
       String packageName, Set<String> imps, StringBuilder code) {
-    var sb = new StringBuilder("package " + packageName + ";").append("\n").append("\n");
-    for (String imp : imps) sb.append(imp).append("\n");
+    var sb =
+        new StringBuilder("package " + packageName + ";")
+            .append(System.lineSeparator())
+            .append(System.lineSeparator());
+    for (String imp : imps) sb.append(imp).append(System.lineSeparator());
 
     return sb.append(code).append("}");
   }
@@ -733,9 +736,9 @@ public class Templates {
           name = getName(line.trim());
           imps = getImports(line.trim());
         } else if (line.contains("_END:")) {
-          templates.put(name, temp.append("\n").toString());
+          templates.put(name, temp.append(System.lineSeparator()).toString());
           imports.put(name, imps);
-        } else temp.append(line).append("\n");
+        } else temp.append(line).append(System.lineSeparator());
       }
       reader.close();
     } catch (Exception e) {
