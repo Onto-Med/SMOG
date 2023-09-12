@@ -1,6 +1,6 @@
 # Spreadsheet Model Generator (SMOG): A Lightweight Tool for Object-Spreadsheet Mapping
 
-[![Maven Test](https://github.com/Onto-Med/SMOG/actions/workflows/maven-test.yml/badge.svg)](https://github.com/Onto-Med/SMOG/actions/workflows/maven-test.yml)
+[![Lint and Test](https://github.com/Onto-Med/SMOG/actions/workflows/lint_and_test.yml/badge.svg)](https://github.com/Onto-Med/SMOG/actions/workflows/lint_and_test.yml)
 
 ## Description
 
