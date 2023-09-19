@@ -16,6 +16,7 @@ import org.semanticweb.owlapi.model.OWLAnnotation;
 import org.semanticweb.owlapi.model.OWLAnnotationProperty;
 import org.semanticweb.owlapi.model.OWLAnnotationValue;
 import org.semanticweb.owlapi.model.OWLClass;
+import org.semanticweb.owlapi.model.OWLClassExpression;
 import org.semanticweb.owlapi.model.OWLDataFactory;
 import org.semanticweb.owlapi.model.OWLObjectProperty;
 import org.semanticweb.owlapi.model.OWLOntology;
@@ -59,7 +60,9 @@ public class SimpleOWLExport {
         classes.stream()
             .filter(
                 cls ->
-                    !cls.isTopEntity() && ont.getAnnotationAssertionAxioms(cls.getIRI()).isEmpty())
+                    !cls.isTopEntity()
+                        && !cls.getIRI().toString().endsWith("Class") // metaclass
+                        && ont.getAnnotationAssertionAxioms(cls.getIRI()).isEmpty())
             .toList();
     if (!unannotated.isEmpty())
       log.warn(
@@ -83,6 +86,7 @@ public class SimpleOWLExport {
       addOntoAnnotation(fac.getOWLVersionInfo(), fac.getOWLLiteral(config.getVersion()));
     for (String prop : config.getMetadata().keySet())
       addMetadata(fac.getOWLAnnotationProperty(prop), config.getMetadata().get(prop));
+    addMetaClasses();
     save();
     report();
   }
@@ -139,6 +143,28 @@ public class SimpleOWLExport {
 
   private void addClass(OWLClass cls, OWLClass superCls) {
     ont.add(fac.getOWLSubClassOfAxiom(cls, superCls));
+  }
+
+  private void addMetaClasses(OWLClass meta, OWLClass c) {
+    ont.getSubClassAxiomsForSuperClass(c).stream()
+        .map(axiom -> axiom.getSubClass())
+        .filter(OWLClassExpression::isOWLClass)
+        .map(OWLClassExpression::asOWLClass)
+        .forEach(
+            subClass -> {
+              var ind = fac.getOWLNamedIndividual(subClass.getIRI());
+              ont.add(fac.getOWLClassAssertionAxiom(meta, ind));
+              // endless loop if there are subclass cycles, which shouldn't exist
+              addMetaClasses(meta, subClass);
+            });
+  }
+
+  private void addMetaClasses() {
+    for (var cls : config.getMetaClasses()) {
+      var base = fac.getOWLClass(cls);
+      var meta = fac.getOWLClass(base.getIRI().getIRIString() + "Class");
+      addMetaClasses(meta, base);
+    }
   }
 
   private OWLClass getClass(String clsName) {

@@ -22,6 +22,7 @@ public class Config {
   private Map<String, String> propertyPrefixes = new HashMap<>();
   private List<String> annotationProperties = new ArrayList<>();
   private List<String> objectProperties = new ArrayList<>();
+  private List<String> metaClasses = new ArrayList<>();
   private Map<String, List<String>> metadata = new HashMap<>();
 
   public static Config get(String yamlFilePath) {
@@ -123,8 +124,16 @@ public class Config {
     return objectProperties;
   }
 
+  public List<String> getMetaClasses() {
+    return metaClasses;
+  }
+
   public void setObjectProperties(List<String> objectProperties) {
     this.objectProperties = objectProperties;
+  }
+
+  public void setMetaClasses(List<String> metaClasses) {
+    this.metaClasses = metaClasses;
   }
 
   public Map<String, List<String>> getMetadata() {
