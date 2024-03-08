@@ -1,29 +1,28 @@
+cff-version: "1.2.0"
+message: "If you use this software, please cite it using these metadata."
 title: "Spreadsheet Model Generator (SMOG)"
 abstract: "A Lightweight Tool for Object-Spreadsheet Mapping."
 authors:
-  -
-    affiliation: "University of Leipzig"
-    family-names: Uciteli
-    given-names: Alexandr
-    orcid: "https://orcid.org/0000-0001-9558-5352"
-  -
-    affiliation: "University of Leipzig"
-    family-names: Beger
-    given-names: Christoph
-    orcid: "https://orcid.org/0000-0002-1166-0368"
-  -
-    affiliation: "University of Leipzig"
-    family-names: Kropf
-    given-names: Stefan
-    orcid: "https://orcid.org/0000-0003-1305-8108"
-  -
-    affiliation: "University of Leipzig"
-    family-names: Herre
-    given-names: Heinrich
-cff-version: "1.1.0"
-date-released: 2021-04-30
+- affiliation: "Leipzig University"
+  family-names: Uciteli
+  given-names: Alexandr
+  orcid: "https://orcid.org/0000-0001-9558-5352"
+- affiliation: "Leipzig University"
+  family-names: Beger
+  given-names: Christoph
+  orcid: "https://orcid.org/0000-0002-1166-0368"
+- affiliation: "Leipzig University"
+  family-names: Kropf
+  given-names: Stefan
+  orcid: "https://orcid.org/0000-0003-1305-8108"
+- affiliation: "Leipzig University"
+  family-names: Herre
+  given-names: Heinrich
 keywords: 
   - "spreadsheet-mapping"
+  - "ontologies"
+version: "v1.2.2"
+doi: 10.5281/zenodo.10797634
+date-released: 2021-04-30
 license: MIT
-message: "If you use this software, please cite it using these metadata."
-version: "v1.0.2"
+url: "https://github.com/Onto-Med/SMOG"
