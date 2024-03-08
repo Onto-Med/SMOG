@@ -1,5 +1,6 @@
 # Spreadsheet Model Generator (SMOG): A Lightweight Tool for Object-Spreadsheet Mapping
 
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.10797634.svg)](https://doi.org/10.5281/zenodo.10797634)
 [![Lint and Test](https://github.com/Onto-Med/SMOG/actions/workflows/lint_and_test.yml/badge.svg)](https://github.com/Onto-Med/SMOG/actions/workflows/lint_and_test.yml)
 
 ## Description
