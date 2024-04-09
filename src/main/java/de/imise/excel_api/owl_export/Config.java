@@ -6,8 +6,10 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import org.semanticweb.owlapi.formats.RDFJsonLDDocumentFormat;
 import org.semanticweb.owlapi.formats.RDFXMLDocumentFormat;
 import org.semanticweb.owlapi.model.IRI;
@@ -23,6 +25,7 @@ public class Config {
   private List<String> annotationProperties = new ArrayList<>();
   private List<String> objectProperties = new ArrayList<>();
   private List<String> metaClasses = new ArrayList<>();
+  private Set<String> individualClasses = new HashSet<>();
   private Map<String, List<String>> metadata = new HashMap<>();
 
   public static Config get(String yamlFilePath) {
@@ -128,12 +131,20 @@ public class Config {
     return metaClasses;
   }
 
+  public Set<String> getIndividualClasses() {
+    return individualClasses;
+  }
+
   public void setObjectProperties(List<String> objectProperties) {
     this.objectProperties = objectProperties;
   }
 
   public void setMetaClasses(List<String> metaClasses) {
     this.metaClasses = metaClasses;
+  }
+
+  public void setIndividualClasses(Set<String> individualClasses) {
+    this.individualClasses = individualClasses;
   }
 
   public Map<String, List<String>> getMetadata() {
