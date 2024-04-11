@@ -13,7 +13,8 @@ public class PropertyReader {
   private static final String OPEN_BRACKET = "{";
   private static final String CLOSED_BRACKET = "}";
   public static final List<String> REF_ANNOTATION = List.of("ref", "ref-a");
-  public static final List<String> REF_RESTRICTION = List.of("ref-r");
+  public static final List<String> REF_OBJECT_RESTRICTION = List.of("ref-r", "ref-o");
+  public static final List<String> REF_DATA_RESTRICTION = List.of("ref-d");
 
   public static List<PropertySpec> getProperties(String propSpec, String valSpec) {
     List<PropertySpec> props = new ArrayList<>();

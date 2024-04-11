@@ -18,6 +18,8 @@ import org.semanticweb.owlapi.model.OWLAnnotationValue;
 import org.semanticweb.owlapi.model.OWLClass;
 import org.semanticweb.owlapi.model.OWLClassExpression;
 import org.semanticweb.owlapi.model.OWLDataFactory;
+import org.semanticweb.owlapi.model.OWLDataProperty;
+import org.semanticweb.owlapi.model.OWLDatatype;
 import org.semanticweb.owlapi.model.OWLObjectProperty;
 import org.semanticweb.owlapi.model.OWLOntology;
 import org.semanticweb.owlapi.model.OWLOntologyCreationException;
@@ -175,6 +177,10 @@ public class SimpleOWLExport {
     }
   }
 
+  private OWLDatatype getDataType(String typeName) {
+    return fac.getOWLDatatype("http://www.w3.org/2001/XMLSchema#", typeName);
+  }
+
   private void addProperties(String clsName, Map<String, DynamicTableField> props) {
     if (props == null) return;
     for (var prop : props.entrySet()) {
@@ -203,9 +209,12 @@ public class SimpleOWLExport {
   private void addProperty(String clsName, PropertySpec propSpec) {
     OWLClass cls = getClass(clsName);
     Property mainProp = propSpec.getMainProperty();
-    if (mainProp.hasReferenceRestriction())
+    if (mainProp.hasReferenceObjectRestriction()) {
       addRestriction(cls, getObjectProperty(mainProp.getProperty()), getClass(mainProp.getValue()));
-    else {
+    } else if (mainProp.hasReferenceDataRestriction()) {
+      addRestriction(
+          cls, getDataProperty(mainProp.getProperty()), getDataType(mainProp.getValue()));
+    } else {
       OWLAnnotation ann = getAnnotation(mainProp);
       List<OWLAnnotation> annOfAnns = new ArrayList<>();
       for (Property p : propSpec.getAdditionalProperties()) annOfAnns.add(getAnnotation(p));
@@ -259,6 +268,11 @@ public class SimpleOWLExport {
     return fac.getOWLObjectProperty(IRI.create(config.getNamespace(), propName));
   }
 
+  private OWLDataProperty getDataProperty(String propName) {
+    propName = cleanProp(propName);
+    return fac.getOWLDataProperty(IRI.create(config.getNamespace(), propName));
+  }
+
   private void addAnnotation(OWLClass sbj, OWLAnnotation ann, List<OWLAnnotation> annOfAnns) {
     if (annOfAnns.isEmpty()) ont.add(fac.getOWLAnnotationAssertionAxiom(sbj.getIRI(), ann));
     else ont.add(fac.getOWLAnnotationAssertionAxiom(sbj.getIRI(), ann, annOfAnns));
@@ -266,6 +280,10 @@ public class SimpleOWLExport {
 
   private void addRestriction(OWLClass cls, OWLObjectProperty prop, OWLClass valCls) {
     ont.add(fac.getOWLSubClassOfAxiom(cls, fac.getOWLObjectSomeValuesFrom(prop, valCls)));
+  }
+
+  private void addRestriction(OWLClass cls, OWLDataProperty prop, OWLDatatype valDataType) {
+    ont.add(fac.getOWLSubClassOfAxiom(cls, fac.getOWLDataSomeValuesFrom(prop, valDataType)));
   }
 
   private String clean(String str) {
