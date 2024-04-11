@@ -31,8 +31,12 @@ public class Property {
     return reference == 1;
   }
 
-  public boolean hasReferenceRestriction() {
+  public boolean hasReferenceObjectRestriction() {
     return reference == 2;
+  }
+
+  public boolean hasReferenceDataRestriction() {
+    return reference == 3;
   }
 
   public String getProperty() {
@@ -52,7 +56,8 @@ public class Property {
     if (attrs.length > 1) {
       String attr = attrs[1].toLowerCase();
       if (PropertyReader.REF_ANNOTATION.contains(attr)) this.reference = 1;
-      else if (PropertyReader.REF_RESTRICTION.contains(attr)) this.reference = 2;
+      else if (PropertyReader.REF_OBJECT_RESTRICTION.contains(attr)) this.reference = 2;
+      else if (PropertyReader.REF_DATA_RESTRICTION.contains(attr)) this.reference = 3;
       else this.language = attr;
     }
   }
