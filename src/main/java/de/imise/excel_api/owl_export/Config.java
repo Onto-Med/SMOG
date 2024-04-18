@@ -13,6 +13,7 @@ import org.semanticweb.owlapi.formats.RDFXMLDocumentFormat;
 import org.semanticweb.owlapi.model.IRI;
 import org.semanticweb.owlapi.model.OWLDocumentFormat;
 
+/** Read and provide configuration options for the Simple OWL Export from a given YAML file. */
 public class Config {
 
   private String namespace;
@@ -25,10 +26,15 @@ public class Config {
   private List<String> metaClasses = new ArrayList<>();
   private Map<String, List<String>> metadata = new HashMap<>();
 
+  /** Convenience wrapper for {@link Config#get(File)}. */
   public static Config get(String yamlFilePath) {
     return get(new File(yamlFilePath));
   }
 
+  /**
+   * @param yamlFile A YAML file in the OWL export format as specified in README.md.
+   * @return config The config read from the file.
+   */
   public static Config get(File yamlFile) {
     ObjectMapper mapper = new ObjectMapper(new YAMLFactory());
     Config config = null;
