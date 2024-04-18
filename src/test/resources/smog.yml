@@ -1,0 +1,23 @@
+namespace: http://test.de/
+version: 24.04
+inputFile: src/test/resources/smog.xlsx
+outputFile: src/test/resources/smog.owl
+#propertyPrefixes:
+#  prefix: http://my.url
+annotationProperties:
+  - http://www.w3.org/2000/01/rdf-schema#comment
+  - http://www.w3.org/2000/01/rdf-schema#label
+  - http://www.w3.org/2004/02/skos/core#altLabel
+  - http://www.w3.org/2004/02/skos/core#prefLabel
+#objectProperties:
+#metaClasses:
+#individualClasses:
+metadata:
+  http://purl.org/vocab/vann/preferredNamespacePrefix: [test]
+  http://purl.org/vocab/vann/example: [http://test.de/TechnicalBiomassPotential|http://test.de/TheoreticalBiomassPotential]
+  http://purl.org/dc/terms/title: [Test|en]
+  http://purl.org/dc/terms/description: [SMOG Test Ontology|en]
+  http://purl.org/dc/terms/creator: [https://www.imise.uni-leipzig.de/en/Mitarbeiter/Konrad_Hoeffner, https://www.imise.uni-leipzig.de/en/Mitarbeiter/Alexandr_Uciteli]
+  http://purl.org/dc/terms/language: [de]
+  http://purl.org/dc/terms/license: [https://www.gnu.org/licenses/gpl-3.0.html]
+  http://www.w3.org/ns/dcat#keyword: [biomass]
