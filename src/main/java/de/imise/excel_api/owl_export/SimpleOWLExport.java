@@ -142,7 +142,12 @@ public class SimpleOWLExport {
   }
 
   private void addClass(OWLClass cls, OWLClass superCls) {
-    ont.add(fac.getOWLSubClassOfAxiom(cls, superCls));
+    if (config.getIndividualClasses().contains(superCls.getIRI().getIRIString())) {
+      var ind = fac.getOWLNamedIndividual(cls.getIRI());
+      ont.add(fac.getOWLClassAssertionAxiom(superCls, ind));
+    } else {
+      ont.add(fac.getOWLSubClassOfAxiom(cls, superCls));
+    }
   }
 
   private void addMetaClasses(OWLClass meta, OWLClass c) {
