@@ -27,6 +27,11 @@ import org.semanticweb.owlapi.vocab.OWL2Datatype;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * Stand alone command line application to generate an OWL ontology from a given Microsoft Excel
+ * spreadsheet and configuration file.
+ */
+/** */
 public class SimpleOWLExport {
 
   private static final Logger log = LoggerFactory.getLogger(SimpleOWLExport.class);
@@ -36,6 +41,10 @@ public class SimpleOWLExport {
   private final Config config;
   private OWLOntology ont;
 
+  /**
+   * Initialize with the given config. Call {@link SimpleOWLExport#export()} to generate and save
+   * the ontology file.
+   */
   public SimpleOWLExport(Config config) {
     this.config = config;
     treeTabs = ExcelReader.getDynamicTreeTables(config.getInputFile());
@@ -53,7 +62,8 @@ public class SimpleOWLExport {
     exp.export();
   }
 
-  public void report() {
+  /** Write stats to command line. */
+  void report() {
     var classes = ont.getClassesInSignature();
     log.info("Exported " + classes.size() + " classes.");
     var unannotated =
@@ -75,6 +85,7 @@ public class SimpleOWLExport {
                   .get());
   }
 
+  /** Generate and export the ontology OWL file. */
   public void export() {
     for (DynamicTreeTable tt : treeTabs) addDynamicTreeTable(tt);
     addOntoAnnotation(
@@ -91,11 +102,11 @@ public class SimpleOWLExport {
     report();
   }
 
-  public void addOntoVersion(String value, OWL2Datatype datatype) {
+  private void addOntoVersion(String value, OWL2Datatype datatype) {
     addOntoAnnotation(fac.getOWLVersionInfo(), fac.getOWLLiteral(value, datatype));
   }
 
-  public OWLDataFactory getFactory() {
+  private OWLDataFactory getFactory() {
     return fac;
   }
 
@@ -269,6 +280,15 @@ public class SimpleOWLExport {
     else ont.add(fac.getOWLAnnotationAssertionAxiom(sbj.getIRI(), ann, annOfAnns));
   }
 
+  /**
+   * Add OWL subclass axiom: SubclassOf(ObjectSomeValuesFrom(prop valCls)). For example:
+   * addRestriction(Parent, hasChild, Child), meaning each parent has some (one or more) children.
+   *
+   * @param cls the subclass
+   * @param prop the property connecting instances of cls as subjects with instances of valCls as
+   *     objects.
+   * @param valCls the superclass
+   */
   private void addRestriction(OWLClass cls, OWLObjectProperty prop, OWLClass valCls) {
     ont.add(fac.getOWLSubClassOfAxiom(cls, fac.getOWLObjectSomeValuesFrom(prop, valCls)));
   }
@@ -281,10 +301,18 @@ public class SimpleOWLExport {
     return res.toString();
   }
 
+  /**
+   * @param str Class suffix as specified in a spreadsheet.
+   * @return Class suffix with non-alphanumeric characters removed and in UpperCamelCase.
+   */
   private String cleanCls(String str) {
     return firstLetterToUpper(clean(str));
   }
 
+  /**
+   * @param str Property suffix as specified in a spreadsheet.
+   * @return Property suffix with non-alphanumeric characters removed and in lowerCamelCase.
+   */
   private String cleanProp(String str) {
     return firstLetterToLower(clean(str));
   }
@@ -301,6 +329,11 @@ public class SimpleOWLExport {
     return str.substring(0, 1).toLowerCase() + str.substring(1);
   }
 
+  /**
+   * Adds an OWL annotation assertion axiom (@see <a
+   * href="https://www.w3.org/TR/owl2-syntax/#Annotation_Axioms">OWL 2 spec</a>) with the given
+   * property and value.
+   */
   private void addOntoAnnotation(OWLAnnotationProperty prop, OWLAnnotationValue val) {
     ont.addAxiom(
         fac.getOWLAnnotationAssertionAxiom(prop, ont.getOntologyID().getOntologyIRI().get(), val));
