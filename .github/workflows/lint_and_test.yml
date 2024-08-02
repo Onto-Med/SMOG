@@ -3,7 +3,8 @@ name: Lint and Test
 
 on:
   push:
-    branches: [master]
+    branches:
+      - main
     paths-ignore:
       - '.gitignore'
       - 'CITATION.cff'
@@ -11,8 +12,9 @@ on:
       - 'LICENSE'
       - 'README.md'
   pull_request:
-    branches: [master]
-    pull_request:
+    branches:
+      - main
+    paths-ignore:
       - '.gitignore'
       - 'CITATION.cff'
       - 'CODE_OF_CONDUCT.md'
