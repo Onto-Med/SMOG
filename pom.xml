@@ -30,7 +30,7 @@
 		<dependency>
 			<groupId>org.junit.jupiter</groupId>
 			<artifactId>junit-jupiter-api</artifactId>
-			<version>5.10.3</version>
+			<version>5.11.0</version>
 			<scope>test</scope>
 		</dependency>
 
@@ -67,7 +67,7 @@
 		<dependency>
 			<groupId>org.slf4j</groupId>
 			<artifactId>slf4j-simple</artifactId>
-			<version>2.0.13</version>
+			<version>2.0.16</version>
 		</dependency>
 		<dependency>
 			<groupId>org.apache.logging.log4j</groupId>
@@ -95,7 +95,7 @@
 			<dependency>
 				<groupId>org.slf4j</groupId>
 				<artifactId>slf4j-api</artifactId>
-				<version>2.0.13</version>
+				<version>2.0.16</version>
 			</dependency>
 		</dependencies>
 	</dependencyManagement>
@@ -133,7 +133,7 @@
 			<plugin>
 				<groupId>org.codehaus.mojo</groupId>
 				<artifactId>exec-maven-plugin</artifactId>
-				<version>3.3.0</version>
+				<version>3.4.1</version>
 				<configuration>
 					<mainClass>de.imise.excel_api.ProjectGenerator</mainClass>
 				</configuration>
