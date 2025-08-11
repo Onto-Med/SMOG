@@ -104,10 +104,12 @@ public class SimpleOWLExport {
     report();
   }
 
+  @SuppressWarnings("unused")
   private void addOntoVersion(String value, OWL2Datatype datatype) {
     addOntoAnnotation(fac.getOWLVersionInfo(), fac.getOWLLiteral(value, datatype));
   }
 
+  @SuppressWarnings("unused")
   private OWLDataFactory getFactory() {
     return fac;
   }
