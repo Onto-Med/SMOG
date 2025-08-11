@@ -9,7 +9,6 @@ import java.text.ParseException;
 import java.util.Date;
 import java.util.Optional;
 import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.ss.usermodel.CellType;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
@@ -199,7 +198,7 @@ public class ExcelWriter {
   }
 
   public static void clearCell(Cell cell) {
-    if (cell != null) cell.setCellType(CellType.BLANK);
+    if (cell != null) cell.setBlank();
   }
 
   public static void clearCell(Row row, int colNum) {

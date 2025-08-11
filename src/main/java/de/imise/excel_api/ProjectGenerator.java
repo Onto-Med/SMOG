@@ -9,7 +9,6 @@ import de.imise.excel_api.util.SmogVersionProvider;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.Collections;
 import java.util.Properties;
 import java.util.concurrent.Callable;
 import org.apache.commons.io.FileUtils;
@@ -66,8 +65,8 @@ public class ProjectGenerator implements Callable<Integer> {
       @Option(
               names = {"-m", "--mvn"},
               description =
-                  "Set this option to enable packaging of the generated Java source files via Maven "
-                      + "(Maven must be installed and set as env variable)")
+                  "Set this option to enable packaging of the generated Java source files via Maven"
+                      + " (Maven must be installed and set as env variable)")
           boolean maven,
       @Parameters(
               index = "0",
@@ -139,10 +138,11 @@ public class ProjectGenerator implements Callable<Integer> {
   }
 
   private void toJar(File dir) throws MavenInvocationException, IOException, CommandLineException {
-    InvocationRequest request = new DefaultInvocationRequest();
-    request.setPomFile(new File(dir, "pom.xml"));
-    request.setGoals(Collections.singletonList("package"));
-    request.setBatchMode(true);
+    InvocationRequest request =
+        new DefaultInvocationRequest()
+            .setPomFile(new File(dir, "pom.xml"))
+            .addArg("package")
+            .setBatchMode(true);
 
     InvocationResult result = new DefaultInvoker().execute(request);
     if (result.getExitCode() != 0)

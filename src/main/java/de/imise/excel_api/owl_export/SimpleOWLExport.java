@@ -4,6 +4,7 @@ import de.imise.excel_api.excel_reader.DynamicTableField;
 import de.imise.excel_api.excel_reader.DynamicTreeTable;
 import de.imise.excel_api.excel_reader.DynamicTreeTableNode;
 import de.imise.excel_api.excel_reader.ExcelReader;
+import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -59,7 +60,7 @@ public class SimpleOWLExport {
     }
   }
 
-  public static void main(String[] args) {
+  public static void main(String[] args) throws IOException {
     SimpleOWLExport exp = new SimpleOWLExport(Config.get("config.yaml"));
     exp.export();
   }
@@ -104,10 +105,12 @@ public class SimpleOWLExport {
     report();
   }
 
+  @SuppressWarnings("unused")
   private void addOntoVersion(String value, OWL2Datatype datatype) {
     addOntoAnnotation(fac.getOWLVersionInfo(), fac.getOWLLiteral(value, datatype));
   }
 
+  @SuppressWarnings("unused")
   private OWLDataFactory getFactory() {
     return fac;
   }

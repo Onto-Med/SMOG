@@ -29,23 +29,36 @@ public class Config {
   private Set<String> individualClasses = new HashSet<>();
   private Map<String, List<String>> metadata = new HashMap<>();
 
-  /** Convenience wrapper for {@link Config#get(File)}. */
-  public static Config get(String yamlFilePath) {
+  /**
+   * Convenience wrapper for {@link Config#get(File)}.
+   *
+   * @param yamlFilePath A YAML file in the OWL export format as specified in README.md.
+   * @return config The config read from the file.
+   * @throws IOException if the file cannot be read or is not in the correct format.
+   * @throws IllegalArgumentException if the namespace is not set correctly or the input/output
+   *     files are not set.
+   */
+  public static Config get(String yamlFilePath) throws IOException {
     return get(new File(yamlFilePath));
   }
 
   /**
    * @param yamlFile A YAML file in the OWL export format as specified in README.md.
    * @return config The config read from the file.
+   * @throws IOException if the file cannot be read or is not in the correct format.
+   * @throws IllegalArgumentException if the namespace is not set correctly or the input/output
+   *     files are not set.
    */
-  public static Config get(File yamlFile) {
+  public static Config get(File yamlFile) throws IOException {
     ObjectMapper mapper = new ObjectMapper(new YAMLFactory());
     Config config = null;
     try {
       config = mapper.readValue(yamlFile, Config.class);
     } catch (IOException e) {
-      System.out.println(
-          "The file 'config.yaml' with the following content must be located in the root directory:");
+      System.err.println(
+          "Error reading the configuration file '"
+              + yamlFile.getAbsolutePath()
+              + "'. Please check that the file is readable and has the following content:");
       System.out.println(
           "namespace: ..."
               + System.lineSeparator()
@@ -70,7 +83,7 @@ public class Config {
               + "metadata:"
               + System.lineSeparator()
               + "  <property-uri>: [value1, value2, ...]");
-      e.printStackTrace();
+      throw e;
     }
     if (config.getNamespace() == null
         || (!config.getNamespace().endsWith("/") && !config.getNamespace().endsWith("#")))
@@ -216,7 +229,7 @@ public class Config {
         + "]";
   }
 
-  public static void main(String[] args) {
+  public static void main(String[] args) throws IOException {
     System.out.println(Config.get("config.yaml"));
   }
 }
